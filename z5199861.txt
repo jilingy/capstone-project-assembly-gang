@@ -1,1 +1,3 @@
 My Work Diary
+
+The team discussed and brainstormed ideas for the project - ReadRecommend. We have more or less an idea of our tech stack. Our primary focus right now is to brainstorm epics and user stories. Once this is done, we intend to map them to Jira.
