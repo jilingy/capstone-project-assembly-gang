@@ -1,0 +1,3 @@
+Week 1
+
+Group formed. I created the Jira account. Together with my team, we decided on the ReadRecommend project. The basic repository on github was set up and split into frontend and backend. Furthermore, our python virtual environment was set up for the backend. We discussed our approach to SCRUM and how we were going to Jira and Github effectively for project management e.g. using pull requests.
