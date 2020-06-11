@@ -1,1 +1,7 @@
 Work Diary
+
+Week 1
+GRoup was formed, named Assembly Gang. Discussed using django for backend and react for front end. Started user stories and set up Jira and Github. Finished first lab and finalised project ideas. Picked Read Recommend.
+
+Week 2
+Set up Virtual environment. 
