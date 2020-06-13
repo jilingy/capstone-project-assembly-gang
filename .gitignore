@@ -2,6 +2,6 @@
 .vscode/
 .env/
 .DS_STORE
-backend/app/__pycache__/
 frontend/node_modules/
 node_modules/
+backend/app/__pycache__/
