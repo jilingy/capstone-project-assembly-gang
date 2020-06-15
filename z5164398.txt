@@ -4,4 +4,6 @@ Week 1
 GRoup was formed, named Assembly Gang. Discussed using django for backend and react for front end. Started user stories and set up Jira and Github. Finished first lab and finalised project ideas. Picked Read Recommend.
 
 Week 2
-Set up Virtual environment. 
+Set up Virtual environment. Downloaded all backend and frontend software. Refining user stories. Sorting out Proposal details and each members role. Have sorted out meeting/ standup times. Have yet to finish Proposal but getting there. By next week, Proposal will have been finished and backend coding should have started. 
+
+Week 3.
