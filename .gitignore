@@ -4,4 +4,6 @@
 .DS_STORE
 frontend/node_modules/
 node_modules/
-/backend/app/__pycache__/
+backend/app/__pycache__/
+backend/app/migrations/
+backend/project/__pycache__/
