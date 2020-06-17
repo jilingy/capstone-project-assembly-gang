@@ -1,1 +1,7 @@
+Week 1
+Group was formed. Set up Jira Account. Discussed what tech stack we would be using, it was decided to be django/flask for backend, react for front end and postgresql for the database. Next week we will have to do user stories and the project proposal
+Week 2
+Set out user stories for the ratings epic story and book epic story.
 
+Week3
+Edited the background and problem domain part of the proposal. Was assigned the storyboarding for books epic.
