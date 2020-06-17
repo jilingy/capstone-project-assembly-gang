@@ -4,7 +4,6 @@ django-coreapi==2.3.0
 django-cors-headers==3.2.1
 django-rest-auth==0.9.5
 djangorestframework==3.11.0
-<<<<<<< HEAD
 dnspython==1.16.0
 docutils==0.15.2
 entrypoints==0.3
@@ -148,7 +147,3 @@ xgboost==1.0.2
 yellowbrick==1.1
 zipp==3.1.0
 zope.interface==4.3.2
-=======
-psycopg2==2.8.4
-virtualenv==20.0.21
->>>>>>> ff1530a35aadddfa3df812ed6012fb8e5e5f5644
