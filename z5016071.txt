@@ -1,3 +1,11 @@
 Week 1
 
 Group formed. I created the Jira account. Together with my team, we decided on the ReadRecommend project. The basic repository on github was set up and split into frontend and backend. Furthermore, our python virtual environment was set up for the backend. We discussed our approach to SCRUM and how we were going to Jira and Github effectively for project management e.g. using pull requests.
+
+Week 2
+
+Reviewed Farhan's user stories. Also added my own user stories. Sorted out our workflow for the project proposal. Planned to meet on 13/06/2020 at uni to write user stories together and go through setting up our development environment.
+
+Week 3
+
+Met on 16/06/2020 at uni. As scrum master, I was responsible for doing part b of the proposal. Began the process of vetting poor user stories and adding new user stories to our jira backlog. Did a discord meeting the following day (17/06/2020) to review Farhan's introduction and provide feedback. The other members did an additional meeting to figure out a common approach to storyboards. I continued to add user stories to Jira.
