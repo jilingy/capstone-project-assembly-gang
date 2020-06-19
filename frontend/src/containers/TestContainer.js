@@ -12,7 +12,7 @@ class TestContainer extends React.Component {
     render() {
         return (
             <div>
-                <p>Hello world</p>
+                <p>Hello world! This paragraph tag is actually contained within another component!</p>
             </div>
         )
     }
