@@ -9,3 +9,5 @@ Reviewed Farhan's user stories. Also added my own user stories. Sorted out our w
 Week 3
 
 Met on 16/06/2020 at uni. As scrum master, I was responsible for doing part b of the proposal. Began the process of vetting poor user stories and adding new user stories to our jira backlog. Did a discord meeting the following day (17/06/2020) to review Farhan's introduction and provide feedback. The other members did an additional meeting to figure out a common approach to storyboards. I continued to add user stories to Jira.
+
+Finished the project proposal. I was responsible for part (b) excluding the novel functionality section. As scrum master submitted the proposal to webcms on Sunday night.
