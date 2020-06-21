@@ -1,5 +1,6 @@
 import React from 'react';
 import CustomCard from '../components/Card';
+import BookCover from '../images/book_cover.jpg';
 
 class TestContainer extends React.Component {
 
@@ -15,15 +16,18 @@ class TestContainer extends React.Component {
         let booksData = [
             {
               title: "Book 1",
-              desc: "Book 1 Description"
+              desc: "Book 1 Description",
+              img_url: BookCover,
             },
             {
               title: "Book 2",
-              desc: "Book 2 Description"
+              desc: "Book 2 Description",
+              img_url: BookCover,
             },
             {
               title: "Book 3",
-              desc: "Book 3 Description"
+              desc: "Book 3 Description",
+              img_url: BookCover,
             },
         ];
 
