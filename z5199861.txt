@@ -1,3 +1,13 @@
 My Work Diary
 
+Week 1
+
 The team discussed and brainstormed ideas for the project - ReadRecommend. We have more or less an idea of our tech stack. Our primary focus right now is to brainstorm epics and user stories. Once this is done, we intend to map them to Jira.
+
+Week 2
+
+Started writing out potential epic stories and related user stories and pitched them to the team. Over the week, as a team, we started off with my initial stories and soon enough we had a lot of functionality narrowed down and refined. Once Micheal Wang had reviewed my set of user stories, they were migrated onto the JIRA backlog. Furthermore, I started developing a potential system schema for our application. Lastly, I personally set up the React frontend so as to make it easier for the rest of the team to get set up and running in less time.
+
+Week 3
+
+Made significant contributions to the Project Proporsal submission. Contributed to completing storyboards covering a total of 8 epic stories. Furthermore, was responsible for writing majority of the introduction section as well as the system architecture section of the project proposal. Both sections were reviewed by the team and approved. 
