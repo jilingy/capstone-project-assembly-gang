@@ -7,3 +7,4 @@ Week 2
 Set up Virtual environment. Downloaded all backend and frontend software. Refining user stories. Sorting out Proposal details and each members role. Have sorted out meeting/ standup times. Have yet to finish Proposal but getting there. By next week, Proposal will have been finished and backend coding should have started. 
 
 Week 3.
+We planned to finish the proposal and assign the first sprint user stories. We finished the proposal and assigned the user stories of the first sprint. We had some members busy with work and other courses but we managed to initiate our own to work to the best of our ability. I myself struggled with visualising the story boards but had tim and farhans as inspiration. Everything was finished with 2 hours to spare, i think we worked well as a group. In the next period, we should have finished the first sprint and started organising the second sprint and learnt about react and django
