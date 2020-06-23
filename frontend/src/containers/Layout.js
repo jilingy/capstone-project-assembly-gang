@@ -15,7 +15,7 @@ import {
 
 const { Header, Content, Footer, Sider } = Layout;
 
-class CustomLayout extends React.Component {
+export default class CustomLayout extends React.Component {
 
   render() {
     return (
@@ -68,8 +68,5 @@ class CustomLayout extends React.Component {
       </Layout>
     </Layout>
     )
+  }
 }
-  
-}
-
-export default CustomLayout;

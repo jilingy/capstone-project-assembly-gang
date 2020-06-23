@@ -3,7 +3,7 @@ import CustomCard from '../components/Card';
 import BookCover from '../images/book_cover.jpg';
 import { Button } from 'antd';
 
-class TestContainer extends React.Component {
+export default class TestContainer extends React.Component {
 
     constructor(props) {
         super(props);
@@ -41,6 +41,3 @@ class TestContainer extends React.Component {
         )
     }
 }
-
-
-export default TestContainer;

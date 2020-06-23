@@ -4,7 +4,7 @@ import BaseRouter from './routes';
 import CustomLayout from './containers/Layout';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-function App() {
+export default function App() {
   return (
     <div>
       <Router>
@@ -13,7 +13,5 @@ function App() {
         </CustomLayout>
       </Router>
     </div>
-  );
+  )
 }
-
-export default App;

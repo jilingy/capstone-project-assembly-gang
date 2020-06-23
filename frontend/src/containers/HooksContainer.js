@@ -12,8 +12,8 @@ function AddBookForm({addBook}) {
 
     useEffect(() => {
         // We use the useEffect hook to apply validation filters to the inputs
-        register({ name : 'bookTitle'} , { required: 'Please enter a book title!'})
-        register({ name : 'bookDesc' } , { required: 'Please enter a description for the book!'})
+        register({ name : 'bookTitle'} , { required: 'Please enter a book title!'});
+        register({ name : 'bookDesc' } , { required: 'Please enter a description for the book!'});
     } , [])
 
     const onSubmit = (data) => {
@@ -41,7 +41,7 @@ function AddBookForm({addBook}) {
                     borderRadius: 10 , 
                     marginTop   : 10, 
                     border      : '2px solid black', 
-                    width       : 400, 
+                    width       : 500, 
                     paddingTop  : 10 
                 }} 
                 onSubmit={handleSubmit(onSubmit)}>
@@ -49,7 +49,7 @@ function AddBookForm({addBook}) {
                     color                   : 'white', 
                     background              : '#1DA57A', 
                     borderBottom            : '2px solid black', 
-                    width                   : 397,
+                    width                   : 496,
                     position                : 'relative',
                     bottom                  : 10,
                     borderTopRightRadius    : 10 ,
@@ -70,7 +70,7 @@ function AddBookForm({addBook}) {
                 }}
                 />
                 <ErrorMessage errors={errors} name="bookTitle">
-                    {({ message }) => <Alert style={{ marginBottom: 10 }} message="Error" description={message} type="error" showIcon/>}
+                    {({ message }) => <Alert style={{ position: 'relative', bottom: 10, marginBottom: 10 }} message="Error" description={message} type="error" showIcon/>}
                 </ErrorMessage>
                 
                 <RHFInput as={
@@ -87,7 +87,7 @@ function AddBookForm({addBook}) {
                 }}
                 />
                 <ErrorMessage errors={errors} name="bookDesc">
-                    {({ message }) => <Alert style={{ marginBottom: 10 }} message="Error" description={message} type="error" showIcon/>}
+                    {({ message }) => <Alert style={{ position: 'relative', bottom: 10, marginBottom: 10 }} message="Error" description={message} type="error" showIcon/>}
                 </ErrorMessage>
                 
                 <RHFInput as={

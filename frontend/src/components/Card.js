@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Col, Row, Button } from 'antd';
 
-class CustomCard extends React.Component {
+export default class CustomCard extends React.Component {
 
     constructor(props) {
         super(props);
@@ -38,5 +38,3 @@ class CustomCard extends React.Component {
         )
     }
 }
-
-export default CustomCard;
