@@ -16,7 +16,7 @@ function AddBookForm({addBook}) {
         register({ name : 'bookDesc' } , { required: 'Please enter a description for the book!'});
     } , [])
 
-    const onSubmit = (data) => {
+    const onSubmit = (data , e) => {
         // After a form submit, we usually make an axios POST request to update
         // the backend. For the sake of simplicity, we only update our frontend.
         console.log(data);
@@ -28,6 +28,7 @@ function AddBookForm({addBook}) {
                 "img_url" : BookCover
             }
         )
+        reset({bookTitle : ""})
     }
 
     return (
@@ -113,16 +114,19 @@ export default function HooksContainer() {
 
     const [books, updateBooks] = useState([
         {
+            id: 1,
             title: "Book 1",
             desc: "Book 1 Description",
             img_url: BookCover,
           },
           {
+            id: 2,
             title: "Book 2",
             desc: "Book 2 Description",
             img_url: BookCover,
           },
           {
+            id: 3,
             title: "Book 3",
             desc: "Book 3 Description",
             img_url: BookCover,
