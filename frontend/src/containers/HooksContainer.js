@@ -8,7 +8,7 @@ import TextArea from 'antd/lib/input/TextArea';
 
 function AddBookForm({addBook}) {
     
-    const { handleSubmit, register, setValue, errors, reset } = useForm();
+    const { handleSubmit, register, setValue, errors, reset } = useForm({});
 
     useEffect(() => {
         // We use the useEffect hook to apply validation filters to the inputs
@@ -46,14 +46,14 @@ function AddBookForm({addBook}) {
                 }} 
                 onSubmit={handleSubmit(onSubmit)}>
                 <p style={{ 
-                    color                   : 'white', 
-                    background              : '#1DA57A', 
-                    borderBottom            : '2px solid black', 
-                    width                   : 496,
-                    position                : 'relative',
-                    bottom                  : 10,
-                    borderTopRightRadius    : 10 ,
-                    borderTopLeftRadius     : 10 , 
+                    color                : 'white', 
+                    background           : '#1DA57A', 
+                    borderBottom         : '2px solid black', 
+                    width                : 496,
+                    position             : 'relative',
+                    bottom               : 10,
+                    borderTopRightRadius : 10 ,
+                    borderTopLeftRadius  : 10 , 
                 }}>Book Form</p>
                 
                 <RHFInput as={
@@ -95,7 +95,7 @@ function AddBookForm({addBook}) {
                         <Button htmlType="submit" type="primary">+ Add Book</Button>
                     </Form.Item>
                 }
-                name="bookDesc"
+                name="formSubmit"
                 register={register}
                 setValue={setValue}
                 />

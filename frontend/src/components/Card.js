@@ -18,7 +18,7 @@ export default class CustomCard extends React.Component {
                 {
                     this.props.booksData.map(book => {
                         return (
-                            <Col>
+                            <Col key={book.id}>
                                 <Card 
                                     title={book.title} 
                                     bordered={false}
