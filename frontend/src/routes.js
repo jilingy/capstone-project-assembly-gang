@@ -5,7 +5,8 @@ import HooksContainer from './containers/HooksContainer';
 
 const BaseRouter = () => (
   <div>
-    <Route exact path='/' component={HooksContainer}/>
+    <Route exact path='/' component={TestContainer}/>
+    <Route exact path='/books' component={HooksContainer}/>
   </div>
 );
 

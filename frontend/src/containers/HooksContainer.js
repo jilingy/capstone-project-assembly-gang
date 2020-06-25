@@ -1,22 +1,14 @@
-import React, { useState , useEffect } from 'react';
+import React, { useState } from 'react';
 import CustomCard from '../components/Card';
 import BookCover from '../images/book_cover.jpg';
-import { useForm, ErrorMessage } from 'react-hook-form';
-import { Alert, Form, Input, Button } from 'antd';
-import { RHFInput } from 'react-hook-form-input';
-import TextArea from 'antd/lib/input/TextArea';
+import { useForm, Controller } from 'react-hook-form';
+import { Form, Input, Button } from 'antd';
 
 function AddBookForm({addBook}) {
     
-    const { handleSubmit, register, setValue, errors, reset } = useForm({});
+    const { handleSubmit, errors, reset, control } = useForm({});
 
-    useEffect(() => {
-        // We use the useEffect hook to apply validation filters to the inputs
-        register({ name : 'bookTitle'} , { required: 'Please enter a book title!'});
-        register({ name : 'bookDesc' } , { required: 'Please enter a description for the book!'});
-    } , [])
-
-    const onSubmit = (data , e) => {
+    const onSubmit = (data) => {
         // After a form submit, we usually make an axios POST request to update
         // the backend. For the sake of simplicity, we only update our frontend.
         console.log(data);
@@ -28,7 +20,6 @@ function AddBookForm({addBook}) {
                 "img_url" : BookCover
             }
         )
-        reset({bookTitle : ""})
     }
 
     return (
@@ -39,12 +30,14 @@ function AddBookForm({addBook}) {
                 Antd form components. Inspect the relevant code.
             </p>
             <form style={{ 
-                    borderRadius: 10 , 
-                    marginTop   : 10, 
-                    border      : '2px solid black', 
-                    width       : 500, 
-                    paddingTop  : 10 
+                    borderRadius : 10 , 
+                    marginTop    : 10, 
+                    border       : '2px solid black', 
+                    width        : 500, 
+                    paddingTop   : 10 ,
+                    paddingBottom: 10,
                 }} 
+                className="bookForm"
                 onSubmit={handleSubmit(onSubmit)}>
                 <p style={{ 
                     color                : 'white', 
@@ -57,49 +50,46 @@ function AddBookForm({addBook}) {
                     borderTopLeftRadius  : 10 , 
                 }}>Book Form</p>
                 
-                <RHFInput as={
-                    <Form.Item label="Book Title: ">
-                        <Input></Input>
+                <Controller
+                    name="bookTitle"
+                    control={control}
+                    rules={{ required: "Please enter a book title" }}
+                    as={
+                    <Form.Item
+                        label="Book Title"
+                        validateStatus={errors.bookTitle && "error"}
+                        help={errors.bookTitle && errors.bookTitle.message}
+                    >
+                        <Input />
                     </Form.Item>
-                }
-                name="bookTitle"
-                register={register}
-                setValue={setValue}
-                style={{ 
-                    paddingLeft  : 20 , 
-                    paddingRight : 20 
-                }}
+                    }
+                    style={{ 
+                        paddingLeft  : 20 , 
+                        paddingRight : 20 
+                    }}
                 />
-                <ErrorMessage errors={errors} name="bookTitle">
-                    {({ message }) => <Alert style={{ position: 'relative', bottom: 10, marginBottom: 10 }} message="Error" description={message} type="error" showIcon/>}
-                </ErrorMessage>
+
+                <Controller
+                    name="bookDesc"
+                    control={control}
+                    rules={{ required: "Please enter a description for the book" }}
+                    as={
+                    <Form.Item
+                        label="Book Description"
+                        validateStatus={errors.bookDesc && "error"}
+                        help={errors.bookDesc && errors.bookDesc.message}
+                    >
+                        <Input />
+                    </Form.Item>
+                    }
+                    style={{ 
+                        paddingLeft  : 20 , 
+                        paddingRight : 20 
+                    }}
+                />
+
+                <Button type="primary" htmlType="submit" onClick={reset}>Submit</Button>
                 
-                <RHFInput as={
-                    <Form.Item label="Book Description: ">
-                        <TextArea></TextArea>
-                    </Form.Item>
-                }
-                name="bookDesc"
-                register={register}
-                setValue={setValue}
-                style={{ 
-                    paddingLeft  : 20, 
-                    paddingRight : 20 
-                }}
-                />
-                <ErrorMessage errors={errors} name="bookDesc">
-                    {({ message }) => <Alert style={{ position: 'relative', bottom: 10, marginBottom: 10 }} message="Error" description={message} type="error" showIcon/>}
-                </ErrorMessage>
-                
-                <RHFInput as={
-                    <Form.Item>
-                        <Button htmlType="submit" type="primary">+ Add Book</Button>
-                    </Form.Item>
-                }
-                name="formSubmit"
-                register={register}
-                setValue={setValue}
-                />
             </form>
         </div>
     )
