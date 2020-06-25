@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import CustomCard from '../components/Card';
 import BookCover from '../images/book_cover.jpg';
 import { useForm, Controller } from 'react-hook-form';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, Popover } from 'antd';
 
 function AddBookForm({addBook}) {
     
@@ -24,73 +24,57 @@ function AddBookForm({addBook}) {
 
     return (
         <div>
-            <p>
-                The form below example of a standard form implemented using React Hooks. We make 
-                use of a handy wrapper utility called 'RHFInput' that allows us to use hooks with 
-                Antd form components. Inspect the relevant code.
-            </p>
-            <form style={{ 
-                    borderRadius : 10 , 
-                    marginTop    : 10, 
-                    border       : '2px solid black', 
-                    width        : 500, 
-                    paddingTop   : 10 ,
-                    paddingBottom: 10,
-                }} 
-                className="bookForm"
-                onSubmit={handleSubmit(onSubmit)}>
-                <p style={{ 
-                    color                : 'white', 
-                    background           : '#1DA57A', 
-                    borderBottom         : '2px solid black', 
-                    width                : 496,
-                    position             : 'relative',
-                    bottom               : 10,
-                    borderTopRightRadius : 10 ,
-                    borderTopLeftRadius  : 10 , 
-                }}>Book Form</p>
-                
-                <Controller
-                    name="bookTitle"
-                    control={control}
-                    rules={{ required: "Please enter a book title" }}
-                    as={
-                    <Form.Item
-                        label="Book Title"
-                        validateStatus={errors.bookTitle && "error"}
-                        help={errors.bookTitle && errors.bookTitle.message}
-                    >
-                        <Input />
-                    </Form.Item>
-                    }
-                    style={{ 
-                        paddingLeft  : 20 , 
-                        paddingRight : 20 
-                    }}
-                />
-
-                <Controller
-                    name="bookDesc"
-                    control={control}
-                    rules={{ required: "Please enter a description for the book" }}
-                    as={
-                    <Form.Item
-                        label="Book Description"
-                        validateStatus={errors.bookDesc && "error"}
-                        help={errors.bookDesc && errors.bookDesc.message}
-                    >
-                        <Input />
-                    </Form.Item>
-                    }
-                    style={{ 
-                        paddingLeft  : 20 , 
-                        paddingRight : 20 
-                    }}
-                />
-
-                <Button type="primary" htmlType="submit" onClick={reset}>Submit</Button>
-                
-            </form>
+            <Popover
+                content={
+                    <form 
+                    className="bookForm"
+                    onSubmit={handleSubmit(onSubmit)}>
+                    <Controller
+                        name="bookTitle"
+                        control={control}
+                        rules={{ required: "Please enter a book title" }}
+                        as={
+                        <Form.Item
+                            label="Book Title"
+                            validateStatus={errors.bookTitle && "error"}
+                            help={errors.bookTitle && errors.bookTitle.message}
+                        >
+                            <Input />
+                        </Form.Item>
+                        }
+                        style={{ 
+                            paddingLeft  : 20 , 
+                            paddingRight : 20 
+                        }}
+                    />
+    
+                    <Controller
+                        name="bookDesc"
+                        control={control}
+                        rules={{ required: "Please enter a description for the book" }}
+                        as={
+                        <Form.Item
+                            label="Book Description"
+                            validateStatus={errors.bookDesc && "error"}
+                            help={errors.bookDesc && errors.bookDesc.message}
+                        >
+                            <Input />
+                        </Form.Item>
+                        }
+                        style={{ 
+                            paddingLeft  : 20 , 
+                            paddingRight : 20 
+                        }}
+                    />
+                    <Button type="primary" htmlType="submit" onClick={reset}>Submit</Button>
+                    
+                </form>
+                }
+                title="Book Form"
+                trigger="click"
+            >
+                <Button type="primary" style={{ marginTop: 15 }}>+ Add Book</Button>
+            </Popover>
         </div>
     )
 }
