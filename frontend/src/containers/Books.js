@@ -84,7 +84,7 @@ function AddBookForm({addBook}) {
                 title="Book Form"
                 trigger="click"
             >
-                <Button type="primary" style={{ marginTop: 15, left: 790, bottom: 440 }}>+ Add Book</Button>
+                <Button type="primary" style={{ marginTop: 15, left: 790, bottom: 475 }}>+ Add Book</Button>
             </Popover>
         </div>
     )
@@ -125,6 +125,11 @@ export default function Books() {
 
     return (
         <div>
+            <h1 style={{
+                position: 'relative',
+                right: 680,
+                bottom: 25,
+            }}>Main Collection</h1>
             {/* We pass the 'books' array as a prop to the 'CustomCard' component */}
             <CustomCard booksData={books}/>
             {/* We pass the 'addBook' function as a prop to the 'AddBookForm' component */}

@@ -1,20 +1,10 @@
 import React from 'react';
 
-export default class Home extends React.Component {
+export default function Hom() {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            
-        }
-    }
-
-    render() {
-
-        return (
-            <div>
-                <p>This is the home page!!!</p>
-            </div>
-        )
-    }
+    return (
+        <div>
+            <p>This is the home page!!!</p>
+        </div>
+    )
 }
