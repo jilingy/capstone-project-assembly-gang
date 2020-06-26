@@ -5,8 +5,17 @@ import { useForm, Controller } from 'react-hook-form';
 import { Form, Input, Button, Popover } from 'antd';
 
 function AddBookForm({addBook}) {
-    
-    const { handleSubmit, errors, reset, control } = useForm({});
+
+    const { handleSubmit, errors, reset, control, defaultValues } = useForm({
+        defaultValues: {
+            "bookTitle" : '',
+            "bookDesc" : '',
+        },
+    });
+
+    // useEffect(() => {
+    //     reset({defaultValues});
+    // } , [defaultValues])
 
     const onSubmit = (data) => {
         // After a form submit, we usually make an axios POST request to update
@@ -25,6 +34,8 @@ function AddBookForm({addBook}) {
     return (
         <div>
             <Popover
+                placement="topLeft"
+                style={{color: '#1DA57A'}}
                 content={
                     <form 
                     className="bookForm"
@@ -66,20 +77,20 @@ function AddBookForm({addBook}) {
                             paddingRight : 20 
                         }}
                     />
-                    <Button type="primary" htmlType="submit" onClick={reset}>Submit</Button>
+                    <Button type="primary" htmlType="submit">Submit</Button>
                     
                 </form>
                 }
                 title="Book Form"
                 trigger="click"
             >
-                <Button type="primary" style={{ marginTop: 15 }}>+ Add Book</Button>
+                <Button type="primary" style={{ marginTop: 15, left: 790, bottom: 440 }}>+ Add Book</Button>
             </Popover>
         </div>
     )
 }
 
-export default function HooksContainer() {
+export default function Books() {
 
     // Normally what'd we do here is call the componentDidMount lifecycle 
     // method which makes an axios GET request and fetches data

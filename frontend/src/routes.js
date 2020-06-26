@@ -1,12 +1,12 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import TestContainer from './containers/TestContainer';
-import HooksContainer from './containers/HooksContainer';
+import Home from './containers/Home';
+import Books from './containers/Books';
 
 const BaseRouter = () => (
   <div>
-    <Route exact path='/' component={TestContainer}/>
-    <Route exact path='/books' component={HooksContainer}/>
+    <Route exact path='/' component={Home}/>
+    <Route exact path='/books' component={Books}/>
   </div>
 );
 

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class TestContainer extends React.Component {
+export default class Home extends React.Component {
 
     constructor(props) {
         super(props);
@@ -13,7 +13,7 @@ export default class TestContainer extends React.Component {
 
         return (
             <div>
-                <p>Hello world! This paragraph tag is actually contained within another component!</p>
+                <p>This is the home page!!!</p>
             </div>
         )
     }

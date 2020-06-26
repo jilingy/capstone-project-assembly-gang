@@ -13,7 +13,6 @@ export default class CustomCard extends React.Component {
     render() {
         return (
             <div className="site-card-wrapper">
-                <p>Below is an example of a customisable Antd 'Card' component that has multiple parameters that can be attached to it</p>
                 <Row gutter={16}>
                 {
                     this.props.booksData.map(book => {

@@ -43,10 +43,10 @@ export default class CustomLayout extends React.Component {
         <div className="logo" />
         <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
           <Menu.Item key="1" icon={<UserOutlined />}>
-            <Link to="/books">Books</Link>
+            <Link to="/">Home</Link>
           </Menu.Item>
           <Menu.Item key="2" icon={<VideoCameraOutlined />}>
-            nav 2
+          <Link to="/books">Books</Link>
           </Menu.Item>
           <Menu.Item key="3" icon={<UploadOutlined />}>
             nav 3
@@ -86,7 +86,6 @@ export default class CustomLayout extends React.Component {
         </Header>
         <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
           <div className="site-layout-background" style={{ padding: 24, textAlign: 'center' }}>
-            You can include more components inside here!
             {this.props.children}
           </div>
         </Content>
