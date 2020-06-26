@@ -13,10 +13,6 @@ function AddBookForm({addBook}) {
         },
     });
 
-    // useEffect(() => {
-    //     reset({defaultValues});
-    // } , [defaultValues])
-
     const onSubmit = (data) => {
         // After a form submit, we usually make an axios POST request to update
         // the backend. For the sake of simplicity, we only update our frontend.
@@ -96,6 +92,11 @@ export default function Books() {
     // method which makes an axios GET request and fetches data
     // from the backend and uses it to update the state of the component
     // But for the sake of simplicity, we've hard-coded some book data here.
+
+    // UPDATE: Since we've decided to use hooks, disregard the above.
+    // All lifecycle methods have equivalent hooks. I suggest the team 
+    // read up the Hooks API doc in the React documentation to fully 
+    // understand how hooks replace lifecycle methods.
 
     const [books, updateBooks] = useState([
         {
