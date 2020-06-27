@@ -28,7 +28,7 @@ export default function CustomLayout(props) {
           <Link to="/">Home</Link>
         </Menu.Item>
         <Menu.Item key="2" icon={<BookOutlined />}>
-        <Link to="/books">Main Collection</Link>
+          <Link to="/books">Main Collection</Link>
         </Menu.Item>
       </Menu>
     </Sider>

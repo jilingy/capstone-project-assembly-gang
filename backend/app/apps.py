@@ -1,5 +1,4 @@
 from django.apps import AppConfig
 
-
-class ReadrecommendappConfig(AppConfig):
-    name = 'ReadRecommendApp'
+class Appconfig(AppConfig):
+    name = 'app'
