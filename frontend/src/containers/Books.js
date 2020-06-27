@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CustomCard from '../components/Card';
 import BookCover from '../images/book_cover.jpg';
 import { useForm, Controller } from 'react-hook-form';
 import { Form, Input, Button, Popover } from 'antd';
+import axios from 'axios';
 
 function AddBookForm({addBook}) {
 
@@ -20,9 +21,13 @@ function AddBookForm({addBook}) {
         if(!data) return;
         addBook(
             {
-                "title"   : data.bookTitle , 
-                "desc"    : data.bookDesc, 
-                "img_url" : BookCover
+                book_details: [
+                    {
+                        "title"       : data.bookTitle , 
+                        "description" : data.bookDesc, 
+                        "image"       : BookCover
+                    }
+                ]
             }
         )
     }
@@ -80,7 +85,7 @@ function AddBookForm({addBook}) {
                 title="Book Form"
                 trigger="click"
             >
-                <Button type="primary" style={{ marginTop: 15, left: 790, bottom: 475 }}>+ Add Book</Button>
+                <Button type="primary" style={{ right: 475, bottom: 73, position: 'relative' }}>+ Add Book</Button>
             </Popover>
         </div>
     )
@@ -98,26 +103,22 @@ export default function Books() {
     // read up the Hooks API doc in the React documentation to fully 
     // understand how hooks replace lifecycle methods.
 
-    const [books, updateBooks] = useState([
-        {
-            id: 1,
-            title: "Book 1",
-            desc: "Book 1 Description",
-            img_url: BookCover,
-          },
-          {
-            id: 2,
-            title: "Book 2",
-            desc: "Book 2 Description",
-            img_url: BookCover,
-          },
-          {
-            id: 3,
-            title: "Book 3",
-            desc: "Book 3 Description",
-            img_url: BookCover,
-          },
-    ])
+    const [books, updateBooks] = useState([])
+
+    const params = {
+        'list': 'hardcover-nonfiction',
+        'api-key': 'Ly6oG7blBi7pwEcKjxqH5O0euRQG2z92',
+      }
+
+    useEffect(() => {
+        const fetchData = async() => {
+            const result = await axios.get(
+                'https://api.nytimes.com/svc/books/v3/lists.json', { params }
+            );
+            updateBooks(result.data.results)
+        }
+        fetchData();
+      } , []);
 
     const addBook = (book) => {
         const newBooks = [...books, book]
@@ -128,13 +129,13 @@ export default function Books() {
         <div>
             <h1 style={{
                 position: 'relative',
-                right: 680,
+                right: 675,
                 bottom: 25,
             }}>Main Collection</h1>
-            {/* We pass the 'books' array as a prop to the 'CustomCard' component */}
-            <CustomCard booksData={books}/>
             {/* We pass the 'addBook' function as a prop to the 'AddBookForm' component */}
             <AddBookForm addBook={addBook}/>
+            {/* We pass the 'books' array as a prop to the 'CustomCard' component */}
+            <CustomCard booksData={books}/>
         </div>
     )
 
