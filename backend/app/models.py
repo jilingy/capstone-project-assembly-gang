@@ -68,7 +68,7 @@ class Books(models.Model):
     ]
 
     book_title = models.CharField(max_length=200, default="book_title")
-    book_synopsis = models.TextField("default_book_synopsis")
+    book_synopsis = models.TextField(default="default_book_synopsis")
     book_publisher = models.CharField(max_length=200, default="default_publisher")
     publication_date = models.DateField(default=date.today)
     genre = models.CharField(max_length=50, choices=GENRES, default=ADVENTURE)
