@@ -36,7 +36,6 @@ function AddBookForm({addBook}) {
         <div>
             <Popover
                 placement="topLeft"
-                style={{color: '#1DA57A'}}
                 content={
                     <form 
                     className="bookForm"

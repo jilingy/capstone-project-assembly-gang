@@ -14,9 +14,9 @@ export default function CustomCard(props) {
                         <Col key={index}>
                             <Card 
                                 title={book.book_details[0].title} 
-                                bordered={false}
+                                bordered={true}
                                 cover={<img alt="example" src={BookCover} />}
-                                style={{ width: 300, height: 590}}
+                                style={{ width: 300, height: 590, background: '#cfcdc6'}}
                                 hoverable
                             >
                                 <p><b><i>{book.book_details[0].author}</i></b></p>
