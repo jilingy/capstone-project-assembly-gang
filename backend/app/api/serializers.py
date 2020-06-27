@@ -86,7 +86,7 @@ class CollectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Collections
         fields = (
-            'id', 'collection_type', 'privacy', 
+            'id', 'collection_type', 'is_private', 
             'description', 'collection_name', 
             'collection_list',
         )
