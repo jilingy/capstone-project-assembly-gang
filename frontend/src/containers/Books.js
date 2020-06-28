@@ -5,6 +5,8 @@ import { useForm, Controller } from 'react-hook-form';
 import { Form, Input, Button, Popover } from 'antd';
 import axios from 'axios';
 
+const { Search } = Input;
+
 function AddBookForm({addBook}) {
 
     const { handleSubmit, errors, reset, control, defaultValues } = useForm({
@@ -37,7 +39,8 @@ function AddBookForm({addBook}) {
             <Popover
                 placement="topLeft"
                 content={
-                    <form 
+                    <form
+                    style={{ width: 500 }} 
                     className="bookForm"
                     onSubmit={handleSubmit(onSubmit)}>
                     <Controller
@@ -78,13 +81,13 @@ function AddBookForm({addBook}) {
                         }}
                     />
                     <Button type="primary" htmlType="submit">Submit</Button>
-                    
-                </form>
-                }
-                title="Book Form"
-                trigger="click"
-            >
-                <Button type="primary" style={{ right: 475, bottom: 73, position: 'relative' }}>+ Add Book</Button>
+                    </form>
+                    }
+                    title="Book Form"
+                    trigger="click"
+                    arrowPointAtCenter={true}
+                    >
+                {/* <Button type="primary" style={{ right: 475, bottom: 73, position: 'relative' }}>+ Add Book</Button> */}
             </Popover>
         </div>
     )
@@ -104,17 +107,10 @@ export default function Books() {
 
     const [books, updateBooks] = useState([])
 
-    const params = {
-        'list': 'hardcover-nonfiction',
-        'api-key': 'Ly6oG7blBi7pwEcKjxqH5O0euRQG2z92',
-      }
-
     useEffect(() => {
         const fetchData = async() => {
-            const result = await axios.get(
-                'https://api.nytimes.com/svc/books/v3/lists.json', { params }
-            );
-            updateBooks(result.data.results)
+            const result = await axios.get('http://127.0.0.1:8000/api/books/');
+            updateBooks(result.data)
         }
         fetchData();
       } , []);
@@ -131,6 +127,17 @@ export default function Books() {
                 right: 675,
                 bottom: 25,
             }}>Main Collection</h1>
+            <Search 
+                placeholder="Search book by title, author, genre..." 
+                onSearch={value => console.log(value)} 
+                enterButton 
+                style={{ 
+                    position: 'relative',
+                    width: 535, 
+                    right: 260,
+                    bottom: 73,
+                }}
+            />
             {/* We pass the 'addBook' function as a prop to the 'AddBookForm' component */}
             <AddBookForm addBook={addBook}/>
             {/* We pass the 'books' array as a prop to the 'CustomCard' component */}
