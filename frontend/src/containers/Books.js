@@ -112,13 +112,14 @@ export default function Books() {
     // hooks
 
     const [books, updateBooks] = useState([])
+    const [ranSearch, setRanSearch] = useState(false)
 
     useEffect(() => {
         const fetchData = async() => {
             const result = await axios.get('http://127.0.0.1:8000/api/books/');
             var filtered = result.data.filter(book => {
                 // Explicitly grab only some of books to add to 'Main Collection'
-                if(book.id === 1 || book.id == 2 || book.id == 3) {
+                if(book.id === 5 || book.id === 2 || book.id === 13) {
                     return book;
                 }
             })
@@ -132,28 +133,59 @@ export default function Books() {
         updateBooks(newBooks);
     }   
 
+    const execSearch = (query, flag) => {
+        if(flag === true) {
+            setRanSearch(true)
+            const fetchSearchData = async() => {
+                const result = await axios.get('http://127.0.0.1:8000/api/books/');
+                updateBooks(result.data);
+            }
+            fetchSearchData();
+        } else {
+            setRanSearch(false)
+            const fetchData = async() => {
+                const result = await axios.get('http://127.0.0.1:8000/api/books/');
+                var filtered = result.data.filter(book => {
+                    // Explicitly grab only some of books to add to 'Main Collection'
+                    if(book.id === 5 || book.id === 2 || book.id === 13) {
+                        return book;
+                    }
+                })
+                updateBooks(filtered);
+            }
+            fetchData();
+        }
+    }
+
     return (
         <div>
             <h1 style={{
                 position: 'relative',
                 right: 675,
                 bottom: 25,
-            }}>Main Collection</h1>
+            }}>{ranSearch ? 'Search Results' : 'Main Collection'}</h1>
             <Search 
                 placeholder="Search book by title, author, genre..." 
-                onSearch={value => console.log(value)} 
+                onSearch={value => execSearch(value , true)} 
                 enterButton 
                 style={{ 
                     position: 'relative',
                     width: 535, 
-                    right: 260,
+                    right: 225,
                     bottom: 73,
                 }}
             />
+            <Button style={{
+                bottom: 73,
+                right: 220,
+            }} 
+            type="primary"
+            onClick={value => execSearch(value , false)}
+            >Cancel</Button>
             {/* We pass the 'addBook' function as a prop to the 'AddBookForm' component */}
             <AddBookForm addBook={addBook}/>
             {/* We pass the 'books' array as a prop to the 'CustomCard' component */}
-            <CustomCard booksData={books}/>
+            <CustomCard booksData={books} ranSearch={ranSearch}/>
         </div>
     )
 

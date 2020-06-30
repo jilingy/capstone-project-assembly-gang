@@ -17,6 +17,7 @@ export default function CustomCard(props) {
                                 cover={<img alt="example" src={BookCover} />}
                                 style={{ width: 300, height: 680, background: '#cfcdc6'}}
                                 hoverable
+                                extra={props.ranSearch ? <Button type="primary">+ Add</Button> : null}
                             >
                                 <p><b>{book.book_publisher}</b></p>
                                 <p><b>{book.publication_date}</b></p>
