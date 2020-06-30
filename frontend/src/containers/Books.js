@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import CustomCard from '../components/Card';
-import BookCover from '../images/book_cover.jpg';
-import { useForm, Controller } from 'react-hook-form';
-import { Form, Input, Button, Popover } from 'antd';
+import { Input, Button } from 'antd';
 import axios from 'axios';
 
 const { Search } = Input;
@@ -35,6 +33,8 @@ export default function Books() {
                 // Explicitly grab only some of books to add to 'Main Collection'
                 if(book.id === 5 || book.id === 2 || book.id === 13) {
                     return book;
+                } else {
+                    return null;
                 }
             })
             updateBooks(filtered);
@@ -58,6 +58,8 @@ export default function Books() {
                     // Explicitly grab only some of books to add to 'Main Collection'
                     if(book.id === 5 || book.id === 2 || book.id === 13) {
                         return book;
+                    } else {
+                        return null;
                     }
                 })
                 updateBooks(filtered);

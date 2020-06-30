@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input, Layout, Menu, Button } from 'antd';
+import { Layout, Menu, Button } from 'antd';
 import { Link } from 'react-router-dom';
 
 import {
@@ -7,8 +7,7 @@ import {
   BookOutlined,
 } from '@ant-design/icons';
 
-const { Header, Content, Footer, Sider } = Layout;
-const { Search } = Input;
+const { Header, Content, Sider } = Layout;
 
 export default function CustomLayout(props) {
 
@@ -36,16 +35,6 @@ export default function CustomLayout(props) {
       <Header className="site-layout-background" style={{ padding: 0 }}>
         <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
           <Button type="primary" style={{ left: 1615 }}><Link to="/logout">Logout</Link></Button>
-            {/* <Search 
-              placeholder="Search book by title, author, genre..." 
-              onSearch={value => console.log(value)} 
-              enterButton 
-              style={{ 
-                width: 535, 
-                position: 'relative', 
-                top: 17, 
-                right: 70
-              }}/> */}
         </Menu>
       </Header>
       <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
