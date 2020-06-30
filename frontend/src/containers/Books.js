@@ -179,7 +179,7 @@ export default function Books() {
                 bottom: 73,
                 right: 220,
             }} 
-            type="primary"
+            type={ranSearch ? "danger" : "primary"}
             onClick={value => execSearch(value , false)}
             >Cancel</Button>
             {/* We pass the 'addBook' function as a prop to the 'AddBookForm' component */}
