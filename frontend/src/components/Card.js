@@ -1,7 +1,6 @@
 import React from 'react';
 import { Card, Col, Row, Button } from 'antd';
 import BookCover from '../images/book_cover.jpg';
-import axios from 'axios';
 
 export default function CustomCard(props) {
 

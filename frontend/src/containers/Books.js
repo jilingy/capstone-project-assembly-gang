@@ -105,12 +105,24 @@ export default function Books() {
     // read up the Hooks API doc in the React documentation to fully 
     // understand how hooks replace lifecycle methods.
 
+    // UPDATE (26th June): As can be seen below, I've populated our 
+    // backend with some dummy book data. Previously we made an axios
+    // request to an external API, however, the code below has been
+    // refactored to make a axios request to our API backend using 
+    // hooks
+
     const [books, updateBooks] = useState([])
 
     useEffect(() => {
         const fetchData = async() => {
             const result = await axios.get('http://127.0.0.1:8000/api/books/');
-            updateBooks(result.data)
+            var filtered = result.data.filter(book => {
+                // Explicitly grab only some of books to add to 'Main Collection'
+                if(book.id === 1 || book.id == 2 || book.id == 3) {
+                    return book;
+                }
+            })
+            updateBooks(filtered);
         }
         fetchData();
       } , []);

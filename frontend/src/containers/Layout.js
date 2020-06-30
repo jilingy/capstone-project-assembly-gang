@@ -28,7 +28,7 @@ export default function CustomLayout(props) {
           <Link to="/">Home</Link>
         </Menu.Item>
         <Menu.Item key="2" icon={<BookOutlined />}>
-          <Link to="/books">Main Collection</Link>
+          <Link to="/col_list">My Book Collections</Link>
         </Menu.Item>
       </Menu>
     </Sider>
@@ -53,7 +53,6 @@ export default function CustomLayout(props) {
           {props.children}
         </div>
       </Content>
-      <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
     </Layout>
   </Layout>
   )
