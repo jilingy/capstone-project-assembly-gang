@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { List, Avatar } from 'antd';
 import { Link } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
-import { Form, Input, Button, Popover } from 'antd';
+import { Form, Input, Button, Popover, Table } from 'antd';
 import CollectionListBookCover from '../images/books.svg';
 
 function AddCollectionForm({addCollection}) {
@@ -27,9 +27,9 @@ function AddCollectionForm({addCollection}) {
         if(!data) return;
         addCollection(
             {
-                "title"       : data.collectionTitle, 
-                "description" : data.collectionDesc, 
-                "image"       : CollectionListBookCover,
+                "collection_name" : data.collectionTitle, 
+                "collection_desc" : data.collectionDesc, 
+                "image"           : CollectionListBookCover,
             }
         )
     }
@@ -100,14 +100,42 @@ export default function CollectionList() {
 
     const [collections, updateCollections] = useState([
         {
-            title: 'Main Collection',
-            description: 'Default list provided by the platform to all users',
+            key: 1,
+            collection_name: 'Main Collection',
+            collection_desc: 'Default list provided by the platform to all users',
         },
         {
-            title: 'Finished Collection',
-            description: "List of books marked 'Read' by user",
+            key: 2,
+            collection_name: 'Finished Collection',
+            collection_desc: "List of books marked 'Read' by user",
         }
     ]);
+
+    const columns = [
+        {
+            title: 'Collection Name',
+            dataIndex: 'collection_name',
+            key: 'collection_name',
+            align: "center",
+            render: collection_name => <p><b>{collection_name}</b></p>
+        },
+        {
+            title: 'Collection Description',
+            dataIndex: 'collection_desc',
+            key: 'collection_desc',
+        },
+        {
+            title: 'Actions',
+            key: 'action',
+            dataIndex: 'action',
+            render: concern =>
+              (
+                <div>
+                  <Button type="primary"><Link to="/books">View Collection</Link></Button>
+                </div>
+              )
+          }
+    ]
 
     const addCollection = (collection) => {
         const newCollection = [...collections, collection]
@@ -123,21 +151,7 @@ export default function CollectionList() {
             }}>My Book Collections</h1>
             {/* We pass the 'addBook' function as a prop to the 'AddBookForm' component */}
             <AddCollectionForm addCollection={addCollection}/>
-            <List
-                itemLayout="horizontal"
-                dataSource={collections}
-                size="small"
-                layout="vertical"
-                renderItem={item => (
-                    <List.Item>
-                        <List.Item.Meta
-                            avatar={<Avatar src={CollectionListBookCover} />}
-                            title={<Link to="/books">{item.title}</Link>}
-                            description={item.description}
-                        />
-                    </List.Item>
-                )}
-            />
+            <Table style={{ position: 'relative', bottom: 45, right:17, border: '2px solid black'}} dataSource={collections} columns={columns} />
         </div>
     )
 
