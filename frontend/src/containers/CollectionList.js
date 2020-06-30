@@ -7,12 +7,18 @@ import CollectionListBookCover from '../images/books.svg';
 
 function AddCollectionForm({addCollection}) {
 
+    const [visible, hideForm] = useState(false);
+
     const { handleSubmit, errors, reset, control, defaultValues } = useForm({
         defaultValues: {
             "collectionTitle" : '',
             "collectionDesc" : '',
         },
     });
+
+    const handleVisibleChange = visible => {
+        hideForm(visible)
+    }
 
     const onSubmit = (data) => {
         // After a form submit, we usually make an axios POST request to update
@@ -62,9 +68,9 @@ function AddCollectionForm({addCollection}) {
                         rules={{ required: "Please enter a description for the collection" }}
                         as={
                         <Form.Item
-                            label="Book Description"
-                            validateStatus={errors.bookDesc && "error"}
-                            help={errors.bookDesc && errors.bookDesc.message}
+                            label="Collection Description"
+                            validateStatus={errors.collectionDesc && "error"}
+                            help={errors.collectionDesc && errors.collectionDesc.message}
                         >
                             <Input />
                         </Form.Item>
@@ -75,11 +81,14 @@ function AddCollectionForm({addCollection}) {
                         }}
                     />
                     <Button type="primary" htmlType="submit">Submit</Button>
+                    <Button type="danger" onClick={() => hideForm(false)} style={{ left: 4 }}>Cancel</Button>
                     </form>
                     }
                     title="Create New Collection"
                     trigger="click"
                     arrowPointAtCenter={true}
+                    visible={visible}
+                    onVisibleChange={handleVisibleChange}
                     >
                 <Button type="primary" style={{ left: 770, bottom: 80, position: 'relative' }}>+ Add Collection</Button>
             </Popover>
