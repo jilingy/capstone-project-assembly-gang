@@ -7,92 +7,6 @@ import axios from 'axios';
 
 const { Search } = Input;
 
-function AddBookForm({addBook}) {
-
-    const { handleSubmit, errors, reset, control, defaultValues } = useForm({
-        defaultValues: {
-            "bookTitle" : '',
-            "bookDesc" : '',
-        },
-    });
-
-    const onSubmit = (data) => {
-        // After a form submit, we usually make an axios POST request to update
-        // the backend. For the sake of simplicity, we only update our frontend.
-        console.log(data);
-        if(!data) return;
-        addBook(
-            {
-                book_details: [
-                    {
-                        "title"       : data.bookTitle , 
-                        "description" : data.bookDesc, 
-                        "image"       : BookCover
-                    }
-                ]
-            }
-        )
-    }
-
-    return (
-        <div>
-            <Popover
-                placement="topLeft"
-                content={
-                    <form
-                    style={{ width: 500 }} 
-                    className="bookForm"
-                    onSubmit={handleSubmit(onSubmit)}>
-                    <Controller
-                        name="bookTitle"
-                        control={control}
-                        rules={{ required: "Please enter a book title" }}
-                        as={
-                        <Form.Item
-                            label="Book Title"
-                            validateStatus={errors.bookTitle && "error"}
-                            help={errors.bookTitle && errors.bookTitle.message}
-                        >
-                            <Input />
-                        </Form.Item>
-                        }
-                        style={{ 
-                            paddingLeft  : 20 , 
-                            paddingRight : 20 
-                        }}
-                    />
-    
-                    <Controller
-                        name="bookDesc"
-                        control={control}
-                        rules={{ required: "Please enter a description for the book" }}
-                        as={
-                        <Form.Item
-                            label="Book Description"
-                            validateStatus={errors.bookDesc && "error"}
-                            help={errors.bookDesc && errors.bookDesc.message}
-                        >
-                            <Input />
-                        </Form.Item>
-                        }
-                        style={{ 
-                            paddingLeft  : 20 , 
-                            paddingRight : 20 
-                        }}
-                    />
-                    <Button type="primary" htmlType="submit">Submit</Button>
-                    </form>
-                    }
-                    title="Book Form"
-                    trigger="click"
-                    arrowPointAtCenter={true}
-                    >
-                {/* <Button type="primary" style={{ right: 475, bottom: 73, position: 'relative' }}>+ Add Book</Button> */}
-            </Popover>
-        </div>
-    )
-}
-
 export default function Books() {
 
     // Normally what'd we do here is call the componentDidMount lifecycle 
@@ -126,12 +40,7 @@ export default function Books() {
             updateBooks(filtered);
         }
         fetchData();
-      } , []);
-
-    const addBook = (book) => {
-        const newBooks = [...books, book]
-        updateBooks(newBooks);
-    }   
+      } , []);  
 
     const execSearch = (query, flag) => {
         if(flag === true) {
@@ -182,8 +91,6 @@ export default function Books() {
             type={ranSearch ? "danger" : "primary"}
             onClick={value => execSearch(value , false)}
             >Cancel</Button>
-            {/* We pass the 'addBook' function as a prop to the 'AddBookForm' component */}
-            <AddBookForm addBook={addBook}/>
             {/* We pass the 'books' array as a prop to the 'CustomCard' component */}
             <CustomCard booksData={books} ranSearch={ranSearch}/>
         </div>
