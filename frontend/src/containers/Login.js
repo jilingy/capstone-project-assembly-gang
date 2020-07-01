@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Form, Input, Button, Checkbox, Typography } from 'antd'
-import { Link } from 'react-router-dom';
+import { Link,Redirect } from 'react-router-dom';
 
 export default function Login() {
 
@@ -9,6 +9,8 @@ export default function Login() {
       if(!data) return;
     }
     */
+
+   const [toCollection, setToCollection] = useState(false);
 
     const {Title} = Typography
     const layout = {
@@ -32,8 +34,18 @@ export default function Login() {
         },
     };
 
+    const onSubmit = values => {
+      console.log('Success:', values);
+      setToCollection(true);
+    };
+  
+    const onSubmitFailed = errorInfo => {
+      console.log('Failed:', errorInfo);
+    };
+
     return(
     <div>
+    {toCollection ? <Redirect to="/col_list" /> : null}
     <Title
       level={3}
     >
@@ -45,6 +57,8 @@ export default function Login() {
       initialValues={{
         remember: true,
       }}
+      onFinish={onSubmit}
+      onFinishFailed={onSubmitFailed}
     >
       <Form.Item
         label="Username"

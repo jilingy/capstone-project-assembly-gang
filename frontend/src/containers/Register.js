@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Form, Input, Button,Typography} from 'antd'
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 export default function Register() {
 
     const {Title} = Typography
+
+    const [toLogin, setToLogin] = useState(false);
 
     const layout = {
         labelCol: {
@@ -14,15 +16,25 @@ export default function Register() {
           span: 4,
         },
       };
-      const tailLayout = {
+    const tailLayout = {
         wrapperCol: {
           offset: 5,
           span: 17,
         },
       };
 
+    const onSubmit = values => {
+        console.log('Success:', values);
+        setToLogin(true)
+      };
+    
+    const onSubmitFailed = errorInfo => {
+        console.log('Failed:', errorInfo);
+      };
+
     return(
     <div>
+    {toLogin ? <Redirect to="/" /> : null}
     <Title
       level={3}
     >
@@ -34,6 +46,8 @@ export default function Register() {
       initialValues={{
         remember: true,
       }}
+      onFinish={onSubmit}
+      onFinishFailed={onSubmitFailed}
     >   
 
       <Form.Item
