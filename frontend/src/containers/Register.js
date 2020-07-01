@@ -1,5 +1,6 @@
 import React from 'react'
 import { Form, Input, Button,Typography} from 'antd'
+import { Link } from 'react-router-dom';
 
 export default function Register() {
 
@@ -93,6 +94,7 @@ export default function Register() {
         </Button>
       </Form.Item>
     </Form>
+    <Link to="/">Return to Login</Link>
     </div>
     )
 

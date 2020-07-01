@@ -1,7 +1,14 @@
 import React from 'react'
 import { Form, Input, Button, Checkbox, Typography } from 'antd'
+import { Link } from 'react-router-dom';
 
 export default function Login() {
+
+    /*const onSubmit = (data) => {
+      console.log(data);
+      if(!data) return;
+    }
+    */
 
     const {Title} = Typography
     const layout = {
@@ -24,6 +31,7 @@ export default function Login() {
           span: 7,
         },
     };
+
     return(
     <div>
     <Title
@@ -74,6 +82,7 @@ export default function Login() {
         </Button>
       </Form.Item>
     </Form>
+    <Link to="/register">Register for an Account</Link>
     </div>
     )
 
