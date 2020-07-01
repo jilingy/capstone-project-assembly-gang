@@ -1,9 +1,10 @@
 import React from 'react'
-import { Form, Input, Button, Checkbox, Typography } from 'antd'
+import { Form, Input, Button,Typography} from 'antd'
 
-export default function Login() {
+export default function Register() {
 
     const {Title} = Typography
+
     const layout = {
         labelCol: {
           span: 10,
@@ -12,24 +13,19 @@ export default function Login() {
           span: 4,
         },
       };
-    const tailLayout = {
+      const tailLayout = {
         wrapperCol: {
-          offset: 7,
-          span: 13,
+          offset: 5,
+          span: 17,
         },
       };
-    const headLayout = {
-        wrapperCol: {
-          offset: 6,
-          span: 7,
-        },
-    };
+
     return(
     <div>
     <Title
       level={3}
     >
-      Login
+      Account Registration
     </Title>
     <Form
       {...layout}
@@ -37,7 +33,34 @@ export default function Login() {
       initialValues={{
         remember: true,
       }}
-    >
+    >   
+
+      <Form.Item
+        label="First Name"
+        name="firstname"
+        rules={[
+          {
+            required: true,
+            message: 'Please input your first name!',
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        label="Last Name"
+        name="lastname"
+        rules={[
+          {
+            required: true,
+            message: 'Please input your last name!',
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+
       <Form.Item
         label="Username"
         name="username"
@@ -64,13 +87,9 @@ export default function Login() {
         <Input.Password />
       </Form.Item>
 
-      <Form.Item {...headLayout} name="remember" valuePropName="checked">
-        <Checkbox>Remember me</Checkbox>
-      </Form.Item>
-
       <Form.Item {...tailLayout}>
         <Button type="primary" htmlType="submit">
-          Log In
+          Register
         </Button>
       </Form.Item>
     </Form>
