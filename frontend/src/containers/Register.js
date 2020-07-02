@@ -34,7 +34,7 @@ export default function Register() {
 
     return(
     <div>
-    {toLogin ? <Redirect to="/" /> : null}
+    {toLogin ? <Redirect to="/emailconfirm" /> : null}
     <Title
       level={3}
     >
