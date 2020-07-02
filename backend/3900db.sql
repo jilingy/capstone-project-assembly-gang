@@ -1516,6 +1516,7 @@ COPY public.socialaccount_socialtoken (id, token, token_secret, expires_at, acco
 --
 
 COPY public.users (id, name, email, username, collection_list_id) FROM stdin;
+2	testuser	test@test.com	testuser98	1
 \.
 
 
@@ -1692,7 +1693,7 @@ SELECT pg_catalog.setval('public.socialaccount_socialtoken_id_seq', 1, false);
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: 3900user
 --
 
-SELECT pg_catalog.setval('public.users_id_seq', 1, false);
+SELECT pg_catalog.setval('public.users_id_seq', 2, true);
 
 
 --
