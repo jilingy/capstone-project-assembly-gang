@@ -7,10 +7,25 @@ import { Form, Input, Button, Popover, Table } from 'antd';
 
 export default function Account() {
     const [visible, hideForm] = useState(false);
+    const { handleSubmit, errors, reset, control, defaultValues } = useForm({});
     const [account, setAccount] = useState({ id: 2, name: "testuser", email: "test@test.com", username: "testuser98"})
 
     const handleVisibleChange = visible => {
         hideForm(visible)
+    }
+
+    const onSubmit = (data) => {
+        // After a form submit, we usually make an axios POST request to update
+        // the backend. For the sake of simplicity, we only update our frontend.
+        console.log(data);
+        if(!data) return;
+        if(data.newName == "") return;
+        setAccount(
+            {
+                ...account,
+                name: data.newName
+            }
+        )
     }
 
     return (
@@ -31,30 +46,31 @@ export default function Account() {
                     <strong>Name: </strong>
                     {account.name}
 
-
-                    
                     <Popover
                         content={
                             <form
                                 style = {{ width: 500}}
+                                onSubmit={handleSubmit(onSubmit)}
                             >
-                                {/* <Controller
-
-
-                                /> */}
+                                <Controller
+                                    name="newName"
+                                    control={control}
+                                    as={
+                                        <Form.Item>
+                                            <Input />
+                                        </Form.Item>
+                                    }
+                                />
                                 <Button type="primary" htmlType="submit">Submit</Button>
                                 <Button type="danger" onClick={() => hideForm(false)} style={{ left: 4 }}>Cancel</Button>
                             </form>
                         }
-
+                        trigger='click'
                         visible={visible}
                         onVisibleChange={handleVisibleChange}
                     >
-                            <Button type="primary" style={{marginLeft:'25px'}}>Edit</Button>
+                        <Button type="primary" style={{marginLeft:'25px'}}>Edit</Button>
                     </Popover>
-
-
-
                 </h5>
                 
             </div>
