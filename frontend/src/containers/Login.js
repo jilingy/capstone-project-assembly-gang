@@ -3,13 +3,7 @@ import { Form, Input, Button, Checkbox, Typography } from 'antd'
 import { Link,Redirect } from 'react-router-dom';
 
 export default function Login() {
-
-    /*const onSubmit = (data) => {
-      console.log(data);
-      if(!data) return;
-    }
-    */
-
+  
    const [toCollection, setToCollection] = useState(false);
 
     const {Title} = Typography

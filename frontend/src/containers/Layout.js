@@ -35,7 +35,7 @@ export default function CustomLayout(props) {
       <Header className="site-layout-background" style={{ padding: 0 }}>
         <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
           <Button type="primary" style={{ left: 1420 }}><Link to="/register">Register</Link></Button>
-          <Button type="primary" style={{ left: 1440}}><Link to="/">Login</Link></Button>
+          <Button type="primary" style={{ left: 1440}}><Link to="/login">Login</Link></Button>
           <Button type="primary" style={{ left: 1460 }}><Link to="/logout">Logout</Link></Button>
         </Menu>
       </Header>

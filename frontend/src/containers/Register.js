@@ -108,7 +108,7 @@ export default function Register() {
         </Button>
       </Form.Item>
     </Form>
-    <Link to="/">Return to Login</Link>
+    <Link to="/login">Return to Login</Link>
     </div>
     )
 
