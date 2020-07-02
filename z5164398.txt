@@ -8,3 +8,8 @@ Set up Virtual environment. Downloaded all backend and frontend software. Refini
 
 Week 3.
 We planned to finish the proposal and assign the first sprint user stories. We finished the proposal and assigned the user stories of the first sprint. We had some members busy with work and other courses but we managed to initiate our own to work to the best of our ability. I myself struggled with visualising the story boards but had tim and farhans as inspiration. Everything was finished with 2 hours to spare, i think we worked well as a group. In the next period, we should have finished the first sprint and started organising the second sprint and learnt about react and django
+
+week 4
+we planned to be finishing the first sprint and planning the second sprint, however due to other course work we didnt end up being able to finish the first sprint. we tried to meet up and get it all finished however i had trouble finding the time to learn react and django with full fluency and struggled to complete my assigned user stories. it doesnt affect the overall project as we assumed there were going to be delays and have adjusted for accordingly. by next sprint i plan to be fluent in react and django and thus ensure the next sprints face no delays.
+
+week 5
