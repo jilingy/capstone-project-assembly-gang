@@ -6,6 +6,7 @@ import CollectionList from './containers/CollectionList';
 import Login from './containers/Login';
 import Register from './containers/Register';
 import EmailConfirm from './containers/EmailConfirm';
+import Account from './containers/Account';
 
 const BaseRouter = () => (
   <div>
@@ -15,6 +16,7 @@ const BaseRouter = () => (
     <Route exact path='/emailconfirm' component={EmailConfirm}/>
     <Route exact path='/books' component={Books}/>
     <Route exact path='/col_list' component={CollectionList}/>
+    <Route exact path='/account' component={Account}/>
   </div>
 );
 

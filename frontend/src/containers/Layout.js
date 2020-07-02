@@ -36,7 +36,8 @@ export default function CustomLayout(props) {
         <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
           <Button type="primary" style={{ left: 1420 }}><Link to="/register">Register</Link></Button>
           <Button type="primary" style={{ left: 1440}}><Link to="/login">Login</Link></Button>
-          <Button type="primary" style={{ left: 1460 }}><Link to="/logout">Logout</Link></Button>
+          <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20, backgroundColor: '#FF5833', borderColor: '#FF5833' }}><Link to="/logout">Logout</Link></Button>
+          <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/account">Account</Link></Button>
         </Menu>
       </Header>
       <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
