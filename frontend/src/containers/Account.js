@@ -19,7 +19,7 @@ export default function Account() {
         // the backend. For the sake of simplicity, we only update our frontend.
         console.log(data);
         if(!data) return;
-        if(data.newName == "") return;
+        if(data.newName === "") return;
         setAccount(
             {
                 ...account,
@@ -56,7 +56,9 @@ export default function Account() {
                                     name="newName"
                                     control={control}
                                     as={
-                                        <Form.Item>
+                                        <Form.Item
+                                            label="Name"
+                                        >
                                             <Input />
                                         </Form.Item>
                                     }
@@ -68,6 +70,7 @@ export default function Account() {
                         trigger='click'
                         visible={visible}
                         onVisibleChange={handleVisibleChange}
+                        title="Update name"
                     >
                         <Button type="primary" style={{marginLeft:'25px'}}>Edit</Button>
                     </Popover>
