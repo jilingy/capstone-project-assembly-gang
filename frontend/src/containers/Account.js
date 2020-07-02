@@ -8,7 +8,7 @@ import { Form, Input, Button, Popover, Table } from 'antd';
 export default function Account() {
     const [visible, hideForm] = useState(false);
     const { handleSubmit, errors, reset, control, defaultValues } = useForm({});
-    const [account, setAccount] = useState({ id: 2, name: "testuser", email: "test@test.com", username: "testuser98"})
+    const [account, setAccount] = useState({ id: 2, name: "Farhan Ghazi", email: "farhansghazi@outlook.com", username: "farhanghazi"})
 
     const handleVisibleChange = visible => {
         hideForm(visible)
