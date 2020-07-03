@@ -98,6 +98,11 @@ function AddCollectionForm({addCollection}) {
 
 export default function CollectionList() {
 
+
+    // --- READ-40 ---
+    // Set up main and finished collection in db so we can grab it via an axios request to backend
+    // Implement delete function to remove any named collection list
+
     const [collections, updateCollections] = useState([
         {
             key: 1,
