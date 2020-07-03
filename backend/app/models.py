@@ -2,21 +2,19 @@ from django.db import models
 from django.core.validators import RegexValidator
 from django.utils import timezone
 from datetime import datetime, date
+from django.contrib.auth.models import User
 
 class CollectionLists(models.Model):
 
     class Meta:
         db_table = 'collection_lists'
 
-class Users(models.Model):
-
-    class Meta:
-        db_table = 'users'
-
-    name = models.CharField(max_length=200 , default="default_name")
-    email = models.EmailField()
-    username = models.CharField(max_length=200, default="default_username")
-    collection_list = models.ForeignKey(CollectionLists, on_delete=models.CASCADE, related_name="collection_list")
+    owner = models.ForeignKey(
+        User, 
+        related_name="collection_list", 
+        on_delete=models.CASCADE,
+        null=True
+    )
 
 class Books(models.Model):
 
@@ -79,7 +77,7 @@ class Reads(models.Model):
     class Meta:
         db_table = 'reads'
 
-    user = models.ForeignKey(Users, on_delete=models.CASCADE, related_name="reader")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reader")
     book = models.ForeignKey(Books, on_delete=models.CASCADE, related_name="read_by")
 
 class Reviews(models.Model):
@@ -95,7 +93,7 @@ class Reviews(models.Model):
         (5 , '5_STAR'),
     ]
 
-    user = models.ForeignKey(Users, on_delete=models.CASCADE, related_name="by_user")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="by_user")
     book = models.ForeignKey(Books, on_delete=models.CASCADE, related_name="for_book")
     review = models.TextField(blank=True, default="default_review_text")
     rating = models.DecimalField(blank=False, max_digits=1, choices=RATINGS, decimal_places=1)

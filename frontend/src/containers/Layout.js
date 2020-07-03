@@ -34,9 +34,8 @@ export default function CustomLayout(props) {
     <Layout className="site-layout" style={{ marginLeft: 200 }}>
       <Header className="site-layout-background" style={{ padding: 0 }}>
         <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
-          <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20, backgroundColor: '#FF5833', borderColor: '#FF5833' }}><Link to="/login">Logout</Link></Button>
+          {props.isAuthenticated ? <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20, backgroundColor: '#FF5833', borderColor: '#FF5833' }}><Link to="/login">Logout</Link></Button> : <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/login">Login</Link></Button>}
           <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/account">Account</Link></Button>
-          <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/login">Login</Link></Button>
           <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/register">Register</Link></Button>
         </Menu>
       </Header>

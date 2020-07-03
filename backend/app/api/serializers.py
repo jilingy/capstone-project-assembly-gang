@@ -2,7 +2,6 @@ from rest_framework import serializers
 
 from app.models import (
     CollectionLists,
-    Users,
     Books,
     Reads,
     Reviews,
@@ -18,14 +17,6 @@ class CollectionListSerializer(serializers.ModelSerializer):
         model = CollectionLists
         fields = (
             'id', 
-        )
-
-class UserSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Users
-        fields = (
-            'id', 'name', 'email', 'username', 'collection_list', 
         )
 
 class BookSerializer(serializers.ModelSerializer):

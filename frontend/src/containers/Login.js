@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import { Form, Input, Button, Checkbox, Typography } from 'antd'
 import { Link,Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import * as actions from '../store/actions/auth';
 
-export default function Login() {
+function Login(props) {
   
    const [toCollection, setToCollection] = useState(false);
 
@@ -30,6 +32,7 @@ export default function Login() {
 
     const onSubmit = values => {
       console.log('Success:', values);
+      props.onAuth(values.username, values.password);
       setToCollection(true);
     };
   
@@ -55,12 +58,12 @@ export default function Login() {
       onFinishFailed={onSubmitFailed}
     >
       <Form.Item
-        label="Email"
-        name="email"
+        label="Username"
+        name="username"
         rules={[
           {
             required: true,
-            message: 'Please input your email!',
+            message: 'Please input your username!',
           },
         ]}
       >
@@ -95,3 +98,18 @@ export default function Login() {
     )
 
 }
+
+const mapStateToProps = (state) => {
+  return {
+    loading: state.loading,
+    error: state.error
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onAuth: (username, password) => dispatch(actions.authLogin(username, password))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
