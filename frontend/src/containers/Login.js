@@ -82,12 +82,12 @@ function Login(props) {
         <Input.Password />
       </Form.Item>
 
-      <Form.Item {...headLayout} name="remember" valuePropName="checked">
-        <Checkbox>Remember me</Checkbox>
+      <Form.Item {...headLayout} name="remember" valuePropName="checked" >
+        <Checkbox >Remember me</Checkbox>
       </Form.Item>
 
       <Form.Item {...tailLayout}>
-        <Button type="primary" htmlType="submit">
+        <Button type="primary" htmlType="submit" style={{ right: 100 }}>
           Log In
         </Button>
       </Form.Item>

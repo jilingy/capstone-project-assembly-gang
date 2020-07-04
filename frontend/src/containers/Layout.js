@@ -15,7 +15,7 @@ function CustomLayout(props) {
 
   return (
     <Layout>
-    <Sider
+    {props.isAuthenticated ? <Sider
       style={{
         overflow: 'auto',
         height: '100vh',
@@ -32,7 +32,7 @@ function CustomLayout(props) {
           <Link to="/col_list">My Book Collections</Link>
         </Menu.Item>
       </Menu>
-    </Sider>
+    </Sider> : null}
     <Layout className="site-layout" style={{ marginLeft: 200 }}>
       <Header className="site-layout-background" style={{ padding: 0 }}>
         <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
