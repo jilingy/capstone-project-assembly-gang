@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Layout, Menu, Button } from 'antd';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import * as actions from '../store/actions/auth';
 
 import {
   HomeOutlined,
@@ -9,7 +11,7 @@ import {
 
 const { Header, Content, Sider } = Layout;
 
-export default function CustomLayout(props) {
+function CustomLayout(props) {
 
   return (
     <Layout>
@@ -34,9 +36,9 @@ export default function CustomLayout(props) {
     <Layout className="site-layout" style={{ marginLeft: 200 }}>
       <Header className="site-layout-background" style={{ padding: 0 }}>
         <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
-          {props.isAuthenticated ? <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20, backgroundColor: '#FF5833', borderColor: '#FF5833' }}><Link to="/login">Logout</Link></Button> : <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/login">Login</Link></Button>}
-          <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/account">Account</Link></Button>
-          <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/register">Register</Link></Button>
+          {props.isAuthenticated ? <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20, backgroundColor: '#FF5833', borderColor: '#FF5833' }} onClick={props.logout}><Link to="/login">Logout</Link></Button> : <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/login">Login</Link></Button>}
+          {props.isAuthenticated ? <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/account">Account</Link></Button> : null}
+          {props.isAuthenticated ? null : <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/register">Register</Link></Button>}
         </Menu>
       </Header>
       <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
@@ -48,3 +50,11 @@ export default function CustomLayout(props) {
   </Layout>
   )
 }
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    logout: () => dispatch(actions.logout())
+  }
+}
+
+export default connect(null, mapDispatchToProps)(CustomLayout);

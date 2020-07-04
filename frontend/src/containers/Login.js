@@ -31,7 +31,6 @@ function Login(props) {
     };
 
     const onSubmit = values => {
-      console.log('Success:', values);
       props.onAuth(values.username, values.password);
       setToCollection(true);
     };
@@ -101,8 +100,8 @@ function Login(props) {
 
 const mapStateToProps = (state) => {
   return {
-    loading: state.loading,
-    error: state.error
+    loading : state.loading,
+    error   : state.error
   }
 }
 

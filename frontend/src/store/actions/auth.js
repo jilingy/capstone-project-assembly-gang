@@ -38,6 +38,7 @@ export const checkAuthTimeout = (expirationTime) => {
 }
 
 export const authLogin = (username, password) => {
+    console.log('Tried to grab uer from backend and log user in...');
     return dispatch => {
         dispatch(authStart());
         axios.post('http://localhost:8000/api/auth/login' , {
