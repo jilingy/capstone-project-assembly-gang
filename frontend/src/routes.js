@@ -10,8 +10,7 @@ import Account from './containers/Account';
 
 const BaseRouter = () => (
   <div>
-    <Route exact path='/' component={Home}/>
-    <Route exact path='/login' component={Login}/>
+    <Route exact path='/' component={Login}/>
     <Route exact path='/register' component={Register}/>
     <Route exact path='/emailconfirm' component={EmailConfirm}/>
     <Route exact path='/books' component={Books}/>

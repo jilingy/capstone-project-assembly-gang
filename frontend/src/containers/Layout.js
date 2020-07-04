@@ -25,18 +25,24 @@ function CustomLayout(props) {
     >
       <div className="logo" />
       <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-        <Menu.Item key="1" icon={<HomeOutlined />}>
-          <Link to="/">Home</Link>
-        </Menu.Item>
-        <Menu.Item key="2" icon={<BookOutlined />}>
+        <Menu.Item key="1" icon={<BookOutlined />}>
           <Link to="/col_list">My Book Collections</Link>
         </Menu.Item>
       </Menu>
     </Sider> : null}
-    <Layout className="site-layout" style={{ marginLeft: 200 }}>
+    <Layout className="site-layout" style={props.isAuthenticated ? { marginLeft: 200 } : null}>
       <Header className="site-layout-background" style={{ padding: 0 }}>
         <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
-          {props.isAuthenticated ? <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20, backgroundColor: '#FF5833', borderColor: '#FF5833' }} onClick={props.logout}><Link to="/login">Logout</Link></Button> : <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/login">Login</Link></Button>}
+          {
+          props.isAuthenticated ? 
+          <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20, backgroundColor: '#FF5833', borderColor: '#FF5833' }} onClick={props.logout}>
+            <Link to="/">Logout</Link>
+          </Button> 
+          : 
+          <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}>
+            <Link to="/">Login</Link>
+          </Button>
+          }
           {props.isAuthenticated ? <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/account">Account</Link></Button> : null}
           {props.isAuthenticated ? null : <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/register">Register</Link></Button>}
         </Menu>

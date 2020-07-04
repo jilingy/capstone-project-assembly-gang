@@ -128,12 +128,12 @@ function Register(props) {
       </Form.Item>
 
       <Form.Item {...tailLayout}>
-        <Button type="primary" htmlType="submit">
+        <Button type="primary" htmlType="submit" style={{ right: 120 }}>
           Register
         </Button>
       </Form.Item>
     </Form>
-    <Link to="/login">Return to Login</Link>
+    <Link to="/">Return to Login</Link>
     </div>
     )
 }

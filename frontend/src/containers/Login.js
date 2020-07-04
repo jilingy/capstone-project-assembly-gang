@@ -25,14 +25,13 @@ function Login(props) {
       };
     const headLayout = {
         wrapperCol: {
-          offset: 6,
-          span: 7,
+          offset: 7,
+          span: 10,
         },
     };
 
     const onSubmit = values => {
       props.onAuth(values.username, values.password);
-      setToCollection(true);
     };
   
     const onSubmitFailed = errorInfo => {
@@ -41,58 +40,58 @@ function Login(props) {
 
     return(
     <div>
-    {toCollection ? <Redirect to="/col_list" /> : null}
-    <Title
-      level={3}
-    >
-      Login
-    </Title>
-    <Form
-      {...layout}
-      name="basic"
-      initialValues={{
-        remember: true,
-      }}
-      onFinish={onSubmit}
-      onFinishFailed={onSubmitFailed}
-    >
-      <Form.Item
-        label="Username"
-        name="username"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your username!',
-          },
-        ]}
+      {toCollection ? <Redirect to="/col_list" /> : null}
+      <Title
+        level={3}
       >
-        <Input />
-      </Form.Item>
-
-      <Form.Item
-        label="Password"
-        name="password"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your password!',
-          },
-        ]}
+        Login
+      </Title>
+      <Form
+        {...layout}
+        name="basic"
+        initialValues={{
+          remember: true,
+        }}
+        onFinish={onSubmit}
+        onFinishFailed={onSubmitFailed}
       >
-        <Input.Password />
-      </Form.Item>
+        <Form.Item
+          label="Username"
+          name="username"
+          rules={[
+            {
+              required: true,
+              message: 'Please input your username!',
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
 
-      <Form.Item {...headLayout} name="remember" valuePropName="checked" >
-        <Checkbox >Remember me</Checkbox>
-      </Form.Item>
+        <Form.Item
+          label="Password"
+          name="password"
+          rules={[
+            {
+              required: true,
+              message: 'Please input your password!',
+            },
+          ]}
+        >
+          <Input.Password />
+        </Form.Item>
 
-      <Form.Item {...tailLayout}>
-        <Button type="primary" htmlType="submit" style={{ right: 100 }}>
-          Log In
-        </Button>
-      </Form.Item>
-    </Form>
-    <Link to="/register">Register for an Account</Link>
+        <Form.Item {...headLayout} name="remember" valuePropName="checked" >
+          <Checkbox>Remember me</Checkbox>
+        </Form.Item>
+
+        <Form.Item {...tailLayout}>
+          <Button type="primary" htmlType="submit" style={{ right: 117 }}>
+            Log In
+          </Button>
+        </Form.Item>
+      </Form>
+      <Link to="/register">Register for an Account</Link>
     </div>
     )
 
