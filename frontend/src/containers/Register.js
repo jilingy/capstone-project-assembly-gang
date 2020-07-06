@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import { Form, Input, Button,Typography} from 'antd'
 import { Link, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import * as actions from '../store/actions/auth';
 
-export default function Register() {
+function Register(props) {
 
     const {Title} = Typography
 
@@ -24,9 +26,16 @@ export default function Register() {
       };
 
     const onSubmit = values => {
-        console.log('Success:', values);
-        setToLogin(true)
-      };
+      props.onAuth(
+        values.username, 
+        values.email, 
+        values.firstname, 
+        values.lastname, 
+        values.password
+      );
+      setToLogin(true);
+      // Create default main and finished collection for user here!
+    };
     
     const onSubmitFailed = errorInfo => {
         console.log('Failed:', errorInfo);
@@ -110,19 +119,38 @@ export default function Register() {
             required: true,
             message: 'Please input your password!',
           },
+          {
+            min: 8,
+            message: 'Password must be at least 8 characters long!'
+          }
         ]}
       >
         <Input.Password />
       </Form.Item>
 
       <Form.Item {...tailLayout}>
-        <Button type="primary" htmlType="submit">
+        <Button type="primary" htmlType="submit" style={{ right: 120 }}>
           Register
         </Button>
       </Form.Item>
     </Form>
-    <Link to="/login">Return to Login</Link>
+    <Link to="/">Return to Login</Link>
     </div>
     )
-
 }
+
+const mapStateToProps = (state) => {
+  return {
+    loading: state.loading,
+    error: state.error,
+    user_id: state.user_id,
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onAuth: (username, email, first_name, last_name, password) => dispatch(actions.authSignup(username, email, first_name, last_name, password))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Register);

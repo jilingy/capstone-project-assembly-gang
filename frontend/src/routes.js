@@ -1,22 +1,23 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
-import Home from './containers/Home';
+import { Route, Switch } from 'react-router-dom';
 import Books from './containers/Books';
 import CollectionList from './containers/CollectionList';
 import Login from './containers/Login';
 import Register from './containers/Register';
 import EmailConfirm from './containers/EmailConfirm';
 import Account from './containers/Account';
+import PrivateRoute from './common/PrivateRoute';
 
 const BaseRouter = () => (
   <div>
-    <Route exact path='/' component={Home}/>
-    <Route exact path='/login' component={Login}/>
-    <Route exact path='/register' component={Register}/>
-    <Route exact path='/emailconfirm' component={EmailConfirm}/>
-    <Route exact path='/books' component={Books}/>
-    <Route exact path='/col_list' component={CollectionList}/>
-    <Route exact path='/account' component={Account}/>
+    <Switch>
+      <Route exact path='/' component={Login}/>
+      <Route exact path='/register' component={Register}/>
+      <Route exact path='/emailconfirm' component={EmailConfirm}/>
+      <PrivateRoute path='/books' component={Books}/>
+      <PrivateRoute path='/col_list' component={CollectionList}/>
+      <PrivateRoute exact path='/account' component={Account}/>
+    </Switch>
   </div>
 );
 

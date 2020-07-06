@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { List, Avatar } from 'antd';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { Form, Input, Button, Popover, Table } from 'antd';
 import CollectionListBookCover from '../images/books.svg';
+import { connect } from 'react-redux';
+import axios from 'axios';
 
 function AddCollectionForm({addCollection}) {
 
@@ -96,7 +97,7 @@ function AddCollectionForm({addCollection}) {
     )
 }
 
-export default function CollectionList() {
+function CollectionList(props) {
 
 
     // --- READ-40 ---
@@ -157,7 +158,15 @@ export default function CollectionList() {
             {/* We pass the 'addBook' function as a prop to the 'AddBookForm' component */}
             <AddCollectionForm addCollection={addCollection}/>
             <Table style={{ position: 'relative', bottom: 45, right:17, border: '2px solid black'}} dataSource={collections} columns={columns} />
+            <Button>{props.user_id} - Hello</Button>
         </div>
     )
-
 }
+
+const mapStateToProps = state => {
+    return {
+        user_id: state.user_id,
+    }
+}
+
+export default connect(mapStateToProps)(CollectionList);
