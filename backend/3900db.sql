@@ -421,8 +421,8 @@ CREATE TABLE public.collection (
     collection_type character varying(10) NOT NULL,
     description text NOT NULL,
     collection_name character varying(200) NOT NULL,
-    collection_list_id integer NOT NULL,
-    is_private boolean NOT NULL
+    is_private boolean NOT NULL,
+    owner_id integer
 );
 
 
@@ -448,39 +448,6 @@ ALTER TABLE public.collection_id_seq OWNER TO "3900user";
 --
 
 ALTER SEQUENCE public.collection_id_seq OWNED BY public.collection.id;
-
-
---
--- Name: collection_lists; Type: TABLE; Schema: public; Owner: 3900user
---
-
-CREATE TABLE public.collection_lists (
-    id integer NOT NULL
-);
-
-
-ALTER TABLE public.collection_lists OWNER TO "3900user";
-
---
--- Name: collection_lists_id_seq; Type: SEQUENCE; Schema: public; Owner: 3900user
---
-
-CREATE SEQUENCE public.collection_lists_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.collection_lists_id_seq OWNER TO "3900user";
-
---
--- Name: collection_lists_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: 3900user
---
-
-ALTER SEQUENCE public.collection_lists_id_seq OWNED BY public.collection_lists.id;
 
 
 --
@@ -678,6 +645,22 @@ ALTER TABLE public.django_site_id_seq OWNER TO "3900user";
 
 ALTER SEQUENCE public.django_site_id_seq OWNED BY public.django_site.id;
 
+
+--
+-- Name: knox_authtoken; Type: TABLE; Schema: public; Owner: 3900user
+--
+
+CREATE TABLE public.knox_authtoken (
+    digest character varying(128) NOT NULL,
+    salt character varying(16) NOT NULL,
+    created timestamp with time zone NOT NULL,
+    user_id integer NOT NULL,
+    expiry timestamp with time zone,
+    token_key character varying(8) NOT NULL
+);
+
+
+ALTER TABLE public.knox_authtoken OWNER TO "3900user";
 
 --
 -- Name: reads; Type: TABLE; Schema: public; Owner: 3900user
@@ -903,43 +886,6 @@ ALTER SEQUENCE public.socialaccount_socialtoken_id_seq OWNED BY public.socialacc
 
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: 3900user
---
-
-CREATE TABLE public.users (
-    id integer NOT NULL,
-    name character varying(200) NOT NULL,
-    email character varying(254) NOT NULL,
-    username character varying(200) NOT NULL,
-    collection_list_id integer NOT NULL
-);
-
-
-ALTER TABLE public.users OWNER TO "3900user";
-
---
--- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: 3900user
---
-
-CREATE SEQUENCE public.users_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.users_id_seq OWNER TO "3900user";
-
---
--- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: 3900user
---
-
-ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
-
-
---
 -- Name: written_by; Type: TABLE; Schema: public; Owner: 3900user
 --
 
@@ -1052,13 +998,6 @@ ALTER TABLE ONLY public.collection ALTER COLUMN id SET DEFAULT nextval('public.c
 
 
 --
--- Name: collection_lists id; Type: DEFAULT; Schema: public; Owner: 3900user
---
-
-ALTER TABLE ONLY public.collection_lists ALTER COLUMN id SET DEFAULT nextval('public.collection_lists_id_seq'::regclass);
-
-
---
 -- Name: contains id; Type: DEFAULT; Schema: public; Owner: 3900user
 --
 
@@ -1133,13 +1072,6 @@ ALTER TABLE ONLY public.socialaccount_socialapp_sites ALTER COLUMN id SET DEFAUL
 --
 
 ALTER TABLE ONLY public.socialaccount_socialtoken ALTER COLUMN id SET DEFAULT nextval('public.socialaccount_socialtoken_id_seq'::regclass);
-
-
---
--- Name: users id; Type: DEFAULT; Schema: public; Owner: 3900user
---
-
-ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
 
 
 --
@@ -1278,6 +1210,10 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 90	Can change social application token	22	change_socialtoken
 91	Can delete social application token	22	delete_socialtoken
 92	Can view social application token	22	view_socialtoken
+93	Can add auth token	23	add_authtoken
+94	Can change auth token	23	change_authtoken
+95	Can delete auth token	23	delete_authtoken
+96	Can view auth token	23	view_authtoken
 \.
 
 
@@ -1286,6 +1222,9 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 --
 
 COPY public.auth_user (id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined) FROM stdin;
+15	pbkdf2_sha256$180000$R0G5yyIbM1pi$qYSzjqRX6sd7FxviAC7s7yBnL85I5G/J2cJTjq1eqTw=	\N	f	farhansghazi	Farhan	Ghazi	test@test.com	f	t	2020-07-06 17:43:10.646007+10
+16	pbkdf2_sha256$180000$RXeJMpJXubYx$A0STh3+QekicItVc1Tq4iZtBhgjy76IKgxRUQo+UHh4=	\N	f	fahimghazi	Fahim	Ghazi	test@test.com	f	t	2020-07-06 19:43:45.069687+10
+17	pbkdf2_sha256$180000$whTqtOaePdQR$vSkQzOaiZAeWWOLVzhlQqE4jXy0d3Gp7wy90cTkOEBM=	\N	f	mwang	Michael	Wang	test@test.com	f	t	2020-07-06 20:14:29.515734+10
 \.
 
 
@@ -1348,16 +1287,7 @@ COPY public.books (id, book_title, book_synopsis, book_publisher, publication_da
 -- Data for Name: collection; Type: TABLE DATA; Schema: public; Owner: 3900user
 --
 
-COPY public.collection (id, collection_type, description, collection_name, collection_list_id, is_private) FROM stdin;
-\.
-
-
---
--- Data for Name: collection_lists; Type: TABLE DATA; Schema: public; Owner: 3900user
---
-
-COPY public.collection_lists (id) FROM stdin;
-1
+COPY public.collection (id, collection_type, description, collection_name, is_private, owner_id) FROM stdin;
 \.
 
 
@@ -1404,6 +1334,7 @@ COPY public.django_content_type (id, app_label, model) FROM stdin;
 20	socialaccount	socialaccount
 21	socialaccount	socialapp
 22	socialaccount	socialtoken
+23	knox	authtoken
 \.
 
 
@@ -1443,6 +1374,17 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 29	socialaccount	0003_extra_data_default_dict	2020-06-27 14:13:45.927217+10
 30	app	0004_auto_20200627_1157	2020-06-27 21:57:41.418718+10
 31	app	0005_auto_20200627_1213	2020-06-27 22:13:55.164398+10
+32	app	0006_auto_20200703_1423	2020-07-04 00:23:23.948157+10
+33	app	0007_auto_20200703_1434	2020-07-04 00:34:31.187903+10
+34	app	0008_auto_20200703_1504	2020-07-04 01:04:25.06251+10
+35	knox	0001_initial	2020-07-04 01:18:21.685836+10
+36	knox	0002_auto_20150916_1425	2020-07-04 01:18:21.764591+10
+37	knox	0003_auto_20150916_1526	2020-07-04 01:18:21.86006+10
+38	knox	0004_authtoken_expires	2020-07-04 01:18:21.879468+10
+39	knox	0005_authtoken_token_key	2020-07-04 01:18:21.898968+10
+40	knox	0006_auto_20160818_0932	2020-07-04 01:18:21.951462+10
+41	knox	0007_auto_20190111_0542	2020-07-04 01:18:21.97217+10
+42	app	0009_auto_20200705_1445	2020-07-06 00:46:01.263614+10
 \.
 
 
@@ -1460,6 +1402,79 @@ COPY public.django_session (session_key, session_data, expire_date) FROM stdin;
 
 COPY public.django_site (id, domain, name) FROM stdin;
 1	example.com	example.com
+\.
+
+
+--
+-- Data for Name: knox_authtoken; Type: TABLE DATA; Schema: public; Owner: 3900user
+--
+
+COPY public.knox_authtoken (digest, salt, created, user_id, expiry, token_key) FROM stdin;
+b00d92114bef8bb0c9997148e0cc71944ffef4e3cf4d057b05bb792e056f1479af71721150820f7c8ce6d2aa3c17352b96ed5517352f2891c4967e1c92c60d92	6775d1a7b74d1445	2020-07-06 17:43:10.758217+10	15	2020-07-07 03:43:10.7579+10	ab957fcc
+32dfad67d29ec9e519ee9a19a3646f2678f63f48db086e12a7a33ca8565e78e06e91b123578532defcee55a8c3736f3ef0cac5a5b31180ced5ce515f57d64b90	97ec73bcee6d6a0e	2020-07-06 17:43:17.248925+10	15	2020-07-07 03:43:17.248627+10	0a9f7553
+6d155ed2ffcaa204576c26826a7456774846ab0452f98ab08540e5828e08e60da4bdb07cb091cc2fed3bf44ff8b74816f8ba2983e233de8be78d88302182fc75	76f15215e5b5c5b4	2020-07-06 17:44:58.128991+10	15	2020-07-07 03:44:58.128686+10	d328aa1a
+909bc668b048569867b73a3136f5a6c6661f4a9eba31fe0e6317a25936cc0c01e91667940465c8da7172ad952f889210497386ab86ca5c304a07fc0941bb63c2	ebc842ff9373f783	2020-07-06 17:46:00.993908+10	15	2020-07-07 03:46:00.993587+10	8b72892b
+fc614f330d8542114bf99e8c0349300e07160f21da509dce6d9d9ad529c71363f23a0fbe1566315b1286be9c165877e0a00ac1b42e4b2e7b663aaabe171a1a51	65433bfa0810018d	2020-07-06 17:49:27.698633+10	15	2020-07-07 03:49:27.698313+10	6c219f28
+77195bb43a7edf78eb71db12c12e71991e6718a9e3ea5a08c86a555b4bbf690cfc6d4e6f9b37381d5511fd2994ff8df79ed059532b97d36175824d4d5103bba5	70f20cfb0dfb8cbe	2020-07-06 17:51:03.981031+10	15	2020-07-07 03:51:03.980737+10	524cde0c
+2731650529f093f8592c47d821a3564fa78206c3ba4a9e0a019db0251888047f48e71cab562dd463b04c4f72f0417e715534193446cd22b88917e7af5cdd3e6b	9386913a617b2882	2020-07-06 17:51:20.870676+10	15	2020-07-07 03:51:20.87038+10	13b1ca89
+b28173242f66f8bfb8f178af220c815515f74064fe73fffdd9754c7128868bcf91c41445cfff18fd10e644dd0be5fc01e1e432e3941af2ef0e52e647779da7c1	62d299bcb0d06978	2020-07-06 18:07:30.906882+10	15	2020-07-07 04:07:30.906565+10	49282bcb
+8448cd02518d27dc5859d5c6d45927bfe1154f66b32c55a47efb44e7fa306726c85e3331697ac9a3d4a42feeb2a8dccfebf7ee891d8c8f7b34b3839679aaf11a	8c027acfa84d0f38	2020-07-06 18:07:46.815373+10	15	2020-07-07 04:07:46.815042+10	a687ba2d
+d71197fa310a9995d290aa4efb8b9117a26ce297af6f048599bbe562884c2757a4757e3b52d9951d909d0bc9c5d17ab8e2b2c92a2c6c47def830464e7f16b27a	1056721b7beecc0a	2020-07-06 18:09:54.536222+10	15	2020-07-07 04:09:54.535903+10	96283d57
+60e9067c5f603f5b3922338498863d18cc61b67b982eff8a6f600b85897c5c8de152d988a7ef0e7fbf87f4ce9ee7f1dfd791d07a12ec9a3ebe48c1f12506043d	681a29d986c6af9f	2020-07-06 18:10:41.698241+10	15	2020-07-07 04:10:41.697923+10	52873344
+a829073db500c6d87dccd2d28e9bc02ee26f88c4fbfef56635a483cf6954ef6e69500a2d877c11722793ea5a35049497984b1467529717bbfc2a105bfa4ef882	438988357fd9b3b1	2020-07-06 18:11:38.645261+10	15	2020-07-07 04:11:38.644957+10	e369101c
+7467142c049fa82b43b31f62d231b3a2c29d72f8280d403026bd5adc16bdbc1fee1f8806e6c43110d76867808ed921369d99272a7227defd1e885252d317609d	b827de4d52b1da00	2020-07-06 18:12:00.737384+10	15	2020-07-07 04:12:00.737086+10	42a64eab
+0478c64b551e3950da543d8742f9f1eab5cc722fd859eb03c10d905b24d3e61c544e77d7d6b5b4ed73cabc6583ad28625e16f5b22befe78fd6372474c9c6e260	5b333ff52bd30254	2020-07-06 18:12:39.387715+10	15	2020-07-07 04:12:39.387418+10	90faf945
+d442f9b4cf20bb7680dfb87c1a696cd6c70268c7449b4e106114875a66743dddd91b12a26619b5e3f6b025466e21e43d9681b22d7b7709cecb3bc06dd6856c61	9e136c6ebb52bcbc	2020-07-06 18:18:14.311956+10	15	2020-07-07 04:18:14.311658+10	95503e30
+d52b477313181cd9564628cd4c9e1beed0cf294c1c3f95aea35cc0850d40d20118028b19b258b5704bb85d388b6395263f978aff1d52739af169632867a30c0d	d18899cc651ec83e	2020-07-06 18:19:05.169793+10	15	2020-07-07 04:19:05.169456+10	97b5c6d1
+b139f56ab5dd6403760057c4dc83beade3b515702fe50714e331ea8c39e50b6b1a393a1a6826a753532d43219a4512c7a049f4839dd3101853aa2af914453b87	2ba1fd4a6e0275df	2020-07-06 18:21:10.868868+10	15	2020-07-07 04:21:10.868536+10	3bc57497
+59a84e53290dfab92057256f99084fa75ee45d6682c7838b79c6a93f684f0bf04cd184726fc5e6353d55dfd8d38d11710eaa8b0fe23ed36631b380c9daecc6dd	bada3f2fd6da6f97	2020-07-06 18:21:26.29525+10	15	2020-07-07 04:21:26.294106+10	0cb378af
+977d260a4c861ad11b1251a649019174f1d988af9fcbf929294aa9f6c0b8e73d27a575348c5bfcbc702d6cd1b016df2a2c53163de04bd0c8bec1662014b20995	fc8f03ee9a7ce85b	2020-07-06 18:22:59.969886+10	15	2020-07-07 04:22:59.969567+10	b4997787
+1fa40bb70b234875238a7afaa538d0e7153119ee27ee93c368d147795999e2eb83eab88ae0fc8295997c846e98b6f82ca104b8af6bcf649402f044c77d93a530	0ec66962df2e8c4f	2020-07-06 18:23:58.048524+10	15	2020-07-07 04:23:58.048176+10	121e7048
+2932940df216af833b4f6bf422c0f50d4ce6a769150a83533374a90befd090d155b590fe92aa9401103030e5a8c1100f8826445513f0a5a096730b1ec3c5b652	34a3df3fa4ff897a	2020-07-06 18:25:17.379238+10	15	2020-07-07 04:25:17.378822+10	c8bbc80e
+724c01dd18cb60c571ae2caa508756088366f805ac845113679d3cec0c787236108c2259a6ae4c3ad786312f15f7337cf1f0b0c01a115e70e6ec76d05694b24c	3c3fa5806c9157ad	2020-07-06 18:25:54.552487+10	15	2020-07-07 04:25:54.552171+10	ab3eb36a
+19434a5efb20a37867b788501b49ef0ca2db01423691a6e2b631b044bcb277480f62d1e80a5511eb0e1cf27735a63d5497f819529e8b453aab15a690c9e3696a	7a09e50541d42a19	2020-07-06 18:28:15.28835+10	15	2020-07-07 04:28:15.287992+10	fbf5bb86
+841045406b18a864174eb3ff1c7dbf428f2886c16337ac5281ce40effaacd1a42c112c1e9e5169b85672f1cd5a47f013dbb6fb8a9de33ff8640c563aaff9d05e	0e7b37e083f91d3a	2020-07-06 18:29:57.495853+10	15	2020-07-07 04:29:57.495269+10	399d1a88
+df4e01fe9feb6eb2faabd11b4dd3de5df8eed8b488c7644fddec711b9fa90ad981fa2fe028529c82a758a70adacbf63db202e0f779e6378974d78e2cd0f9e212	c3efcbbfa9d1b344	2020-07-06 18:30:43.605232+10	15	2020-07-07 04:30:43.604913+10	5abd2a58
+f031eeb846a328cf02b2d49150039379951cc0537658a8beceda8c0b7791f262bdfd20817fbd00e75cc30ff8cd717604f2fe6e9f039260a6e3eb837ff7e1c8d0	e72b2dd96ffd8571	2020-07-06 18:33:14.915309+10	15	2020-07-07 04:33:14.914995+10	c844731a
+681839bcc476e46bf30b593e4695536923c2c1c2e9dacaf1086c7674345a8edc5a5bb0370d9de193e2b851e194f2d7621c34122b61d9292c2987fd79249f8774	4be33dd62af2f4ad	2020-07-06 18:34:45.462108+10	15	2020-07-07 04:34:45.461748+10	8652f036
+7bd32e188d67de0423f1da1de5dc7ef2ab6d3c303dd5743a4013d7e7fed38e72ce6233047e886432d1114c6f30119226b7031171e01a04d69b2a0615f7926319	10505f3da885ee5d	2020-07-06 18:35:15.255916+10	15	2020-07-07 04:35:15.255607+10	e69c79c0
+f407502a2116db223291970ddffb6dec5c11bb38be87d9adc8de8804302e7bfa0b721c370fefd8299c7a14f57d1fa1fdf2bfd60f455872846b474b7a85606d5e	d779b68b99aaec57	2020-07-06 18:40:42.057889+10	15	2020-07-07 04:40:42.057562+10	c6e7af62
+642583fb6c99f6561ecb1ed70130d6dda60472897e6701275cfdd588a8bdd96628521c19a4092a5ec333b9474cbb86e3d062eacee9a0ac8535f24318131aa065	ba2ff9a0db3521d0	2020-07-06 18:41:00.641961+10	15	2020-07-07 04:41:00.6416+10	6de040fd
+b6c49d17c8ff423951882a3850088c60959ee3b3f52106102b1a323dfb837313c2de9bd644652a915cf4acf44861bed3457e8a126a9f569d6873681a0d531318	bccc58a4b6989b4b	2020-07-06 18:42:12.183417+10	15	2020-07-07 04:42:12.183055+10	0b61f3cf
+50d8b99eb7a99326aa5be2e51a169725f5e4e32fc3f8c80f2d40076390320a5098e1617dda50c8bb0d3897e7b21ee6bd23cc02c6409532e0d2953d9862056b3a	0502a9906b801b19	2020-07-06 18:44:30.602454+10	15	2020-07-07 04:44:30.602136+10	e626fa21
+ca3a647380fe67e620ebea392135c9de71855fd9d086fc3e00dacbb89aa28c66c2f1fa2fa99bb0e27587cc9da349a4688070cc15a6c9c47b0b0ec7dcc43fceb3	2543a363f217abe1	2020-07-06 18:57:46.994654+10	15	2020-07-07 04:57:46.994339+10	3e07469f
+b4ed158d82839421fb02a1a17a7b1213a408c93f26e408d5fc33c4a58de80beacffdb5870a17178f8c9a36ac6137f62341e5eb81a3077da215ea528db8722a15	776bb7707d74cc20	2020-07-06 19:19:35.49239+10	15	2020-07-07 05:19:35.491951+10	e9dd16cc
+ae8002321e01c26cea6f27a52ff5896c96953bf28a4c7b508ae02745e0c22dd06264cea0bd42fc944723470fc0b4dea88731725858e2f94d0e9a47127ce8e405	2472fed7642ed1b7	2020-07-06 19:19:44.799311+10	15	2020-07-07 05:19:44.79898+10	47a5771d
+b0b1c2d6687948121668666909b8f8c8d781c5bb53a0012954a5d4f97df63f76d90f177e9981d24a3d9a2275e57e0644b8d06ce3c0a9a006f1bb8fcba6a2e09a	d507956438c8d254	2020-07-06 19:23:08.398114+10	15	2020-07-07 05:23:08.397808+10	6d6fa87f
+0bbc92977936b6b4a6dc877b291807553b4273b8feabf6dc0216790f454ad14607371be4319ab508e3ab551c31fde0921627ea57a8bc866988775acfdba81e8a	48c31ab0c85349f6	2020-07-06 19:23:28.941143+10	15	2020-07-07 05:23:28.940768+10	29681b64
+60d2ea7457ab19a57e09f039459a2444a9fff941dad059cedfc71e25bf4e53ca1986f6014ffe7ba399d5555a373eb5ec74bf35568ead4223c64e96491c5a16fa	69ebe58ad3983749	2020-07-06 19:23:55.229134+10	15	2020-07-07 05:23:55.228819+10	14ed6165
+2cf8b47f3f2016d347dc29241cf107a4f24a8a1e1f2fc342e37b192e849b343dc01601da0aa2e11ce58dacb90ac3734c4850c572e34ed11a113bc6f0c3012ab7	9938a6fbc8e96880	2020-07-06 19:25:15.734777+10	15	2020-07-07 05:25:15.734461+10	cb1097d4
+4402808894810f991685fdf7377db6c364903b827434a6f606bd29dea4618ea0c639b51c9be058f21cf7e35c21af7cea82032711df3d818b7a865226d43db06f	c8b8a8fd79ead5d6	2020-07-06 19:31:07.302217+10	15	2020-07-07 05:31:07.301902+10	684c5e09
+b7352e6828f6edce210e9b1466f029b467b47cc87705d23501fab2d2d4a2bc897ab5a69cf6f641db1090a534f9cbe119408904c74a407553f4ff43a960bf102a	a6477c9d9046feb2	2020-07-06 19:37:56.304992+10	15	2020-07-07 05:37:56.304406+10	df0c6491
+cea80427bad00287e73f34f9de24addd54bbe2d271da3f34e59d0afdc446b5363168cb034472cff8ae042137d79553245afdd356068ecb2fe681cee4d16aa421	a9b2503366b7e8c0	2020-07-06 19:40:19.75331+10	15	2020-07-07 05:40:19.752989+10	ee10da2b
+10c5c19fd18ff347b09503341beeb6ae65a32505d76eba92b2ff7518396977ee65e31ffaeb8b875f95475b8263549f8bbce236e34f3654703755500178317c91	23503694f8a3a9c9	2020-07-06 19:40:51.030981+10	15	2020-07-07 05:40:51.030664+10	4eebd20b
+9c994a343f70167a1da90f8d9ec69934da31aff9c30d13ec3fdd2960e699c3eca8af5086b6f78af2172cd30dc33026c22d8e9e826ff856a055ebe6267b64d73e	5fb2adba24a318a4	2020-07-06 19:41:13.940503+10	15	2020-07-07 05:41:13.940117+10	dee893f0
+84076fcd75b294d6a84f57f77fdcd14e3864dab8609d55fd7f3f50a8937195ae6ca5a94c5d21490ae029cc8bbde1fe0df86f1a5714c5978042d5c488653d011e	52fcaa9f1e4f193d	2020-07-06 19:41:39.878267+10	15	2020-07-07 05:41:39.877951+10	d0ec9b3e
+546dfb12fba1a9238584a43a164b196c535743dc0cec552c5a82f97c9be7e5192e1102ba51e91a842fd62551df86e14d733689f1eb711a66ebae2eb400614bc1	ee10e869ea0d24dd	2020-07-06 19:42:09.060836+10	15	2020-07-07 05:42:09.060515+10	e4810894
+68c0329d5bc428d10da17611347d50ac069d43f1e60b1b1b2141eec3565720016345be0eeae4fbc5154343248101878920172b71e8c734ebc772f5c3525ca3ac	eafe63eb7243e902	2020-07-06 19:42:22.03706+10	15	2020-07-07 05:42:22.036693+10	b34fe730
+aebc3db66d880dc7186950fb10bebf8c5d4cf46bda84714872f4e3571a7f4f7a99bea05131f562517ea807f86b59f6c502b642edfaa716aad716aa33aa292516	3f275ba173e2219e	2020-07-06 19:43:45.175952+10	16	2020-07-07 05:43:45.175642+10	6ea3eaa3
+138d8fb9e44fdac7fcb5a44f8f5fad9e56c9c965ef1af4afe90fd4947250b11458263d77d11209eacce041202c0a28ca6dc4e01087763ea752e77d831c7fde62	6ae426c4647a9999	2020-07-06 19:43:54.334948+10	16	2020-07-07 05:43:54.334644+10	97387e0d
+47067e076e2762cbcaf4f8fba45118af069a6ab04eac81bc003f02af0844b2538d90a710ccac8dfb25e5f38604c83a6b973994f1e9a7c73114bf553c49962856	a025af7d8a765496	2020-07-06 19:44:04.466219+10	15	2020-07-07 05:44:04.465901+10	137a897b
+63279f9580573d2958623e7b7d6574e508064969272b416ae51adc340de3f55b8c8425027f5db0c05464d436c643bb0b7a78bdb0524de962f7bf7efd08fd8b9b	91ca0c5939e0f396	2020-07-06 19:44:21.045248+10	16	2020-07-07 05:44:21.04458+10	426dbe69
+2f1658c2c4243d4d3581d4dd6fc3a6b84fe59497b138b41152ef6596486cc400e0c3a84278adb5164220609f3cd67baefe0c06273c6b75da7c775c02496a26c4	28487081c0642486	2020-07-06 19:44:39.127918+10	15	2020-07-07 05:44:39.127582+10	de7fd394
+257f5b38f63aad72610224ec9a02876ab63a0031df4879ee03a161f29c1d75d62c7ef2b6b94e4dc57f5eec7a0a4f05596b56a1e3aead7fcc8051f4710678579d	6d356d453b6252b1	2020-07-06 19:46:26.492825+10	15	2020-07-07 05:46:26.492461+10	b65e142b
+d3f6c2bacd9fa43d31f92e00d33e8fb5bc81a1bc3505401242d3af8015a20f7ed47a884f9d9e8b52631fe7b7c8897bea3f750851e6c1bf834a915b7c839f4e26	f64901ab75c3fbcb	2020-07-06 19:46:44.046252+10	16	2020-07-07 05:46:44.045884+10	314073d3
+0abe11f265e0576bd581de4c8a72f4473e5e6ebe93c4b5c8e3d21eed6efd8d7525e0bdc3b036ec59782d624ca0b819b0e9176dfa9a43a1d2a6cc8bf61364d041	b5f5e997315a6123	2020-07-06 20:14:29.660884+10	17	2020-07-07 06:14:29.660452+10	b6012ec8
+59798a1f8665b7092957582193a11748dd146b4e1f6eb802a2790c03329e43809bf4b2da475610a8386303fab38433ef9e4de6bd014ae44be81a61fd02b98cc0	36af5d084eef4fcf	2020-07-06 20:15:45.391586+10	17	2020-07-07 06:15:45.391217+10	9745c687
+b78c596339408e28a9a2a6d1065f53b913349509ab122b3973577d927dafba3ab0a19f6f41ff841e2f2eec7be43b9674fe3c3757792630d36889254aacb61527	5ec11763e3075cd2	2020-07-06 20:16:05.120265+10	15	2020-07-07 06:16:05.119906+10	356bfa1f
+b9c83ee015b98d5c3d7e5506748a91605ac2750fdd6934b9aac906bbf012e46e9b1f2ad101863f83fd53f01e3512f01c2eb564da69c9277b9fdbcfd84e41fefd	b73e39c3207235e2	2020-07-06 20:16:27.009268+10	15	2020-07-07 06:16:27.008856+10	ee656792
+6f14fd6c2efbbc40d6ec8c126775c313804af12915d2bb38ba5352a8f7c8dc049e50dffef61a86271d98f223fda0fc76534512a6ee48ed93da762d9529c48567	ae4b7e85664f5baf	2020-07-06 20:16:47.794032+10	15	2020-07-07 06:16:47.793266+10	993c59e4
+b42d7f8a41baae2cdd0ea0d4f2b945be3efccd9857839b98aed1e971bf302b47c1e58eb42a135cb8f49d7d7ba48bcada4ec79eafec49ee543d0b2eca0d30a81a	3a5b126e7c274e54	2020-07-06 20:17:28.786888+10	15	2020-07-07 06:17:28.786442+10	80333d2d
+4a4bc61317e0168f34b2c6d2b9cb6545e4cbf923336f2d61a110ed778cd48da82acd19e6ee7653e0878498901737ce96253c5b123d091efcadac06046ecf4aff	9a048b3dfbc71a44	2020-07-06 20:17:48.136368+10	15	2020-07-07 06:17:48.135766+10	5f6dbd3c
+4d2943117b9bd3d817f8d987a6fdf09b418b546dd62689a74a6acac1e380e1bbbdf44e7de4aeaae354fda080bb7b990ed1d21caa725f1112dfdf7d3aaf51ff62	682b9d3b212c8a28	2020-07-06 20:19:40.192189+10	15	2020-07-07 06:19:40.191688+10	bebe2496
+0894e580bb0bae19f22323249f223f1f4fda9a5cb55a22cdeb9a2a96898c9653df803c5a944f7d9201959a722b4db3726ffbffb89f95973b9523018430561724	824de15ae1974a1a	2020-07-06 20:23:04.531109+10	15	2020-07-07 06:23:04.530634+10	02a22d4f
+e95db8ba9e0de62229b2155c138a78179fc0aa1b2317f2ea212b157303dc798ace42c7fd0700738eddb3a518f986de0038f64dca3c863cc3d9c69bf2ca630be7	75330a9790d73052	2020-07-06 20:35:24.968719+10	15	2020-07-07 06:35:24.968332+10	ed9bafcb
+f91a8198fd2ec0639f566bae05798b8499c769aaef0a6bd129a460517b3794df51b3c72b43d0d26cce5552813740977ae0b356ebe1f43c83ed9be241911ed276	c3cd5fbba2bdeb01	2020-07-06 20:41:05.511845+10	15	2020-07-07 06:41:05.511098+10	d9f17909
 \.
 
 
@@ -1512,15 +1527,6 @@ COPY public.socialaccount_socialtoken (id, token, token_secret, expires_at, acco
 
 
 --
--- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: 3900user
---
-
-COPY public.users (id, name, email, username, collection_list_id) FROM stdin;
-2	testuser	test@test.com	testuser98	1
-\.
-
-
---
 -- Data for Name: written_by; Type: TABLE DATA; Schema: public; Owner: 3900user
 --
 
@@ -1560,7 +1566,7 @@ SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 1, false);
 -- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: 3900user
 --
 
-SELECT pg_catalog.setval('public.auth_permission_id_seq', 92, true);
+SELECT pg_catalog.setval('public.auth_permission_id_seq', 96, true);
 
 
 --
@@ -1574,7 +1580,7 @@ SELECT pg_catalog.setval('public.auth_user_groups_id_seq', 1, false);
 -- Name: auth_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: 3900user
 --
 
-SELECT pg_catalog.setval('public.auth_user_id_seq', 1, false);
+SELECT pg_catalog.setval('public.auth_user_id_seq', 17, true);
 
 
 --
@@ -1602,14 +1608,7 @@ SELECT pg_catalog.setval('public.books_id_seq', 15, true);
 -- Name: collection_id_seq; Type: SEQUENCE SET; Schema: public; Owner: 3900user
 --
 
-SELECT pg_catalog.setval('public.collection_id_seq', 1, false);
-
-
---
--- Name: collection_lists_id_seq; Type: SEQUENCE SET; Schema: public; Owner: 3900user
---
-
-SELECT pg_catalog.setval('public.collection_lists_id_seq', 1, true);
+SELECT pg_catalog.setval('public.collection_id_seq', 35, true);
 
 
 --
@@ -1630,14 +1629,14 @@ SELECT pg_catalog.setval('public.django_admin_log_id_seq', 1, false);
 -- Name: django_content_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: 3900user
 --
 
-SELECT pg_catalog.setval('public.django_content_type_id_seq', 22, true);
+SELECT pg_catalog.setval('public.django_content_type_id_seq', 23, true);
 
 
 --
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: 3900user
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 31, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 42, true);
 
 
 --
@@ -1687,13 +1686,6 @@ SELECT pg_catalog.setval('public.socialaccount_socialapp_sites_id_seq', 1, false
 --
 
 SELECT pg_catalog.setval('public.socialaccount_socialtoken_id_seq', 1, false);
-
-
---
--- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: 3900user
---
-
-SELECT pg_catalog.setval('public.users_id_seq', 2, true);
 
 
 --
@@ -1864,14 +1856,6 @@ ALTER TABLE ONLY public.books
 
 
 --
--- Name: collection_lists collection_lists_pkey; Type: CONSTRAINT; Schema: public; Owner: 3900user
---
-
-ALTER TABLE ONLY public.collection_lists
-    ADD CONSTRAINT collection_lists_pkey PRIMARY KEY (id);
-
-
---
 -- Name: collection collection_pkey; Type: CONSTRAINT; Schema: public; Owner: 3900user
 --
 
@@ -1944,6 +1928,22 @@ ALTER TABLE ONLY public.django_site
 
 
 --
+-- Name: knox_authtoken knox_authtoken_pkey; Type: CONSTRAINT; Schema: public; Owner: 3900user
+--
+
+ALTER TABLE ONLY public.knox_authtoken
+    ADD CONSTRAINT knox_authtoken_pkey PRIMARY KEY (digest);
+
+
+--
+-- Name: knox_authtoken knox_authtoken_salt_key; Type: CONSTRAINT; Schema: public; Owner: 3900user
+--
+
+ALTER TABLE ONLY public.knox_authtoken
+    ADD CONSTRAINT knox_authtoken_salt_key UNIQUE (salt);
+
+
+--
 -- Name: reads reads_pkey; Type: CONSTRAINT; Schema: public; Owner: 3900user
 --
 
@@ -2013,14 +2013,6 @@ ALTER TABLE ONLY public.socialaccount_socialtoken
 
 ALTER TABLE ONLY public.socialaccount_socialtoken
     ADD CONSTRAINT socialaccount_socialtoken_pkey PRIMARY KEY (id);
-
-
---
--- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: 3900user
---
-
-ALTER TABLE ONLY public.users
-    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
 
 
 --
@@ -2130,10 +2122,10 @@ CREATE INDEX authtoken_token_key_10f0b77e_like ON public.authtoken_token USING b
 
 
 --
--- Name: collection_collection_list_id_cc54ff6e; Type: INDEX; Schema: public; Owner: 3900user
+-- Name: collection_owner_id_eb1b2f64; Type: INDEX; Schema: public; Owner: 3900user
 --
 
-CREATE INDEX collection_collection_list_id_cc54ff6e ON public.collection USING btree (collection_list_id);
+CREATE INDEX collection_owner_id_eb1b2f64 ON public.collection USING btree (owner_id);
 
 
 --
@@ -2183,6 +2175,41 @@ CREATE INDEX django_session_session_key_c0390e0f_like ON public.django_session U
 --
 
 CREATE INDEX django_site_domain_a2e37b91_like ON public.django_site USING btree (domain varchar_pattern_ops);
+
+
+--
+-- Name: knox_authtoken_digest_188c7e77_like; Type: INDEX; Schema: public; Owner: 3900user
+--
+
+CREATE INDEX knox_authtoken_digest_188c7e77_like ON public.knox_authtoken USING btree (digest varchar_pattern_ops);
+
+
+--
+-- Name: knox_authtoken_salt_3d9f48ac_like; Type: INDEX; Schema: public; Owner: 3900user
+--
+
+CREATE INDEX knox_authtoken_salt_3d9f48ac_like ON public.knox_authtoken USING btree (salt varchar_pattern_ops);
+
+
+--
+-- Name: knox_authtoken_token_key_8f4f7d47; Type: INDEX; Schema: public; Owner: 3900user
+--
+
+CREATE INDEX knox_authtoken_token_key_8f4f7d47 ON public.knox_authtoken USING btree (token_key);
+
+
+--
+-- Name: knox_authtoken_token_key_8f4f7d47_like; Type: INDEX; Schema: public; Owner: 3900user
+--
+
+CREATE INDEX knox_authtoken_token_key_8f4f7d47_like ON public.knox_authtoken USING btree (token_key varchar_pattern_ops);
+
+
+--
+-- Name: knox_authtoken_user_id_e5a5d899; Type: INDEX; Schema: public; Owner: 3900user
+--
+
+CREATE INDEX knox_authtoken_user_id_e5a5d899 ON public.knox_authtoken USING btree (user_id);
 
 
 --
@@ -2246,13 +2273,6 @@ CREATE INDEX socialaccount_socialtoken_account_id_951f210e ON public.socialaccou
 --
 
 CREATE INDEX socialaccount_socialtoken_app_id_636a42d7 ON public.socialaccount_socialtoken USING btree (app_id);
-
-
---
--- Name: users_collection_list_id_c0e214ec; Type: INDEX; Schema: public; Owner: 3900user
---
-
-CREATE INDEX users_collection_list_id_c0e214ec ON public.users USING btree (collection_list_id);
 
 
 --
@@ -2350,11 +2370,11 @@ ALTER TABLE ONLY public.authtoken_token
 
 
 --
--- Name: collection collection_collection_list_id_cc54ff6e_fk_collection_lists_id; Type: FK CONSTRAINT; Schema: public; Owner: 3900user
+-- Name: collection collection_owner_id_eb1b2f64_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: 3900user
 --
 
 ALTER TABLE ONLY public.collection
-    ADD CONSTRAINT collection_collection_list_id_cc54ff6e_fk_collection_lists_id FOREIGN KEY (collection_list_id) REFERENCES public.collection_lists(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT collection_owner_id_eb1b2f64_fk_auth_user_id FOREIGN KEY (owner_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -2390,6 +2410,14 @@ ALTER TABLE ONLY public.django_admin_log
 
 
 --
+-- Name: knox_authtoken knox_authtoken_user_id_e5a5d899_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: 3900user
+--
+
+ALTER TABLE ONLY public.knox_authtoken
+    ADD CONSTRAINT knox_authtoken_user_id_e5a5d899_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
 -- Name: reads reads_book_id_0376bcbf_fk_books_id; Type: FK CONSTRAINT; Schema: public; Owner: 3900user
 --
 
@@ -2398,11 +2426,11 @@ ALTER TABLE ONLY public.reads
 
 
 --
--- Name: reads reads_user_id_c209fc96_fk_users_id; Type: FK CONSTRAINT; Schema: public; Owner: 3900user
+-- Name: reads reads_user_id_c209fc96_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: 3900user
 --
 
 ALTER TABLE ONLY public.reads
-    ADD CONSTRAINT reads_user_id_c209fc96_fk_users_id FOREIGN KEY (user_id) REFERENCES public.users(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT reads_user_id_c209fc96_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -2414,11 +2442,11 @@ ALTER TABLE ONLY public.reviews
 
 
 --
--- Name: reviews reviews_user_id_c23b0903_fk_users_id; Type: FK CONSTRAINT; Schema: public; Owner: 3900user
+-- Name: reviews reviews_user_id_c23b0903_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: 3900user
 --
 
 ALTER TABLE ONLY public.reviews
-    ADD CONSTRAINT reviews_user_id_c23b0903_fk_users_id FOREIGN KEY (user_id) REFERENCES public.users(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT reviews_user_id_c23b0903_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -2459,14 +2487,6 @@ ALTER TABLE ONLY public.socialaccount_socialapp_sites
 
 ALTER TABLE ONLY public.socialaccount_socialaccount
     ADD CONSTRAINT socialaccount_socialaccount_user_id_8146e70c_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: users users_collection_list_id_c0e214ec_fk_collection_lists_id; Type: FK CONSTRAINT; Schema: public; Owner: 3900user
---
-
-ALTER TABLE ONLY public.users
-    ADD CONSTRAINT users_collection_list_id_c0e214ec_fk_collection_lists_id FOREIGN KEY (collection_list_id) REFERENCES public.collection_lists(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
