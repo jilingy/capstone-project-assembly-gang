@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
-import { Form, Input, Button, Checkbox, Typography } from 'antd'
+import { Form, Input, Button, Checkbox, Typography, Alert } from 'antd'
 import { Link,Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import * as actions from '../store/actions/auth';
 
-export default function Login() {
+function Login(props) {
   
    const [toCollection, setToCollection] = useState(false);
 
@@ -23,13 +25,13 @@ export default function Login() {
       };
     const headLayout = {
         wrapperCol: {
-          offset: 6,
-          span: 7,
+          offset: 7,
+          span: 10,
         },
     };
 
     const onSubmit = values => {
-      console.log('Success:', values);
+      props.onAuth(values.username, values.password);
       setToCollection(true);
     };
   
@@ -39,59 +41,78 @@ export default function Login() {
 
     return(
     <div>
-    {toCollection ? <Redirect to="/col_list" /> : null}
-    <Title
-      level={3}
-    >
-      Login
-    </Title>
-    <Form
-      {...layout}
-      name="basic"
-      initialValues={{
-        remember: true,
-      }}
-      onFinish={onSubmit}
-      onFinishFailed={onSubmitFailed}
-    >
-      <Form.Item
-        label="Email"
-        name="email"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your email!',
-          },
-        ]}
+      {toCollection ? <Redirect to="/col_list" /> : null}
+      <Title level={3}>Login</Title>
+      <Form
+        {...layout}
+        name="basic"
+        initialValues={{
+          remember: true,
+        }}
+        onFinish={onSubmit}
+        onFinishFailed={onSubmitFailed}
       >
-        <Input />
-      </Form.Item>
+        <Form.Item
+          label="Username"
+          name="username"
+          rules={[
+            {
+              required: true,
+              message: 'Please input your username!',
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
 
-      <Form.Item
-        label="Password"
-        name="password"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your password!',
-          },
-        ]}
-      >
-        <Input.Password />
-      </Form.Item>
+        <Form.Item
+          label="Password"
+          name="password"
+          rules={[
+            {
+              required: true,
+              message: 'Please input your password!',
+            },
+          ]}
+        >
+          <Input.Password />
+        </Form.Item>
 
-      <Form.Item {...headLayout} name="remember" valuePropName="checked">
-        <Checkbox>Remember me</Checkbox>
-      </Form.Item>
+        <Form.Item {...headLayout} name="remember" valuePropName="checked" >
+          <Checkbox>Remember me</Checkbox>
+        </Form.Item>
 
-      <Form.Item {...tailLayout}>
-        <Button type="primary" htmlType="submit">
-          Log In
-        </Button>
-      </Form.Item>
-    </Form>
-    <Link to="/register">Register for an Account</Link>
+        {props.error ? <Alert
+          message="Error"
+          description={props.error ? 'Invalid Login Credentials!' : null}
+          type="error"
+          showIcon
+          style={{ width: 500, left: 650, marginBottom: 10 }}
+        /> : null}
+
+        <Form.Item {...tailLayout}>
+          <Button type="primary" htmlType="submit" style={{ right: 117, position: 'relative' }}>
+            Log In 
+          </Button>
+        </Form.Item>
+      </Form>
+      <Link to="/register">Register for an Account</Link>
     </div>
     )
 
 }
+
+const mapStateToProps = (state) => {
+  return {
+    loading : state.loading,
+    error   : state.error,
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onAuth: (username, password) => dispatch(actions.authLogin(username, password))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
