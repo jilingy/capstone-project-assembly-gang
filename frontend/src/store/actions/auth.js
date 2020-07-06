@@ -1,5 +1,24 @@
 import * as actionTypes from './actionTypes';
+import { alertTypes } from './alertTypes';
 import axios from 'axios';
+
+export const alert_success = (message) => {
+    return {
+        type: alertTypes.SUCCESS, message
+    }
+}
+
+export const alert_error = (message) => {
+    return {
+        type: alertTypes.ERROR, message
+    }
+}
+
+export const alert_clear = (message) => {
+    return {
+        type: alertTypes.CLEAR
+    }
+}
 
 export const authStart = () => {
     return {
@@ -58,7 +77,7 @@ export const authLogin = (username, password) => {
             dispatch(checkAuthTimeout(3600));
         })
         .catch(err => {
-            dispatch(authFail(err))
+            dispatch(authFail(err));
         })
     }
 }
@@ -82,7 +101,7 @@ export const authSignup = (username, email, first_name, last_name, password) => 
             dispatch(checkAuthTimeout(3600));
         })
         .catch(err => {
-            dispatch(authFail(err))
+            dispatch(authFail('Invalid login credentials!'))
         })
     }
 }

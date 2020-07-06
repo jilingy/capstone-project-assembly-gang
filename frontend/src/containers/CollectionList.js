@@ -97,7 +97,7 @@ function AddCollectionForm({addCollection}) {
     )
 }
 
-function CollectionList() {
+function CollectionList(props) {
 
     const [collections, updateCollections] = useState([
         {
@@ -153,8 +153,15 @@ function CollectionList() {
             {/* We pass the 'addBook' function as a prop to the 'AddBookForm' component */}
             <AddCollectionForm addCollection={addCollection}/>
             <Table style={{ position: 'relative', bottom: 45, right:17, border: '2px solid black'}} dataSource={collections} columns={columns} />
+            <Button>{props.user_id} - Hello</Button>
         </div>
     )
 }
 
-export default connect()(CollectionList);
+const mapStateToProps = state => {
+    return {
+        user_id: state.user_id,
+    }
+}
+
+export default connect(mapStateToProps)(CollectionList);

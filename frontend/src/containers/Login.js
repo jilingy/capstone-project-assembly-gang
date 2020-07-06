@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Form, Input, Button, Checkbox, Typography, Spin } from 'antd'
+import { Form, Input, Button, Checkbox, Typography, Alert } from 'antd'
 import { Link,Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as actions from '../store/actions/auth';
@@ -81,6 +81,14 @@ function Login(props) {
         <Form.Item {...headLayout} name="remember" valuePropName="checked" >
           <Checkbox>Remember me</Checkbox>
         </Form.Item>
+
+        {props.error ? <Alert
+          message="Error"
+          description={props.error ? 'Invalid Login Credentials!' : null}
+          type="error"
+          showIcon
+          style={{ width: 500, left: 650, marginBottom: 10 }}
+        /> : null}
 
         <Form.Item {...tailLayout}>
           <Button type="primary" htmlType="submit" style={{ right: 117, position: 'relative' }}>

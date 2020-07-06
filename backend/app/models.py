@@ -4,18 +4,6 @@ from django.utils import timezone
 from datetime import datetime, date
 from django.contrib.auth.models import User
 
-class CollectionLists(models.Model):
-
-    class Meta:
-        db_table = 'collection_lists'
-
-    owner = models.ForeignKey(
-        User, 
-        related_name="collection_list", 
-        on_delete=models.CASCADE,
-        null=True
-    )
-
 class Books(models.Model):
 
     class Meta:
@@ -133,7 +121,7 @@ class Collections(models.Model):
     is_private = models.BooleanField(default=False)
     description = models.TextField(default="collection_description")
     collection_name = models.CharField(max_length=200, default="default_collection_name")
-    collection_list = models.ForeignKey(CollectionLists, on_delete=models.CASCADE, related_name="part_of")
+    owner = models.ForeignKey(User, related_name="collection_list", on_delete=models.CASCADE, null=True)
 
 class Contains(models.Model):
 

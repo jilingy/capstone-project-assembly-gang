@@ -1,7 +1,6 @@
 from rest_framework import viewsets, permissions
 
 from app.models import (
-    CollectionLists,
     Books,
     Reads,
     Reviews,
@@ -12,7 +11,6 @@ from app.models import (
 )
 
 from .serializers import (
-    CollectionListSerializer,
     BookSerializer,
     ReadSerializer,
     ReviewSerializer,
@@ -21,20 +19,6 @@ from .serializers import (
     CollectionSerializer,
     ContainSerializer
 )
-
-class CollectionListsSet(viewsets.ModelViewSet):
-
-    permission_classes = [
-        permissions.IsAuthenticated
-    ]
-
-    serializer_class = CollectionListSerializer
-    
-    def get_queryset(self):
-        return self.request.user.collection_list.all()
-
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
 
 class BooksSet(viewsets.ModelViewSet):
     serializer_class = BookSerializer
