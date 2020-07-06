@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { List, Avatar } from 'antd';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { Form, Input, Button, Popover, Table } from 'antd';
 import CollectionListBookCover from '../images/books.svg';
+import { connect } from 'react-redux';
+import axios from 'axios';
 
 function AddCollectionForm({addCollection}) {
 
@@ -96,7 +97,7 @@ function AddCollectionForm({addCollection}) {
     )
 }
 
-export default function CollectionList() {
+function CollectionList() {
 
     const [collections, updateCollections] = useState([
         {
@@ -154,5 +155,6 @@ export default function CollectionList() {
             <Table style={{ position: 'relative', bottom: 45, right:17, border: '2px solid black'}} dataSource={collections} columns={columns} />
         </div>
     )
-
 }
+
+export default connect()(CollectionList);

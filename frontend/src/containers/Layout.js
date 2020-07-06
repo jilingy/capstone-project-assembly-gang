@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Layout, Menu, Button } from 'antd';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as actions from '../store/actions/auth';
 
 import {
-  HomeOutlined,
   BookOutlined,
 } from '@ant-design/icons';
 
@@ -57,10 +56,16 @@ function CustomLayout(props) {
   )
 }
 
+const mapStateToProps = (state) => {
+  return {
+    user_id: state.user_id,
+  }
+}
+
 const mapDispatchToProps = (dispatch) => {
   return {
     logout: () => dispatch(actions.logout())
   }
 }
 
-export default connect(null, mapDispatchToProps)(CustomLayout);
+export default connect(mapStateToProps, mapDispatchToProps)(CustomLayout);

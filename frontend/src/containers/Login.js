@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Form, Input, Button, Checkbox, Typography } from 'antd'
+import { Form, Input, Button, Checkbox, Typography, Spin } from 'antd'
 import { Link,Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as actions from '../store/actions/auth';
@@ -32,6 +32,7 @@ function Login(props) {
 
     const onSubmit = values => {
       props.onAuth(values.username, values.password);
+      setToCollection(true);
     };
   
     const onSubmitFailed = errorInfo => {
@@ -41,11 +42,7 @@ function Login(props) {
     return(
     <div>
       {toCollection ? <Redirect to="/col_list" /> : null}
-      <Title
-        level={3}
-      >
-        Login
-      </Title>
+      <Title level={3}>Login</Title>
       <Form
         {...layout}
         name="basic"
@@ -86,8 +83,8 @@ function Login(props) {
         </Form.Item>
 
         <Form.Item {...tailLayout}>
-          <Button type="primary" htmlType="submit" style={{ right: 117 }}>
-            Log In
+          <Button type="primary" htmlType="submit" style={{ right: 117, position: 'relative' }}>
+            Log In 
           </Button>
         </Form.Item>
       </Form>
@@ -100,7 +97,7 @@ function Login(props) {
 const mapStateToProps = (state) => {
   return {
     loading : state.loading,
-    error   : state.error
+    error   : state.error,
   }
 }
 

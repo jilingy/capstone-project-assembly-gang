@@ -25,7 +25,7 @@ function App(props) {
 
 const mapStateToProps = state => {
   return {
-    isAuthenticated: state.token ? true : false
+    isAuthenticated: state.token ? true : false,
   }
 }
 

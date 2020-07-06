@@ -7,10 +7,11 @@ export const authStart = () => {
     }
 }
 
-export const authSuccess = (token) => {
+export const authSuccess = (token, user_id) => {
     return {
         type: actionTypes.AUTH_SUCCESS,
-        token: token
+        token: token,
+        user_id: user_id
     }
 }
 
@@ -23,7 +24,9 @@ export const authFail = (error) => {
 
 export const logout = () => {
     localStorage.removeItem('token');
-    localStorage.removeItem('expirationDate')
+    localStorage.removeItem('expirationDate');
+    localStorage.removeItem('user_id');
+    localStorage.removeItem('user');
     return {
         type: actionTypes.AUTH_LOGOUT
     }
@@ -38,7 +41,6 @@ export const checkAuthTimeout = (expirationTime) => {
 }
 
 export const authLogin = (username, password) => {
-    console.log('Tried to grab uer from backend and log user in...');
     return dispatch => {
         dispatch(authStart());
         axios.post('http://localhost:8000/api/auth/login' , {
@@ -46,11 +48,13 @@ export const authLogin = (username, password) => {
             password: password
         })
         .then(res => {
+            const user_id = res.data.user.id;
             const token = res.data.token;
             const expirationDate = new Date(new Date().getTime() + 3600 * 1000);
             localStorage.setItem('token', token);
             localStorage.setItem('expirationDate', expirationDate);
-            dispatch(authSuccess(token));
+            localStorage.setItem('user_id', user_id);
+            dispatch(authSuccess(token, user_id));
             dispatch(checkAuthTimeout(3600));
         })
         .catch(err => {
@@ -74,7 +78,7 @@ export const authSignup = (username, email, first_name, last_name, password) => 
             const expirationDate = new Date(new Date().getTime() + 3600 * 1000);
             localStorage.setItem('token', token);
             localStorage.setItem('expirationDate', expirationDate);
-            dispatch(authSuccess(token));
+            dispatch(authSuccess(token, null));
             dispatch(checkAuthTimeout(3600));
         })
         .catch(err => {
@@ -86,6 +90,7 @@ export const authSignup = (username, email, first_name, last_name, password) => 
 export const authCheckState = () => {
     return dispatch => {
         const token = localStorage.getItem('token');
+        const user_id = localStorage.getItem('user_id');
         if(token === undefined) {
             dispatch(logout())
         } else {
@@ -93,7 +98,7 @@ export const authCheckState = () => {
             if (expirationDate <= new Date()) {
                 dispatch(logout()); 
             } else {
-                dispatch(authSuccess(token));
+                dispatch(authSuccess(token, user_id));
                 dispatch(checkAuthTimeout(expirationDate.getTime() - ((new Date()).getTime()) / 1000));
             }
         }
