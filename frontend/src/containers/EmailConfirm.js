@@ -1,6 +1,38 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
+import axios from 'axios';
 
-export default function EmailConfirm() {
+function EmailConfirm(props) {
+
+    useEffect(() => {
+        createDefaultCollections();
+    } , [props.user_id])
+
+    const createDefaultCollections = async () => {
+            if(props.user_id !== null) {
+                await axios.post(`http://127.0.0.1:8000/api/collections/` , {
+                collection_type : "Main",
+                is_private      : false,
+                description     : 'This is your Main Collection',
+                collection_name : 'Main Collection',
+                owner           : props.user_id,
+
+            })
+            .catch(err => {
+                console.log(err);
+            });
+            await axios.post(`http://127.0.0.1:8000/api/collections/` , {
+                collection_type : "Finished",
+                is_private      : false,
+                description     : 'This is your Finished Collection',
+                collection_name : 'Finished Collection',
+                owner           : props.user_id,
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        }
+    }
 
     return (
         <div>
@@ -8,3 +40,12 @@ export default function EmailConfirm() {
         </div>
     )
 }
+
+const mapStateToProps = (state) => {
+    return {
+        user_id: state.user_id,
+    }
+}
+
+export default connect(mapStateToProps)(EmailConfirm);
+
