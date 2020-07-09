@@ -1,40 +1,36 @@
 import React from 'react';
 import { Card, Col, Row, Button } from 'antd';
+import BookCover from '../images/book_cover.jpg';
 
-export default class CustomCard extends React.Component {
+export default function CustomCard(props) {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-
-        }
-    }
-
-    render() {
-        return (
-            <div className="site-card-wrapper">
-                <p>Below is an example of a customisable Antd 'Card' component that has multiple parameters that can be attached to it</p>
-                <Row gutter={16}>
-                {
-                    this.props.booksData.map(book => {
-                        return (
-                            <Col key={book.id}>
-                                <Card 
-                                    title={book.title} 
-                                    bordered={false}
-                                    cover={<img alt="example" src={book.img_url} />}
-                                    style={{ width: 240 }}
-                                    extra={<Button type="primary" shape="round">View Details</Button>}
-                                    hoverable
-                                >
-                                    {book.desc}
-                                </Card>
-                            </Col>
-                        )
-                    })
-                }
-                </Row>
-            </div>
-        )
-    }
+    return (
+        <div className="site-card-wrapper" style={{ position: 'relative' , bottom: 50}}>
+            <Row gutter={16}>
+            {
+                props.booksData.map((book, index) => {
+                    return (
+                        <Col key={index}>
+                            <Card 
+                                title={book.book_title} 
+                                bordered={true}
+                                cover={<img alt="example" src={BookCover} />}
+                                style={{ width: 300, height: 680, background: '#cfcdc6'}}
+                                hoverable
+                                extra={props.ranSearch ? <Button type="primary">+ Add</Button> : null}
+                            >
+                                <p><b>{book.book_publisher}</b></p>
+                                <p><b>{book.publication_date}</b></p>
+                                {book.book_synopsis}                       
+                            </Card>
+                            <div style={{position: 'relative', bottom: 50 }}>
+                                <Button type="primary" shape="round">View Details</Button>
+                            </div>
+                        </Col>
+                    )
+                })
+            }
+            </Row>
+        </div>
+    )
 }

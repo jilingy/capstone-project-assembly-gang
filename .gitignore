@@ -5,5 +5,5 @@
 frontend/node_modules/
 node_modules/
 backend/app/__pycache__/
-backend/app/migrations/
 backend/project/__pycache__/
+backend/app/api/__pycache__/
