@@ -34,12 +34,11 @@ function Register(props) {
         values.password
       );
       setToLogin(true);
-      // Create default main and finished collection for user here!
     };
     
     const onSubmitFailed = errorInfo => {
-        console.log('Failed:', errorInfo);
-      };
+      console.log('Failed:', errorInfo);
+    };
 
     return(
     <div>
@@ -141,7 +140,6 @@ function Register(props) {
 
 const mapStateToProps = (state) => {
   return {
-    loading: state.loading,
     error: state.error,
     user_id: state.user_id,
   }

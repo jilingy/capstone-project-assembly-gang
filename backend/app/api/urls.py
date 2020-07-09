@@ -18,7 +18,7 @@ router.register(r'reads', ReadsSet)
 router.register(r'reviews', ReviewsSet)
 router.register(r'authors', AuthorsSet)
 router.register(r'writtenby', WrittenBySet)
-router.register(r'collections', CollectionsSet)
+router.register(r'collections', CollectionsSet, basename='collections')
 router.register(r'contains', ContainsSet)
 
 urlpatterns = router.urls

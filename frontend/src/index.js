@@ -4,12 +4,13 @@ import './index.css';
 import "antd/dist/antd.css";
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { createStore, compose, applyMiddleware } from "redux";
+import { createStore, applyMiddleware } from "redux";
 import reducer from './store/reducers/auth';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
 
-const composeEnhances = window.__REDUX_DEVTOOLS_EXTENSIONS_COMPOSE__ || compose
+const composeEnhances = composeWithDevTools
 
 const store = createStore(reducer, composeEnhances(
   applyMiddleware(thunk)

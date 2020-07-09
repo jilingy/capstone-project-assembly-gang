@@ -3,6 +3,7 @@ import { Layout, Menu, Button } from 'antd';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as actions from '../store/actions/auth';
+import Particles from 'react-particles-js';
 
 import {
   BookOutlined,
@@ -46,8 +47,8 @@ function CustomLayout(props) {
           {props.isAuthenticated ? null : <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/register">Register</Link></Button>}
         </Menu>
       </Header>
-      <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
-        <div className="site-layout-background" style={{ padding: 24, textAlign: 'center' }}>
+      <Content style={{ padding: 24, margin: '24px 16px 0', overflow: 'initial' }}>
+        <div className="site-layout-background" style={{ textAlign: 'center' }}>
           {props.children}
         </div>
       </Content>

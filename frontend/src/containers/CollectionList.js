@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { Form, Input, Button, Popover, Table } from 'antd';
-import CollectionListBookCover from '../images/books.svg';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
-function AddCollectionForm({addCollection}) {
+// Destructuring props...
+function AddCollectionForm({props: Props , setLen: setLength, len: Length}) {
 
     const [visible, hideForm] = useState(false);
 
@@ -22,17 +22,23 @@ function AddCollectionForm({addCollection}) {
     }
 
     const onSubmit = (data) => {
-        // After a form submit, we usually make an axios POST request to update
-        // the backend. For the sake of simplicity, we only update our frontend.
-        console.log(data);
-        if(!data) return;
-        addCollection(
-            {
-                "collection_name" : data.collectionTitle, 
-                "collection_desc" : data.collectionDesc, 
-                "image"           : CollectionListBookCover,
-            }
-        )
+        // UPDATE: Add new collection for user by sending POST request to 
+        // relevant API endpoint (making use of user_id from redux store)
+        axios.post('http://127.0.0.1:8000/api/collections/' , {
+            collection_type : "Named",
+            is_private      : false,
+            description     : data.collectionDesc,
+            collection_name : data.collectionTitle,
+            owner           : Props.user_id,
+        })
+        .then(() => {
+            // Triggers useEffect() to re-render component,
+            // fetching new colletions
+            setLength(Length + 1);
+        })
+        .catch(err => {
+            console.log(err);
+        })
     }
 
     return (
@@ -91,7 +97,7 @@ function AddCollectionForm({addCollection}) {
                     visible={visible}
                     onVisibleChange={handleVisibleChange}
                     >
-                <Button type="primary" style={{ left: 770, bottom: 80, position: 'relative' }}>+ Add Collection</Button>
+                <Button type="primary" style={{ left: 740, bottom: 70, position: 'relative' }}>+ Add Collection</Button>
             </Popover>
         </div>
     )
@@ -99,18 +105,36 @@ function AddCollectionForm({addCollection}) {
 
 function CollectionList(props) {
 
-    const [collections, updateCollections] = useState([
-        {
-            key: 1,
-            collection_name: 'Main Collection',
-            collection_desc: 'Default list provided by the platform to all users',
-        },
-        {
-            key: 2,
-            collection_name: 'Finished Collection',
-            collection_desc: "List of books marked 'Read' by user",
-        }
-    ]);
+    const [collections, updateCollections] = useState([]);
+    const [len, setLen] = useState(collections.length);
+
+    useEffect(() => {
+        axios.get('http://127.0.0.1:8000/api/collections/')
+        .then(res => {
+            var filtered = res.data.filter(collection => {
+                if(parseInt(props.user_id) === collection.owner) {
+                    return collection;
+                } else {
+                    return null;
+                }
+            })
+            updateCollections(filtered);
+        })
+    }, [len])
+
+    // Collection Delete
+    const handleDelete = (collection_id) => {
+        // UPDATE: Delete collection matching given ID by sending axios DELETE request 
+        // to relevant API endpoint 
+        axios.delete(`http://127.0.0.1:8000/api/collections/${collection_id}`)
+        .then(res => {
+            // Triggers useEffect() to re-render component,
+            // fetching new colletions
+            setLen(len - 1);
+        }).catch(err => {
+            console.log(err);
+        })
+    }
 
     const columns = [
         {
@@ -122,38 +146,54 @@ function CollectionList(props) {
         },
         {
             title: 'Collection Description',
-            dataIndex: 'collection_desc',
-            key: 'collection_desc',
+            dataIndex: 'description',
+            key: 'description',
+            render: description => <p>{description}</p>
         },
+        
         {
             title: 'Actions',
-            key: 'action',
-            dataIndex: 'action',
-            render: concern =>
-              (
+            key: 'id',
+            dataIndex: 'id',
+            render: (id, record) =>
                 <div>
-                  <Button type="primary"><Link to="/books">View Collection</Link></Button>
+                    <Button type="primary"><Link to="/books">View Collection</Link></Button>
+                    <Popover
+                        placement="topLeft"
+                        content={
+                        <div style={{ width: 250 }} >
+                            <p><b>Are you sure you want to delete this collection?</b></p>
+                            <Button type="danger" onClick={() => handleDelete(id)}>Delete</Button>
+                        </div>
+                        }
+                        title="Delete Collection"
+                        trigger="click"
+                        arrowPointAtCenter={true}
+                    >
+                        {(record.collection_type === 'Named') ? <Button type="danger" style={{ left: 10 }}>Delete Collection</Button> : null}
+                    </Popover>
                 </div>
-              )
           }
     ]
-
-    const addCollection = (collection) => {
-        const newCollection = [...collections, collection]
-        updateCollections(newCollection);
-    } 
 
     return (
         <div>
             <h1 style={{
                 position: 'relative',
-                right: 655,
-                bottom: 25,
+                right: 640,
+                bottom: 30,
             }}>My Book Collections</h1>
-            {/* We pass the 'addBook' function as a prop to the 'AddBookForm' component */}
-            <AddCollectionForm addCollection={addCollection}/>
-            <Table style={{ position: 'relative', bottom: 45, right:17, border: '2px solid black'}} dataSource={collections} columns={columns} />
-            <Button>{props.user_id} - Hello</Button>
+            <AddCollectionForm props={props} setLen={setLen} len={len}/>
+            {collections ? <Table 
+                style={{ 
+                    position: 'relative',
+                    border  : '2px solid black',
+                    bottom: 55,
+                    width: 1650
+                }} 
+                dataSource={collections} 
+                columns={columns} 
+            /> : null}
         </div>
     )
 }
