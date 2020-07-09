@@ -150,11 +150,12 @@ function CollectionList(props) {
             key: 'description',
             render: description => <p>{description}</p>
         },
+        
         {
             title: 'Actions',
             key: 'id',
             dataIndex: 'id',
-            render: (id) =>
+            render: (id, record) =>
                 <div>
                     <Button type="primary"><Link to="/books">View Collection</Link></Button>
                     <Popover
@@ -169,13 +170,12 @@ function CollectionList(props) {
                         trigger="click"
                         arrowPointAtCenter={true}
                     >
-                        <Button type="danger" style={{ left: 10 }}>Delete Collection</Button>
+                        {(record.collection_type === 'Named') ? <Button type="danger" style={{ left: 10 }}>Delete Collection</Button> : null}
                     </Popover>
                 </div>
           }
     ]
 
-    const data = null;
     return (
         <div>
             <h1 style={{
@@ -193,7 +193,6 @@ function CollectionList(props) {
                 }} 
                 dataSource={collections} 
                 columns={columns} 
-                data={data}
             /> : null}
         </div>
     )
