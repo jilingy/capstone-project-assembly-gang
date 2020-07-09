@@ -15,9 +15,9 @@ function App(props) {
   return (
     <div>
       <Router>
-        <CustomLayout {...props}>
-          <BaseRouter />
-        </CustomLayout>
+          <CustomLayout {...props}>
+              <BaseRouter />
+          </CustomLayout>
       </Router>
     </div>
   )

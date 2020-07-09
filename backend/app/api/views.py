@@ -1,4 +1,4 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets
 
 from app.models import (
     Books,
@@ -41,8 +41,10 @@ class WrittenBySet(viewsets.ModelViewSet):
     queryset = WrittenBy.objects.all()
 
 class CollectionsSet(viewsets.ModelViewSet):
+    
     serializer_class = CollectionSerializer
     queryset = Collections.objects.all()
+
 
 class ContainsSet(viewsets.ModelViewSet):
     serializer_class = ContainSerializer

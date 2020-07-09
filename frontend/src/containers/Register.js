@@ -34,7 +34,6 @@ function Register(props) {
         values.password
       );
       setToLogin(true);
-      // Create default main and finished collection for user here!
     };
     
     const onSubmitFailed = errorInfo => {

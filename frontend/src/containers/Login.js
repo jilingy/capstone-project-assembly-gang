@@ -3,7 +3,6 @@ import { Form, Input, Button, Checkbox, Typography, Alert } from 'antd'
 import { Link,Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as actions from '../store/actions/auth';
-import axios from 'axios';
 
 function Login(props) {
   
