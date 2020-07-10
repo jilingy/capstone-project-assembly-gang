@@ -69,7 +69,7 @@ class CollectionSerializer(serializers.ModelSerializer):
         model = Collections
         fields = (
             'id', 'collection_type', 'is_private', 
-            'description', 'collection_name', 'owner',
+            'description', 'collection_name', 'count', 'date_created', 'owner',
         )
 
 class ContainSerializer(serializers.ModelSerializer):
