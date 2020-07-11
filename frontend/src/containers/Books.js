@@ -36,7 +36,7 @@ export default function Books(props) {
                 setCollection(res.data);
             }
         )
-      } , [collection]);  
+      } , []);  
 
     const execSearch = (query, flag) => {
         if(flag === true) {
