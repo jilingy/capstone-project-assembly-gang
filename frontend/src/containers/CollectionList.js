@@ -125,7 +125,7 @@ function CollectionList(props) {
         axios.get('http://127.0.0.1:8000/api/collections/')
             .then(res => {
                 var filtered = res.data.filter(collection => {
-                    if (18 === collection.owner) {
+                    if (2 === collection.owner) {
                         return collection;
                     } else {
                         return null;
