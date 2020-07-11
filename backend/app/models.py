@@ -122,6 +122,8 @@ class Collections(models.Model):
     description = models.TextField(default="collection_description")
     collection_name = models.CharField(max_length=200, default="default_collection_name")
     owner = models.ForeignKey(User, related_name="collection_list", on_delete=models.CASCADE, null=True)
+    count = models.IntegerField(default=0)
+    date_created = models.DateTimeField(default=datetime.now)
 
 class Contains(models.Model):
 

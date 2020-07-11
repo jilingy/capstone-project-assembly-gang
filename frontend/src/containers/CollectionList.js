@@ -150,7 +150,18 @@ function CollectionList(props) {
             key: 'description',
             render: description => <p>{description}</p>
         },
-        
+        {
+            title: 'Number Of Books',
+            dataIndex: 'count',
+            key: 'count',
+            render: count => <p>{count}</p>
+        },
+        {
+            title: 'Date Created',
+            dataIndex: 'date_created',
+            key: 'date_created',
+            render: date_created => <p>{date_created}</p>
+        },
         {
             title: 'Actions',
             key: 'id',
