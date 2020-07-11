@@ -25,6 +25,7 @@ export default function CustomCard(props) {
                             </Card>
                             <div style={{position: 'relative', bottom: 50 }}>
                                 <Button type="primary" shape="round">View Details</Button>
+                                {props.isFinished ? <Button style={{marginLeft: 25}} type="primary" shape="round">Add Review</Button> : null}
                             </div>
                         </Col>
                     )

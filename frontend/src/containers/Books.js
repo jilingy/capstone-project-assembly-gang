@@ -25,6 +25,7 @@ export default function Books() {
 
     const [books, updateBooks] = useState([])
     const [ranSearch, setRanSearch] = useState(false)
+    const [isFinished, setIsFinished] = useState(true)
 
     useEffect(() => {
         const fetchData = async() => {
@@ -94,7 +95,7 @@ export default function Books() {
             onClick={value => execSearch(value , false)}
             >Cancel</Button>
             {/* We pass the 'books' array as a prop to the 'CustomCard' component */}
-            <CustomCard booksData={books} ranSearch={ranSearch}/>
+            <CustomCard booksData={books} ranSearch={ranSearch} isFinished={isFinished}/>
         </div>
     )
 
