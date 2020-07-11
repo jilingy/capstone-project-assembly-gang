@@ -14,9 +14,11 @@ const BaseRouter = () => (
       <Route exact path='/' component={Login}/>
       <Route exact path='/register' component={Register}/>
       <Route exact path='/emailconfirm' component={EmailConfirm}/>
-      <PrivateRoute path='/books' component={Books}/>
-      <PrivateRoute path='/col_list' component={CollectionList}/>
-      <PrivateRoute exact path='/account' component={Account}/>
+      {/* UPDATE: The below routes should all be PrivateRoute Components. They have
+          been changed to normal Routes due to authenticatio being taken out */}
+      <Route path='/books' component={Books}/>
+      <Route path='/col_list' component={CollectionList}/>
+      <Route exact path='/account' component={Account}/>
     </Switch>
   </div>
 );

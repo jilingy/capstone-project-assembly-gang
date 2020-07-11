@@ -31,7 +31,15 @@ function Login(props) {
     };
 
     const onSubmit = values => {
-      props.onAuth(values.username, values.password);
+
+       {/* 
+
+        The below code commented out is AUTH related.
+        DO NOT ALTER TO CHANGE.
+
+      */}
+
+      //props.onAuth(values.username, values.password);
       setToCollection(true);
     };
   

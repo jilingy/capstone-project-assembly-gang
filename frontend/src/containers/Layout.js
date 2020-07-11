@@ -15,7 +15,23 @@ function CustomLayout(props) {
 
   return (
     <Layout>
-    {props.isAuthenticated ? <Sider
+
+    {/* 
+
+      The below code commented out is AUTH related.
+      DO NOT ALTER TO CHANGE.
+
+    */}
+
+    {/* {props.isAuthenticated ? <Sider
+      style={{
+        overflow: 'auto',
+        height: '100vh',
+        position: 'fixed',
+        left: 0,
+      }}
+    > */}
+    <Sider
       style={{
         overflow: 'auto',
         height: '100vh',
@@ -33,18 +49,39 @@ function CustomLayout(props) {
     <Layout className="site-layout" style={props.isAuthenticated ? { marginLeft: 200 } : null}>
       <Header className="site-layout-background" style={{ padding: 0 }}>
         <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
-          {
-          props.isAuthenticated ? 
+
+           {/* 
+
+            The below code commented out is AUTH related.
+            DO NOT ALTER TO CHANGE.
+
+          */}
+
+          {/* { */}
+          {/* // props.isAuthenticated ?  */}
           <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20, backgroundColor: '#FF5833', borderColor: '#FF5833' }} onClick={props.logout}>
             <Link to="/">Logout</Link>
           </Button> 
-          : 
+          {/* :  */}
           <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}>
             <Link to="/">Login</Link>
           </Button>
-          }
-          {props.isAuthenticated ? <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/account">Account</Link></Button> : null}
-          {props.isAuthenticated ? null : <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/register">Register</Link></Button>}
+          {/* } */}
+
+           {/* 
+
+            The below code commented out is AUTH related.
+            DO NOT ALTER TO CHANGE.
+
+          */}
+
+          {/* {props.isAuthenticated ? <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/account">Account</Link></Button> : null}
+          {props.isAuthenticated ? null : <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/register">Register</Link></Button>} */}
+
+            
+          <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/account">Account</Link></Button>
+          <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/register">Register</Link></Button>
+        
         </Menu>
       </Header>
       <Content style={{ padding: 24, margin: '24px 16px 0', overflow: 'initial' }}>
