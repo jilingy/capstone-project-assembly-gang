@@ -69,7 +69,7 @@ export const authLogin = (username, password) => {
         .then(res => {
             const user_id = res.data.user.id;
             const token = res.data.token;
-            const expirationDate = new Date(new Date().getTime() + 900 * 1000);
+            const expirationDate = new Date(new Date().getTime() + 300 * 1000);
             localStorage.setItem('token', token);
             localStorage.setItem('expirationDate', expirationDate);
             localStorage.setItem('user_id', user_id);
@@ -95,12 +95,12 @@ export const authSignup = (username, email, first_name, last_name, password) => 
         .then(res => {
             const user_id = res.data.user.id;
             const token = res.data.key;
-            const expirationDate = new Date(new Date().getTime() + 900 * 1000);
+            const expirationDate = new Date(new Date().getTime() + 300 * 1000);
             localStorage.setItem('token', token);
             localStorage.setItem('expirationDate', expirationDate);
             localStorage.setItem('user_id', user_id);
             dispatch(authSuccess(token, user_id));
-            dispatch(checkAuthTimeout(900));
+            dispatch(checkAuthTimeout(300));
         })
         .catch(err => {
             dispatch(authFail('Invalid login credentials!'))

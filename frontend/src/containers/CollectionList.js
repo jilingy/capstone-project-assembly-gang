@@ -5,6 +5,10 @@ import { Form, Input, Button, Popover, Table } from 'antd';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
+import {
+    EditOutlined,
+  } from '@ant-design/icons';
+
 // Destructuring props...
 function AddCollectionForm({props: Props , setLen: setLength, len: Length}) {
 
@@ -105,8 +109,16 @@ function AddCollectionForm({props: Props , setLen: setLength, len: Length}) {
 
 function CollectionList(props) {
 
+    const [collectionToUpdate, setCollectionToUpdate] = useState();
     const [collections, updateCollections] = useState([]);
     const [len, setLen] = useState(collections.length);
+
+    const { handleSubmit, errors, control } = useForm({
+        defaultValues: {
+            collectionTitle: 'Wow',
+            collectionDesc: 'How',
+        }
+    });
 
     useEffect(() => {
         axios.get('http://127.0.0.1:8000/api/collections/')
@@ -120,7 +132,7 @@ function CollectionList(props) {
             })
             updateCollections(filtered);
         })
-    }, [len])
+    }, [len, collectionToUpdate])
 
     // Collection Delete
     const handleDelete = (collection_id) => {
@@ -134,6 +146,26 @@ function CollectionList(props) {
         }).catch(err => {
             console.log(err);
         })
+    }
+
+    const onSubmit = (data) => {
+        axios.put(`http://127.0.0.1:8000/api/collections/${collectionToUpdate[0].id}/` , {
+            collection_name: data.collectionTitle,
+            description: data.collectionDesc
+        }).then(res => {
+            setLen(len + 1);
+        }).catch(err => {
+            console.log(err);
+        })
+    }
+
+    const getCollectionData = (collection_id) => {
+        var obj = collections.filter(collection => {
+            if(collection.id == collection_id) {
+                return collection;
+            }
+        })
+        setCollectionToUpdate(obj);
     }
 
     const columns = [
@@ -168,7 +200,61 @@ function CollectionList(props) {
             dataIndex: 'id',
             render: (id, record) =>
                 <div>
-                    <Button type="primary"><Link to="/books">View Collection</Link></Button>
+                    <Popover
+                        placement="topLeft"
+                        content={
+                            <form
+                                style={{ width: 500 }} 
+                                className="bookForm"
+                                onSubmit={handleSubmit(onSubmit)}>
+                                <Controller
+                                    name="collectionTitle"
+                                    control={control}
+                                    rules={{ required: "Please enter a collection title" }}
+                                    as={
+                                    <Form.Item
+                                        label="Collection Title"
+                                        validateStatus={errors.collectionTitle && "error"}
+                                        help={errors.collectionTitle && errors.collectionTitle.message}
+                                    >
+                                        <Input defaultValue={collectionToUpdate ? collectionToUpdate[0].collection_name : ''}/>
+                                    </Form.Item>
+                                    }
+                                    style={{ 
+                                        paddingLeft  : 20 , 
+                                        paddingRight : 20 
+                                    }}
+                                />
+                
+                                <Controller
+                                    name="collectionDesc"
+                                    control={control}
+                                    rules={{ required: "Please enter a description for the collection" }}
+                                    as={
+                                    <Form.Item
+                                        label="Collection Description"
+                                        validateStatus={errors.collectionDesc && "error"}
+                                        help={errors.collectionDesc && errors.collectionDesc.message}
+                                    >
+                                        <Input defaultValue={collectionToUpdate ? collectionToUpdate[0].description : ''}/>
+                                    </Form.Item>
+                                    }
+                                    style={{ 
+                                        paddingLeft  : 20 , 
+                                        paddingRight : 20 
+                                    }}
+                                />
+                                <Button type="primary" htmlType="submit">Submit</Button>
+                                <Button type="danger" style={{ left: 4 }}>Cancel</Button>
+                    </form>
+                        }
+                        title="Edit Collection"
+                        trigger="click"
+                        arrowPointAtCenter={true}
+                    >
+                        {(record.collection_type === 'Named') ? <Button onClick={() => getCollectionData(id)} type="primary" icon={<EditOutlined theme="outlined" style={{ position: 'relative', bottom: 3}}/>}>Edit</Button> : null}
+                    </Popover>
+                    <Button type="primary" style={{ left: 5 }}><Link to="/books">View Collection</Link></Button>
                     <Popover
                         placement="topLeft"
                         content={
