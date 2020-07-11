@@ -24,13 +24,11 @@ export default function Books(props) {
     // refactored to make a axios request to our API backend using 
     // hooks
 
-    // Upon render, we recieve collection ID from props thanks to <Link>
-    // CollectionList.js
     const collectionID = props.location.state.id;
-
-    const [books, updateBooks] = useState(0);
-    const [ranSearch, setRanSearch] = useState(false);
-    const [collection, setCollection] = useState();
+    const [books, updateBooks] = useState([])
+    const [ranSearch, setRanSearch] = useState(false)
+    const [isFinished, setIsFinished] = useState(true)
+    const [collection, setCollection] = useState()
 
     useEffect(() => {
         axios.get(`http://127.0.0.1:8000/api/collections/${collectionID}`)
@@ -105,6 +103,7 @@ export default function Books(props) {
             }
             {/* We pass the 'books' array as a prop to the 'CustomCard' component */}
             {/* <CustomCard booksData={books} ranSearch={ranSearch}/> */}
+            <CustomCard booksData={books} ranSearch={ranSearch} isFinished={isFinished}/>
         </div>
     )
 

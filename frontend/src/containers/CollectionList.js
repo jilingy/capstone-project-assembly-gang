@@ -116,8 +116,8 @@ function CollectionList(props) {
 
     const { handleSubmit, errors, control } = useForm({
         defaultValues: {
-            collectionTitle: '',
-            collectionDesc: '',
+            collectionTitle: 'Wow',
+            collectionDesc: 'How',
         }
     });
 
