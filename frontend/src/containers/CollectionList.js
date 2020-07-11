@@ -113,11 +113,11 @@ function CollectionList(props) {
     const [collections, updateCollections] = useState([]);
     const [len, setLen] = useState(collections.length);
 
-    const { handleSubmit, errors, reset, control, defaultValues } = useForm({
+    const { handleSubmit, errors, control } = useForm({
         defaultValues: {
-            "collectionTitle" : '',
-            "collectionDesc" : '',
-        },
+            collectionTitle: 'Wow',
+            collectionDesc: 'How',
+        }
     });
 
     useEffect(() => {
@@ -148,8 +148,15 @@ function CollectionList(props) {
         })
     }
 
-    const onSubmit = () => {
-
+    const onSubmit = (data) => {
+        axios.put(`http://127.0.0.1:8000/api/collections/${collectionToUpdate[0].id}/` , {
+            collection_name: data.collectionTitle,
+            description: data.collectionDesc
+        }).then(res => {
+            setLen(len + 1);
+        }).catch(err => {
+            console.log(err);
+        })
     }
 
     const getCollectionData = (collection_id) => {
@@ -202,7 +209,6 @@ function CollectionList(props) {
                                 onSubmit={handleSubmit(onSubmit)}>
                                 <Controller
                                     name="collectionTitle"
-                                    defaultValue={defaultValues.collectionTitle}
                                     control={control}
                                     rules={{ required: "Please enter a collection title" }}
                                     as={
@@ -211,7 +217,7 @@ function CollectionList(props) {
                                         validateStatus={errors.collectionTitle && "error"}
                                         help={errors.collectionTitle && errors.collectionTitle.message}
                                     >
-                                        <Input />
+                                        <Input defaultValue={collectionToUpdate ? collectionToUpdate[0].collection_name : ''}/>
                                     </Form.Item>
                                     }
                                     style={{ 
@@ -223,7 +229,6 @@ function CollectionList(props) {
                                 <Controller
                                     name="collectionDesc"
                                     control={control}
-                                    defaultValue={defaultValues.description}
                                     rules={{ required: "Please enter a description for the collection" }}
                                     as={
                                     <Form.Item
@@ -231,7 +236,7 @@ function CollectionList(props) {
                                         validateStatus={errors.collectionDesc && "error"}
                                         help={errors.collectionDesc && errors.collectionDesc.message}
                                     >
-                                        <Input />
+                                        <Input defaultValue={collectionToUpdate ? collectionToUpdate[0].description : ''}/>
                                     </Form.Item>
                                     }
                                     style={{ 
