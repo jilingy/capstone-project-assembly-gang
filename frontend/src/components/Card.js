@@ -5,7 +5,7 @@ import BookCover from '../images/book_cover.jpg';
 export default function CustomCard(props) {
 
     return (
-        <div className="site-card-wrapper" style={{ position: 'relative' , bottom: 50}}>
+        <div className="site-card-wrapper" style={{ position: 'relative' , bottom: 50, left: 150}}>
             <Row gutter={16}>
             {
                 props.booksData.map((book, index) => {
@@ -17,10 +17,11 @@ export default function CustomCard(props) {
                                 cover={<img alt="example" src={BookCover} />}
                                 style={{ width: 300, height: 680, background: '#cfcdc6'}}
                                 hoverable
-                                extra={props.ranSearch ? <Button type="primary">+ Add</Button> : null}
+                                extra={<Button type="primary">+ Add</Button>}
                             >
                                 <p><b>{book.book_publisher}</b></p>
                                 <p><b>{book.publication_date}</b></p>
+                                <p><b>{book.genre}</b></p>
                                 {book.book_synopsis}                       
                             </Card>
                             <div style={{position: 'relative', bottom: 50 }}>

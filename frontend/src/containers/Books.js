@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import CustomCard from '../components/Card';
 import { Input, Button } from 'antd';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 const { Search } = Input;
@@ -90,12 +91,12 @@ export default function Books(props) {
             type={ranSearch ? "danger" : "primary"}
             onClick={value => execSearch(value , false)}
             >Cancel</Button>
-            <Button style={{
+            <Link to="/col_list"><Button style={{
                 bottom: 73,
                 right: 65,
             }} 
             type="primary"
-            >Back to Collections</Button>
+            >Back to Collections</Button></Link>
             {
                 books === 0 ? 
                     <h4>Your collection is currently empty</h4> 

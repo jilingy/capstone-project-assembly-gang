@@ -7,6 +7,7 @@ import Register from './containers/Register';
 import EmailConfirm from './containers/EmailConfirm';
 import Account from './containers/Account';
 import PrivateRoute from './common/PrivateRoute';
+import BookDirectroy from './containers/BookDirectory';
 
 const BaseRouter = () => (
   <div>
@@ -19,6 +20,7 @@ const BaseRouter = () => (
       <Route path='/books' component={Books}/>
       <Route path='/col_list' component={CollectionList}/>
       <Route exact path='/account' component={Account}/>
+      <Route exact path='/book_dir' component={BookDirectroy}/>
     </Switch>
   </div>
 );

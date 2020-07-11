@@ -44,6 +44,9 @@ function CustomLayout(props) {
         <Menu.Item key="1" icon={<BookOutlined />}>
           <Link to="/col_list">My Book Collections</Link>
         </Menu.Item>
+        <Menu.Item key="2" icon={<BookOutlined />}>
+          <Link to="/book_dir">Book Directory</Link>
+        </Menu.Item>
       </Menu>
     </Sider> : null}
     <Layout className="site-layout" style={props.isAuthenticated ? { marginLeft: 200 } : null}>
@@ -78,7 +81,7 @@ function CustomLayout(props) {
           {/* {props.isAuthenticated ? <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/account">Account</Link></Button> : null}
           {props.isAuthenticated ? null : <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/register">Register</Link></Button>} */}
 
-            
+
           <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/account">Account</Link></Button>
           <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/register">Register</Link></Button>
         
