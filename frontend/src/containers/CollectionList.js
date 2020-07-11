@@ -4,6 +4,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { Form, Input, Button, Popover, Table } from 'antd';
 import { connect } from 'react-redux';
 import axios from 'axios';
+import moment from 'moment';
 
 import {
     EditOutlined,
@@ -174,6 +175,7 @@ function CollectionList(props) {
             dataIndex: 'collection_name',
             key: 'collection_name',
             align: "center",
+            sorter: (a, b) => { return a.collection_name.localeCompare(b.collection_name)},
             render: collection_name => <p><b>{collection_name}</b></p>
         },
         {
@@ -186,12 +188,15 @@ function CollectionList(props) {
             title: 'Number Of Books',
             dataIndex: 'count',
             key: 'count',
+            sorter: (a, b) => a.count - b.count,
             render: count => <p>{count}</p>
         },
         {
             title: 'Date Created',
             dataIndex: 'date_created',
             key: 'date_created',
+            sorter: (a, b) => { return moment(a.date_created || 0).unix() - moment(b.date_created || 0).unix() },
+            sortDirections: ['descend'],
             render: date_created => <p>{date_created}</p>
         },
         {
