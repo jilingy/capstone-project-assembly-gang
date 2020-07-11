@@ -125,7 +125,7 @@ function CollectionList(props) {
         axios.get('http://127.0.0.1:8000/api/collections/')
             .then(res => {
                 var filtered = res.data.filter(collection => {
-                    if (2 === collection.owner) {
+                    if (56 === collection.owner) {
                         return collection;
                     } else {
                         return null;
@@ -259,7 +259,7 @@ function CollectionList(props) {
                     >
                         {(record.collection_type === 'Named') ? <Button onClick={() => getCollectionData(id)} type="primary" icon={<EditOutlined theme="outlined" style={{ position: 'relative', bottom: 3 }} />}>Edit</Button> : null}
                     </Popover>
-                    <Button type="primary" style={{ left: 5 }}><Link to="/books">View Collection</Link></Button>
+                    <Button type="primary" style={{ left: 5 }}><Link to={{pathname: "/books", state: {id} }}>View Collection</Link></Button>
                     <Popover
                         placement="topLeft"
                         content={

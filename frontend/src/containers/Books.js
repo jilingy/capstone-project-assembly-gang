@@ -5,7 +5,7 @@ import axios from 'axios';
 
 const { Search } = Input;
 
-export default function Books() {
+export default function Books(props) {
 
     // Normally what'd we do here is call the componentDidMount lifecycle 
     // method which makes an axios GET request and fetches data
@@ -23,24 +23,21 @@ export default function Books() {
     // refactored to make a axios request to our API backend using 
     // hooks
 
-    const [books, updateBooks] = useState([])
-    const [ranSearch, setRanSearch] = useState(false)
+    // Upon render, we recieve collection ID from props thanks to <Link>
+    // CollectionList.js
+    const collectionID = props.location.state.id;
+
+    const [books, updateBooks] = useState(0);
+    const [ranSearch, setRanSearch] = useState(false);
+    const [collection, setCollection] = useState();
 
     useEffect(() => {
-        const fetchData = async() => {
-            const result = await axios.get('http://127.0.0.1:8000/api/books/');
-            var filtered = result.data.filter(book => {
-                // Explicitly grab only some of books to add to 'Main Collection'
-                if(book.id === 5 || book.id === 2 || book.id === 13) {
-                    return book;
-                } else {
-                    return null;
-                }
-            })
-            updateBooks(filtered);
-        }
-        fetchData();
-      } , []);  
+        axios.get(`http://127.0.0.1:8000/api/collections/${collectionID}`)
+            .then(res => {
+                setCollection(res.data);
+            }
+        )
+      } , [collection]);  
 
     const execSearch = (query, flag) => {
         if(flag === true) {
@@ -72,9 +69,9 @@ export default function Books() {
         <div>
             <h1 style={{
                 position: 'relative',
-                right: 675,
+                right: 600,
                 bottom: 25,
-            }}>{ranSearch ? 'Search Results' : 'Main Collection'}</h1>
+            }}>{collection ? collection.collection_name : 'Search Results'}</h1>
             <Search 
                 placeholder="Search book by title, author, genre..." 
                 onSearch={value => execSearch(value , true)} 
@@ -82,19 +79,31 @@ export default function Books() {
                 style={{ 
                     position: 'relative',
                     width: 535, 
-                    right: 225,
+                    right: 75,
                     bottom: 73,
                 }}
             />
             <Button style={{
                 bottom: 73,
-                right: 220,
+                right: 70,
             }} 
             type={ranSearch ? "danger" : "primary"}
             onClick={value => execSearch(value , false)}
             >Cancel</Button>
+            <Button style={{
+                bottom: 73,
+                right: 65,
+            }} 
+            type="primary"
+            >Back to Collections</Button>
+            {
+                books === 0 ? 
+                    <h4>Your collection is currently empty</h4> 
+                : 
+                    null
+            }
             {/* We pass the 'books' array as a prop to the 'CustomCard' component */}
-            <CustomCard booksData={books} ranSearch={ranSearch}/>
+            {/* <CustomCard booksData={books} ranSearch={ranSearch}/> */}
         </div>
     )
 
