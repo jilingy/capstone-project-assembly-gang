@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import CustomCard from '../components/Card';
 import { Input, Button, Dropdown, Menu } from 'antd';
 import axios from 'axios';
+import { connect } from 'react-redux';
 
 const { Search } = Input;
 
-export default function BookDirectory(props) {
+function BookDirectory(props) {
 
     const [books, updateBooks] = useState([]);
     const [filteredBooks, setFilteredBooks] = useState([]);
@@ -65,6 +66,8 @@ export default function BookDirectory(props) {
         })
         if(filtered.length > 0) {
             setFilteredBooks(filtered);
+        } else {
+            setFilteredBooks([]);
         }
     }
 
@@ -86,7 +89,7 @@ export default function BookDirectory(props) {
         <div>
             <h1 style={{
                 position: 'relative',
-                right: 600,
+                right: 710,
                 bottom: 25,
             }}>{search ? 'Search Results' : 'Book Directory'}</h1>
             <Search 
@@ -96,16 +99,16 @@ export default function BookDirectory(props) {
                 style={{ 
                     position: 'relative',
                     width: 535, 
-                    right: 75,
-                    bottom: 73,
+                    right: 210,
+                    bottom: 70,
                 }}
             />
-            <Dropdown.Button overlay={menu} style={{ bottom: 73, right: 70}} type="primary"> 
+            <Dropdown.Button overlay={menu} style={{ bottom: 70, right: 200}} type="primary"> 
                 {filter ? filter : 'Filters'}
             </Dropdown.Button>
             <Button style={{
-                bottom: 73,
-                right: 65,
+                bottom: 70,
+                right: 190,
             }} 
             type={search ? "danger" : "primary"}
             onClick={(value) => setSearchFlag(value, false)}
@@ -114,5 +117,12 @@ export default function BookDirectory(props) {
             <CustomCard booksData={search ? filteredBooks : books}/>
         </div>
     )
-
 }
+
+const mapStateToProps = state => {
+    return {
+        user_id: state.user_id,
+    }
+}
+
+export default connect(mapStateToProps)(BookDirectory);

@@ -38,32 +38,6 @@ export default function Books(props) {
         )
       } , []);  
 
-    const execSearch = (query, flag) => {
-        if(flag === true) {
-            setRanSearch(true)
-            const fetchSearchData = async() => {
-                const result = await axios.get('http://127.0.0.1:8000/api/books/');
-                updateBooks(result.data);
-            }
-            fetchSearchData();
-        } else {
-            setRanSearch(false)
-            const fetchData = async() => {
-                const result = await axios.get('http://127.0.0.1:8000/api/books/');
-                var filtered = result.data.filter(book => {
-                    // Explicitly grab only some of books to add to 'Main Collection'
-                    if(book.id === 5 || book.id === 2 || book.id === 13) {
-                        return book;
-                    } else {
-                        return null;
-                    }
-                })
-                updateBooks(filtered);
-            }
-            fetchData();
-        }
-    }
-
     return (
         <div>
             <h1 style={{
@@ -71,24 +45,6 @@ export default function Books(props) {
                 right: 600,
                 bottom: 25,
             }}>{collection ? collection.collection_name : 'Search Results'}</h1>
-            <Search 
-                placeholder="Search book by title, author, genre..." 
-                onSearch={value => execSearch(value , true)} 
-                enterButton 
-                style={{ 
-                    position: 'relative',
-                    width: 535, 
-                    right: 75,
-                    bottom: 73,
-                }}
-            />
-            <Button style={{
-                bottom: 73,
-                right: 70,
-            }} 
-            type={ranSearch ? "danger" : "primary"}
-            onClick={value => execSearch(value , false)}
-            >Cancel</Button>
             <Link to="/col_list"><Button style={{
                 bottom: 73,
                 right: 65,

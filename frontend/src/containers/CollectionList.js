@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
-import { Form, Input, Button, Popover, Table } from 'antd';
+import { Form, Input, Button, Popover, Table, message } from 'antd';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import moment from 'moment';
@@ -25,6 +25,10 @@ function AddCollectionForm({ props: Props, setLen: setLength, len: Length }) {
     const handleVisibleChange = visible => {
         hideForm(visible)
     }
+
+    const addCollectionSuccess = () => {
+        message.success('Collection created successfully!');
+    };
 
     const onSubmit = (data) => {
         // UPDATE: Add new collection for user by sending POST request to 
@@ -92,7 +96,7 @@ function AddCollectionForm({ props: Props, setLen: setLength, len: Length }) {
                                 paddingRight: 20
                             }}
                         />
-                        <Button type="primary" htmlType="submit">Submit</Button>
+                        <Button onClick={addCollectionSuccess} type="primary" htmlType="submit">Submit</Button>
                         <Button type="danger" onClick={() => hideForm(false)} style={{ left: 4 }}>Cancel</Button>
                     </form>
                 }
@@ -102,7 +106,7 @@ function AddCollectionForm({ props: Props, setLen: setLength, len: Length }) {
                 visible={visible}
                 onVisibleChange={handleVisibleChange}
             >
-                <Button type="primary" style={{ left: 740, bottom: 70, position: 'relative' }}>+ Add Collection</Button>
+                <Button type="primary" style={{ left: 730, bottom: 70, position: 'relative' }}>+ Add Collection</Button>
             </Popover>
         </div>
     )
@@ -116,8 +120,8 @@ function CollectionList(props) {
 
     const { handleSubmit, errors, control } = useForm({
         defaultValues: {
-            collectionTitle: 'Wow',
-            collectionDesc: 'How',
+            collectionTitle: '',
+            collectionDesc: '',
         }
     });
 
@@ -125,7 +129,7 @@ function CollectionList(props) {
         axios.get('http://127.0.0.1:8000/api/collections/')
             .then(res => {
                 var filtered = res.data.filter(collection => {
-                    if (56 === collection.owner) {
+                    if (parseInt(props.user_id) === collection.owner) {
                         return collection;
                     } else {
                         return null;
@@ -282,7 +286,7 @@ function CollectionList(props) {
         <div>
             <h1 style={{
                 position: 'relative',
-                right: 590,
+                right: 660,
                 bottom: 30,
             }}>My Book Collections</h1>
             <AddCollectionForm props={props} setLen={setLen} len={len} />
@@ -292,7 +296,7 @@ function CollectionList(props) {
                     border: '2px solid black',
                     bottom: 55,
                     width: 1650,
-                    left: 130,
+                    left: -20,
                 }}
                 dataSource={collections}
                 columns={columns}
