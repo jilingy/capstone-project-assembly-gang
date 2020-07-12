@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 
 const { Option } = Select;
+const key = 'updatable';
 
 function CustomCard(props) {
 
@@ -56,6 +57,37 @@ function CustomCard(props) {
         })
     }
 
+    const removeBookSuccess = () => {
+        message.loading({ content: 'Processing...', key });
+            setTimeout(() => {
+                // Trigger Books Component to re-render by running useEffect() after a 2 second timeout
+                // which renders an alert message to the browser...
+                message.warning({ content: 'Book removed from collection successfully!', key, duration: 2 });
+                props.setBooks([]);
+                props.setBookDelete(props.bookDelete + 1);
+            }, 1000);
+    };
+
+    const handleDelete = (bookID , collectionID) => {
+        axios.get('http://127.0.0.1:8000/api/contains/')
+            .then(res => {
+                    var objToDelete = res.data.filter(contain => {
+                       if(contain.collection === collectionID && contain.book === bookID) {
+                           return contain;
+                       }
+                    });
+                    const triggerDelete = async() => {
+                        axios.delete(`http://127.0.0.1:8000/api/contains/${objToDelete[0].id}`)
+                            .then(res => {
+                                removeBookSuccess();
+                            }).catch(err => {
+                                console.log(err);
+                            })
+                        }
+                    triggerDelete();
+            })
+    }
+
     return (
         <div className="site-card-wrapper" style={{ position: 'relative' , bottom: 50, left: -20}}>
             <Row gutter={16}>
@@ -70,35 +102,51 @@ function CustomCard(props) {
                                 style={{ width: 300, height: 680, background: '#cfcdc6'}}
                                 hoverable
                                 extra={
-                                    <Popover
-                                        placement="topLeft"
-                                        content={
-                                            collections ?
-                                                <form
-                                                    onSubmit={handleSubmit(onSubmit)}
-                                                >
-                                                <Controller
-                                                    name="selectedCollections"
-                                                    control={control}
-                                                    as={
-                                                        <Select placeholder="Choose collection(s)" style={{ width: 250,paddingRight: 10 }} mode="multiple" allowClear={true}>
-                                                            {collections.map(collection => {
-                                                                return (
-                                                                    <Option value={`${collection.id},${book.id}`}>{collection.collection_name}</Option>
-                                                                )
-                                                            })}
-                                                        </Select>
-                                                    }
-                                                />
-                                                    <Button onClick={addBookSuccess} type="primary" htmlType="submit">Submit</Button>
-                                                </form> 
-                                        : null}
-                                        title="Add To Collection"
-                                        trigger="click"
-                                        arrowPointAtCenter={true}
-                                    >
-                                        <Button type="primary">+ Add</Button>
-                                    </Popover>
+                                    props.partOf ? 
+                                        (<Popover
+                                            placement="topLeft"
+                                            content={
+                                                collections ?
+                                                <div>
+                                                    <p>Are you sure you want to remove this book from this collection ?</p>
+                                                    <Button onClick={() => handleDelete(book.id , props.collectionID)} type="danger">Confirm</Button>
+                                                </div>
+                                                : null}
+                                            title="Remove From Collection ?"
+                                            trigger="click"
+                                            arrowPointAtCenter={true}
+                                        >
+                                            {props.partOf ? <Button type="danger">Remove</Button> : <Button type="primary">+ Add</Button>}
+                                        </Popover>) : 
+                                        (<Popover
+                                            placement="topLeft"
+                                            content={
+                                                collections ?
+                                                    <form
+                                                        onSubmit={handleSubmit(onSubmit)}
+                                                    >
+                                                    <Controller
+                                                        name="selectedCollections"
+                                                        control={control}
+                                                        as={
+                                                            <Select placeholder="Choose collection(s)" style={{ width: 250,paddingRight: 10 }} mode="multiple" allowClear={true}>
+                                                                {collections.map(collection => {
+                                                                    return (
+                                                                        <Option value={`${collection.id},${book.id}`}>{collection.collection_name}</Option>
+                                                                    )
+                                                                })}
+                                                            </Select>
+                                                        }
+                                                    />
+                                                        <Button onClick={addBookSuccess} type="primary" htmlType="submit">Submit</Button>
+                                                    </form> 
+                                            : null}
+                                            title="Add To Collection ?"
+                                            trigger="click"
+                                            arrowPointAtCenter={true}
+                                        >
+                                            {props.partOf ? <Button type="danger">Remove</Button> : <Button type="primary">+ Add</Button>}
+                                        </Popover>)
                                 }
                             >
                                 <p><b>{book.book_publisher}</b></p>

@@ -25,31 +25,38 @@ function Books(props) {
     // refactored to make a axios request to our API backend using 
     // hooks
 
-    const collectionID = props.location.state.id;
+    const collectionID = props.location.state.collectionID;
+    const partOf = props.location.state.partOf;
     const [books, setBooks] = useState([])
-    const [ranSearch, setRanSearch] = useState(false)
     const [isFinished, setIsFinished] = useState(true)
     const [collection, setCollection] = useState()
+    const [bookDelete, setBookDelete] = useState(0);
 
     useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/api/collections/${collectionID}`)
-            .then(res => {
-                setCollection(res.data);
-            }
-        )
-        axios.get('http://127.0.0.1:8000/api/contains/')
-            .then(res => {
-                res.data.filter(contain => {
-                    if(collectionID === contain.collection) {
-                        axios.get(`http://127.0.0.1:8000/api/books/${contain.book}`)
-                            .then(res => {
-                                addToBooks(res.data);
-                            }
-                        )
-                    }
+        const getCollection = async () => {
+            await axios.get(`http://127.0.0.1:8000/api/collections/${collectionID}`)
+                .then(res => {
+                    setCollection(res.data);
+                }
+            )
+        }
+        const getBooks = async () => {
+            await axios.get('http://127.0.0.1:8000/api/contains/')
+                .then(res => {
+                    res.data.filter(contain => {
+                        if(collectionID === contain.collection) {
+                            axios.get(`http://127.0.0.1:8000/api/books/${contain.book}`)
+                                .then(res => {
+                                    addToBooks(res.data);
+                                }
+                            )
+                        }
+                    })
                 })
-            })
-      } , []);  
+            }
+            getCollection();
+            getBooks();
+      } , [bookDelete]);  
 
     const addToBooks = (book) => {
         setBooks(prevBooks => ([...prevBooks , book]));
@@ -62,12 +69,27 @@ function Books(props) {
                 right: 660,
                 bottom: 25,
             }}>{collection ? collection.collection_name : 'Search Results'}</h1>
-            <Link to="/col_list"><Button style={{
+            
+            {books.length === 0 ? <Link to="/col_list"><Button style={{
                 bottom: 73,
                 right: 410
             }} 
             type="primary"
-            >Back to Collections</Button></Link>
+            >Back to Collections</Button></Link> : <Link to="/book_dir"><Button style={{
+                position: 'relative',
+                bottom: 73,
+                right: 360
+            }} 
+            type="primary"
+            >Back to Collections</Button></Link>}
+
+            {books.length > 0 ? <Link to="/book_dir"><Button style={{
+                position: 'relative',
+                bottom: 73,
+                right: 350
+            }} 
+            type="primary"
+            >Add Books</Button></Link> : null}
             {
                 books.length === 0 ? 
                     <div>
@@ -80,7 +102,14 @@ function Books(props) {
                         <Button style={{ position: 'relative', left: 25, top: 15 }} type="primary"><Link to="/book_dir">Go To Book Directory</Link></Button>
                     </div>
                 : 
-                <CustomCard booksData={books} ranSearch={ranSearch} isFinished={isFinished}/>
+                <CustomCard 
+                    setBooks={setBooks} 
+                    bookDelete={bookDelete} 
+                    setBookDelete={setBookDelete} 
+                    collectionID={collectionID} 
+                    partOf={partOf} booksData={books} 
+                    isFinished={isFinished}
+                />
             }            
         </div>
     )

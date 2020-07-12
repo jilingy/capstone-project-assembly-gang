@@ -114,7 +114,7 @@ function BookDirectory(props) {
             onClick={(value) => setSearchFlag(value, false)}
             >Cancel</Button>
             {/* We pass the 'books' array as a prop to the 'CustomCard' component */}
-            <CustomCard booksData={search ? filteredBooks : books}/>
+            <CustomCard partOf={false} booksData={search ? filteredBooks : books}/>
         </div>
     )
 }

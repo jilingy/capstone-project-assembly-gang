@@ -263,7 +263,7 @@ function CollectionList(props) {
                     >
                         {(record.collection_type === 'Named') ? <Button onClick={() => getCollectionData(id)} type="primary" icon={<EditOutlined theme="outlined" style={{ position: 'relative', bottom: 3 }} />}>Edit</Button> : null}
                     </Popover>
-                    <Button type="primary" style={{ left: 5 }}><Link to={{pathname: "/books", state: {id} }}>View Collection</Link></Button>
+                    <Button type="primary" style={{ left: 5 }}><Link to={{pathname: "/books", state: {collectionID: id , partOf: true} }}>View Collection</Link></Button>
                     <Popover
                         placement="topLeft"
                         content={
