@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import CustomCard from '../components/Card';
-import { Input, Button } from 'antd';
+import { Input, Button, Alert } from 'antd';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { connect } from 'react-redux'
 
 const { Search } = Input;
 
-export default function Books(props) {
+function Books(props) {
 
     // Normally what'd we do here is call the componentDidMount lifecycle 
     // method which makes an axios GET request and fetches data
@@ -25,7 +26,7 @@ export default function Books(props) {
     // hooks
 
     const collectionID = props.location.state.id;
-    const [books, updateBooks] = useState([])
+    const [books, setBooks] = useState([])
     const [ranSearch, setRanSearch] = useState(false)
     const [isFinished, setIsFinished] = useState(true)
     const [collection, setCollection] = useState()
@@ -36,31 +37,60 @@ export default function Books(props) {
                 setCollection(res.data);
             }
         )
+        axios.get('http://127.0.0.1:8000/api/contains/')
+            .then(res => {
+                res.data.filter(contain => {
+                    if(collectionID === contain.collection) {
+                        axios.get(`http://127.0.0.1:8000/api/books/${contain.book}`)
+                            .then(res => {
+                                addToBooks(res.data);
+                            }
+                        )
+                    }
+                })
+            })
       } , []);  
+
+    const addToBooks = (book) => {
+        setBooks(prevBooks => ([...prevBooks , book]));
+    }
 
     return (
         <div>
             <h1 style={{
                 position: 'relative',
-                right: 600,
+                right: 660,
                 bottom: 25,
             }}>{collection ? collection.collection_name : 'Search Results'}</h1>
             <Link to="/col_list"><Button style={{
                 bottom: 73,
-                right: 65,
+                right: 410
             }} 
             type="primary"
             >Back to Collections</Button></Link>
             {
-                books === 0 ? 
-                    <h4>Your collection is currently empty</h4> 
+                books.length === 0 ? 
+                    <div>
+                        <Alert
+                            message="Hey there!"
+                            description="Seems like you've got no books in this colleciton. Head over to the Book Directory to start adding some books!"
+                            type="info"
+                            showIcon
+                        />
+                        <Button style={{ position: 'relative', left: 25, top: 15 }} type="primary"><Link to="/book_dir">Go To Book Directory</Link></Button>
+                    </div>
                 : 
-                    null
-            }
-            {/* We pass the 'books' array as a prop to the 'CustomCard' component */}
-            {/* <CustomCard booksData={books} ranSearch={ranSearch}/> */}
-            <CustomCard booksData={books} ranSearch={ranSearch} isFinished={isFinished}/>
+                <CustomCard booksData={books} ranSearch={ranSearch} isFinished={isFinished}/>
+            }            
         </div>
     )
 
 }
+
+const mapStateToProps = state => {
+    return {
+        user_id: state.user_id,
+    }
+}
+
+export default connect(mapStateToProps)(Books);
