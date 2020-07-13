@@ -38,25 +38,27 @@ function BookDirectory(props) {
 
     const execSearch = () => {
         var filtered = books.filter(book => {
+            var queryMod = ''
+            var fieldMod = ''
             if(filter === "Title") {
-                var queryMod = query.toLowerCase();
-                var fieldMod = book.book_title.toLowerCase();
+                queryMod = query.toLowerCase();
+                fieldMod = book.book_title.toLowerCase();
                 if(fieldMod.includes(queryMod)) {
                     return book;
                } else {
                    return null;
                }
             } else if(filter === "Genre") {
-                var queryMod = query.toLowerCase();
-                var fieldMod = book.genre.toLowerCase();
+                queryMod = query.toLowerCase();
+                fieldMod = book.genre.toLowerCase();
                 if(fieldMod.includes(queryMod)) {
                     return book;
                 } else {
                     return null;
                 }
             } else if(filter === "Publisher") {
-                var queryMod = query.toLowerCase();
-                var fieldMod = book.book_publisher.toLowerCase();
+                queryMod = query.toLowerCase();
+                fieldMod = book.book_publisher.toLowerCase();
                 if(fieldMod.includes(queryMod)) {
                     return book;
                } else {

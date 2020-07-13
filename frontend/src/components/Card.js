@@ -20,6 +20,8 @@ function CustomCard(props) {
                 var filtered = res.data.filter(collection => {
                     if(parseInt(props.user_id) === collection.owner) {
                         return collection;
+                    } else {
+                        return null;
                     }
                 })
                 setCollections(filtered);
@@ -45,7 +47,7 @@ function CustomCard(props) {
             })
             .then(res => {
                 collections.map(collection => {
-                    if(collection.id == parseInt(split[0])) {
+                    if(collection.id === parseInt(split[0])) {
                         axios.patch(`http://127.0.0.1:8000/api/collections/${split[0]}/` , {
                             count: collection.count + 1,
                         })
@@ -73,18 +75,42 @@ function CustomCard(props) {
             }, 1000);
     };
 
-    const handleDelete = (bookID , collectionID) => {
+    const markBookAsReadSuccess = () => {
+        message.loading({ content: 'Processing...', key });
+            setTimeout(() => {
+                // Trigger Books Component to re-render by running useEffect() after a 2 second timeout
+                // which renders an alert message to the browser...
+                message.warning(
+                    { 
+                        content: 'Congrats on finishing this book! We\'ve conveniently added the book to your \'Finished\' collection list. Happy Reading!', 
+                        key, 
+                        duration: 5 
+                    }
+                );
+                props.setBooks([]);
+                props.setBookDelete(props.bookDelete + 1);
+            }, 1000);
+    };
+
+    const handleDelete = (bookID , collectionID, MarkAsRead) => {
         axios.get('http://127.0.0.1:8000/api/contains/')
             .then(res => {
                     var objToDelete = res.data.filter(contain => {
                        if(contain.collection === collectionID && contain.book === bookID) {
                            return contain;
+                       } else {
+                           return null;
                        }
                     });
                     const triggerDelete = async() => {
                         axios.delete(`http://127.0.0.1:8000/api/contains/${objToDelete[0].id}`)
                             .then(res => {
-                                removeBookSuccess();
+                                if(MarkAsRead) {
+                                    markBookAsReadSuccess();
+                                    handleMarkAsRead(bookID, collectionID);
+                                } else {
+                                    removeBookSuccess();
+                                }
                             }).catch(err => {
                                 console.log(err);
                             })
@@ -108,6 +134,23 @@ function CustomCard(props) {
             })
     }
 
+    const handleMarkAsRead = (bookID, collectionID) => {
+        collections.filter(collection => {
+            if(collection.collection_type === "Finished") {
+                axios.post('http://127.0.0.1:8000/api/contains/' , {
+                    collection: collection.id,
+                    book: bookID,
+                }
+            )
+            axios.patch(`http://127.0.0.1:8000/api/collections/${collection.id}/` , {
+                count: collection.count + 1,
+            })
+            } else {
+                return null;
+            }
+        })
+    }
+
     return (
         <div className="site-card-wrapper" style={{ position: 'relative' , bottom: 50, left: -20}}>
             <Row gutter={16}>
@@ -119,7 +162,7 @@ function CustomCard(props) {
                                 title={book.book_title} 
                                 bordered={true}
                                 cover={<img alt="example" src={BookCover} />}
-                                style={{ width: 300, height: 680, background: '#cfcdc6'}}
+                                style={{ width: 300, height: 600, background: '#cfcdc6'}}
                                 hoverable
                                 extra={
                                     props.partOf ? 
@@ -129,7 +172,7 @@ function CustomCard(props) {
                                                 collections ?
                                                 <div>
                                                     <p>Are you sure you want to remove this book from this collection ?</p>
-                                                    <Button onClick={() => handleDelete(book.id , props.collectionID)} type="danger">Confirm</Button>
+                                                    <Button onClick={() => handleDelete(book.id , props.collectionID, false)} type="danger">Confirm</Button>
                                                 </div>
                                                 : null}
                                             title="Remove From Collection ?"
@@ -169,15 +212,24 @@ function CustomCard(props) {
                                         </Popover>)
                                 }
                             >
-                                <p><b>{book.book_publisher}</b></p>
-                                <p><b>{book.publication_date}</b></p>
-                                <p><b>{book.genre}</b></p>
                                 {book.book_synopsis}                       
                             </Card>
-                            <div style={{position: 'relative', bottom: 50 }}>
-                                <Button type="primary" shape="round">View Details</Button>
-                                {props.isFinished ? <Button style={{marginLeft: 25}} type="primary" shape="round">Add Review</Button> : null}
-                            </div>
+                            <Button style={{ position : 'relative', bottom: 50 }} type="primary" shape="round">View Details</Button>
+                            {props.partOf ? 
+                                <Button 
+                                    style={{ 
+                                        position : 'relative', 
+                                        bottom: 50, left: 5 
+                                    }} 
+                                    type="primary" 
+                                    shape="round"
+                                    onClick={() => handleDelete(book.id, props.collectionID, true)}
+                                >
+                                        Mark as Read
+                                </Button> 
+                                    : 
+                                null
+                            }
                         </Col>
                     )
                 })

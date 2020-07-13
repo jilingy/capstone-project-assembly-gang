@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import CustomCard from '../components/Card';
-import { Input, Button, Alert } from 'antd';
+import { Button, Alert } from 'antd';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { connect } from 'react-redux'
-
-const { Search } = Input;
 
 function Books(props) {
 
@@ -28,7 +26,6 @@ function Books(props) {
     const collectionID = props.location.state.collectionID;
     const partOf = props.location.state.partOf;
     const [books, setBooks] = useState([])
-    const [isFinished, setIsFinished] = useState(true)
     const [collection, setCollection] = useState()
     const [bookDelete, setBookDelete] = useState(0);
 
@@ -75,7 +72,7 @@ function Books(props) {
                 right: 410
             }} 
             type="primary"
-            >Back to Collections</Button></Link> : <Link to="/book_dir"><Button style={{
+            >Back to Collections</Button></Link> : <Link to="/col_list"><Button style={{
                 position: 'relative',
                 bottom: 73,
                 right: 360
@@ -107,8 +104,8 @@ function Books(props) {
                     bookDelete={bookDelete} 
                     setBookDelete={setBookDelete} 
                     collectionID={collectionID} 
-                    partOf={partOf} booksData={books} 
-                    isFinished={isFinished}
+                    partOf={partOf} 
+                    booksData={books} 
                 />
             }            
         </div>
