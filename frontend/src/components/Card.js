@@ -27,7 +27,12 @@ function CustomCard(props) {
     } , [])
 
     const addBookSuccess = () => {
-        message.success('Book added to collection(s)!');
+        message.loading({ content: 'Processing...', key });
+            setTimeout(() => {
+                // Trigger Books Component to re-render by running useEffect() after a 2 second timeout
+                // which renders an alert message to the browser...
+                message.success({ content: 'Book added to collection(s)!', key, duration: 2 });
+            }, 1000);
     };
 
     // Add book to collection(s) and increment 'Count' for collection
@@ -84,7 +89,22 @@ function CustomCard(props) {
                                 console.log(err);
                             })
                         }
+                    const updateCollectionCount = async() => {
+                        axios.get(`http://127.0.0.1:8000/api/collections/${collectionID}`)
+                            .then(res => {
+                                axios.patch(`http://127.0.0.1:8000/api/collections/${collectionID}/` , {
+                                    count: res.data.count - 1,
+                                })
+                                .catch(err => {
+                                    console.log(err);
+                                })
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            })
+                    }
                     triggerDelete();
+                    updateCollectionCount();
             })
     }
 

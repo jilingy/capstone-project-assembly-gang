@@ -10,6 +10,8 @@ import {
     EditOutlined,
 } from '@ant-design/icons';
 
+const key = 'updatable';
+
 // Destructuring props...
 function AddCollectionForm({ props: Props, setLen: setLength, len: Length }) {
 
@@ -27,7 +29,11 @@ function AddCollectionForm({ props: Props, setLen: setLength, len: Length }) {
     }
 
     const addCollectionSuccess = () => {
-        message.success('Collection created successfully!');
+        message.loading({ content: 'Processing...', key });
+            setTimeout(() => {
+                message.success({ content: 'Collection created successfully!', key, duration: 2 });
+                setLength(Length + 1);
+            }, 1000);
     };
 
     const onSubmit = (data) => {
@@ -40,14 +46,9 @@ function AddCollectionForm({ props: Props, setLen: setLength, len: Length }) {
             collection_name: data.collectionTitle,
             owner: Props.user_id,
         })
-            .then(() => {
-                // Triggers useEffect() to re-render component,
-                // fetching new colletions
-                setLength(Length + 1);
-            })
-            .catch(err => {
-                console.log(err);
-            })
+        .catch(err => {
+            console.log(err);
+        })
     }
 
     return (
@@ -139,6 +140,14 @@ function CollectionList(props) {
             })
     }, [len, collectionToUpdate])
 
+    const deleteCollectionSuccess = () => {
+        message.loading({ content: 'Processing...', key });
+            setTimeout(() => {
+                message.success({ content: 'Collection deleted successfully!', key, duration: 2 });
+                setLen(len - 1);
+            }, 1000);
+    };
+
     // Collection Delete
     const handleDelete = (collection_id) => {
         // UPDATE: Delete collection matching given ID by sending axios DELETE request 
@@ -147,7 +156,7 @@ function CollectionList(props) {
             .then(res => {
                 // Triggers useEffect() to re-render component,
                 // fetching new colletions
-                setLen(len - 1);
+                deleteCollectionSuccess();
             }).catch(err => {
                 console.log(err);
             })
