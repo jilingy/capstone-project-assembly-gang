@@ -152,7 +152,7 @@ function CustomCard(props) {
                                                             <Select placeholder="Choose collection(s)" style={{ width: 250,paddingRight: 10 }} mode="multiple" allowClear={true}>
                                                                 {collections.map(collection => {
                                                                     return (
-                                                                        <Option value={`${collection.id},${book.id}`}>{collection.collection_name}</Option>
+                                                                        collection.collection_type !== "Finished" ? <Option value={`${collection.id},${book.id}`}>{collection.collection_name}</Option> : null
                                                                     )
                                                                 })}
                                                             </Select>
