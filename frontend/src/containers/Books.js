@@ -103,7 +103,8 @@ function Books(props) {
                     setBooks={setBooks} 
                     bookDelete={bookDelete} 
                     setBookDelete={setBookDelete} 
-                    collectionID={collectionID} 
+                    collectionID={collectionID}
+                    collection={collection} 
                     partOf={partOf} 
                     booksData={books} 
                 />

@@ -151,6 +151,12 @@ function CustomCard(props) {
         })
     }
 
+    const handleAddReview = () => {
+        // Get started on adding reviews from here
+        // @MichaelP
+        console.log("Add review button clicked!");
+    }
+
     return (
         <div className="site-card-wrapper" style={{ position: 'relative' , bottom: 50, left: -20}}>
             <Row gutter={16}>
@@ -223,9 +229,9 @@ function CustomCard(props) {
                                     }} 
                                     type="primary" 
                                     shape="round"
-                                    onClick={() => handleDelete(book.id, props.collectionID, true)}
+                                    onClick={props.collection.collection_type !== "Finished" ? (() => handleDelete(book.id, props.collectionID, true)) : handleAddReview}
                                 >
-                                        Mark as Read
+                                        {(props.collection.collection_type === "Finished") ? "Add Review" : "Mark As Read"}
                                 </Button> 
                                     : 
                                 null
