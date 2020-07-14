@@ -74,7 +74,7 @@ export const authLogin = (username, password) => {
             localStorage.setItem('expirationDate', expirationDate);
             localStorage.setItem('user_id', user_id);
             dispatch(authSuccess(token, user_id));
-            dispatch(checkAuthTimeout(3600));
+            dispatch(checkAuthTimeout(300));
         })
         .catch(err => {
             dispatch(authFail('Invalid Login Credentials!'));
@@ -120,7 +120,7 @@ export const authCheckState = () => {
                 dispatch(logout()); 
             } else {
                 dispatch(authSuccess(token, user_id));
-                dispatch(checkAuthTimeout(expirationDate.getTime() - ((new Date()).getTime()) / 1000));
+                dispatch(checkAuthTimeout((expirationDate.getTime() - new Date().getTime()) / 1000));
             }
         }
     }

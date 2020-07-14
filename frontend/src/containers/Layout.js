@@ -3,7 +3,6 @@ import { Layout, Menu, Button } from 'antd';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as actions from '../store/actions/auth';
-import Particles from 'react-particles-js';
 
 import {
   BookOutlined,
@@ -23,15 +22,7 @@ function CustomLayout(props) {
 
     */}
 
-    {/* {props.isAuthenticated ? <Sider
-      style={{
-        overflow: 'auto',
-        height: '100vh',
-        position: 'fixed',
-        left: 0,
-      }}
-    > */}
-    <Sider
+    {props.isAuthenticated ? <Sider
       style={{
         overflow: 'auto',
         height: '100vh',
@@ -39,10 +30,21 @@ function CustomLayout(props) {
         left: 0,
       }}
     >
+    {/* <Sider
+      style={{
+        overflow: 'auto',
+        height: '100vh',
+        position: 'fixed',
+        left: 0,
+      }}
+    > */}
       <div className="logo" />
       <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
         <Menu.Item key="1" icon={<BookOutlined />}>
           <Link to="/col_list">My Book Collections</Link>
+        </Menu.Item>
+        <Menu.Item key="2" icon={<BookOutlined />}>
+          <Link to="/book_dir">Book Directory</Link>
         </Menu.Item>
       </Menu>
     </Sider> : null}
@@ -57,16 +59,15 @@ function CustomLayout(props) {
 
           */}
 
-          {/* { */}
-          {/* // props.isAuthenticated ?  */}
+          { props.isAuthenticated ?  
           <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20, backgroundColor: '#FF5833', borderColor: '#FF5833' }} onClick={props.logout}>
             <Link to="/">Logout</Link>
           </Button> 
-          {/* :  */}
+          :  
           <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}>
             <Link to="/">Login</Link>
           </Button>
-          {/* } */}
+          }
 
            {/* 
 
@@ -75,12 +76,12 @@ function CustomLayout(props) {
 
           */}
 
-          {/* {props.isAuthenticated ? <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/account">Account</Link></Button> : null}
-          {props.isAuthenticated ? null : <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/register">Register</Link></Button>} */}
+          {props.isAuthenticated ? <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/account">Account</Link></Button> : null}
+          {props.isAuthenticated ? null : <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/register">Register</Link></Button>} 
 
-            
-          <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/account">Account</Link></Button>
-          <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/register">Register</Link></Button>
+
+          {/* <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/account">Account</Link></Button>
+          <Button type="primary" style={{ float: 'right', marginTop: 15, marginRight: 20 }}><Link to="/register">Register</Link></Button> */}
         
         </Menu>
       </Header>

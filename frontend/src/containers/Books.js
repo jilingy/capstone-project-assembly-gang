@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import CustomCard from '../components/Card';
-import { Input, Button } from 'antd';
+import { Button, Alert } from 'antd';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { connect } from 'react-redux'
 
-const { Search } = Input;
-
-export default function Books() {
+function Books(props) {
 
     // Normally what'd we do here is call the componentDidMount lifecycle 
     // method which makes an axios GET request and fetches data
@@ -23,80 +23,101 @@ export default function Books() {
     // refactored to make a axios request to our API backend using 
     // hooks
 
-    const [books, updateBooks] = useState([])
-    const [ranSearch, setRanSearch] = useState(false)
-    const [isFinished, setIsFinished] = useState(true)
+    const collectionID = props.location.state.collectionID;
+    const partOf = props.location.state.partOf;
+    const [books, setBooks] = useState([])
+    const [collection, setCollection] = useState()
+    const [bookDelete, setBookDelete] = useState(0);
 
     useEffect(() => {
-        const fetchData = async() => {
-            const result = await axios.get('http://127.0.0.1:8000/api/books/');
-            var filtered = result.data.filter(book => {
-                // Explicitly grab only some of books to add to 'Main Collection'
-                if(book.id === 5 || book.id === 2 || book.id === 13) {
-                    return book;
-                } else {
-                    return null;
+        const getCollection = async () => {
+            await axios.get(`http://127.0.0.1:8000/api/collections/${collectionID}`)
+                .then(res => {
+                    setCollection(res.data);
                 }
-            })
-            updateBooks(filtered);
+            )
         }
-        fetchData();
-      } , []);  
-
-    const execSearch = (query, flag) => {
-        if(flag === true) {
-            setRanSearch(true)
-            const fetchSearchData = async() => {
-                const result = await axios.get('http://127.0.0.1:8000/api/books/');
-                updateBooks(result.data);
-            }
-            fetchSearchData();
-        } else {
-            setRanSearch(false)
-            const fetchData = async() => {
-                const result = await axios.get('http://127.0.0.1:8000/api/books/');
-                var filtered = result.data.filter(book => {
-                    // Explicitly grab only some of books to add to 'Main Collection'
-                    if(book.id === 5 || book.id === 2 || book.id === 13) {
-                        return book;
-                    } else {
-                        return null;
-                    }
+        const getBooks = async () => {
+            await axios.get('http://127.0.0.1:8000/api/contains/')
+                .then(res => {
+                    res.data.filter(contain => {
+                        if(collectionID === contain.collection) {
+                            axios.get(`http://127.0.0.1:8000/api/books/${contain.book}`)
+                                .then(res => {
+                                    addToBooks(res.data);
+                                }
+                            )
+                        }
+                    })
                 })
-                updateBooks(filtered);
             }
-            fetchData();
-        }
+            getCollection();
+            getBooks();
+      } , [bookDelete]);  
+
+    const addToBooks = (book) => {
+        setBooks(prevBooks => ([...prevBooks , book]));
     }
 
     return (
         <div>
             <h1 style={{
                 position: 'relative',
-                right: 675,
+                right: 660,
                 bottom: 25,
-            }}>{ranSearch ? 'Search Results' : 'Main Collection'}</h1>
-            <Search 
-                placeholder="Search book by title, author, genre..." 
-                onSearch={value => execSearch(value , true)} 
-                enterButton 
-                style={{ 
-                    position: 'relative',
-                    width: 535, 
-                    right: 225,
-                    bottom: 73,
-                }}
-            />
-            <Button style={{
+            }}>{collection ? collection.collection_name : 'Search Results'}</h1>
+            
+            {books.length === 0 ? <Link to="/col_list"><Button style={{
                 bottom: 73,
-                right: 220,
+                right: 410
             }} 
-            type={ranSearch ? "danger" : "primary"}
-            onClick={value => execSearch(value , false)}
-            >Cancel</Button>
-            {/* We pass the 'books' array as a prop to the 'CustomCard' component */}
-            <CustomCard booksData={books} ranSearch={ranSearch} isFinished={isFinished}/>
+            type="primary"
+            >Back to Collections</Button></Link> : <Link to="/col_list"><Button style={{
+                position: 'relative',
+                bottom: 73,
+                right: 360
+            }} 
+            type="primary"
+            >Back to Collections</Button></Link>}
+
+            {books.length > 0 ? <Link to="/book_dir"><Button style={{
+                position: 'relative',
+                bottom: 73,
+                right: 350
+            }} 
+            type="primary"
+            >Add Books</Button></Link> : null}
+            {
+                books.length === 0 ? 
+                    <div>
+                        <Alert
+                            message="Hey there!"
+                            description="Seems like you've got no books in this colleciton. Head over to the Book Directory to start adding some books!"
+                            type="info"
+                            showIcon
+                        />
+                        <Button style={{ position: 'relative', left: 25, top: 15 }} type="primary"><Link to="/book_dir">Go To Book Directory</Link></Button>
+                    </div>
+                : 
+                <CustomCard 
+                    setBooks={setBooks} 
+                    bookDelete={bookDelete} 
+                    setBookDelete={setBookDelete} 
+                    collectionID={collectionID}
+                    collection={collection} 
+                    partOf={partOf} 
+                    booksData={books} 
+                />
+            }            
         </div>
     )
 
 }
+
+const mapStateToProps = state => {
+    return {
+        user_id: state.user_id,
+    }
+}
+
+export default connect(mapStateToProps)(Books);

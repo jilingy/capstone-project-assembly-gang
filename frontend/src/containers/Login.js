@@ -39,7 +39,7 @@ function Login(props) {
 
       */}
 
-      //props.onAuth(values.username, values.password);
+      props.onAuth(values.username, values.password);
       setToCollection(true);
     };
   
