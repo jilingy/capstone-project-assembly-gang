@@ -37,31 +37,44 @@ function CustomCard(props) {
             }, 1000);
     };
 
+    const addBookError = () => {
+        message.loading({ content: 'Processing...', key });
+            setTimeout(() => {
+                // Trigger Books Component to re-render by running useEffect() after a 2 second timeout
+                // which renders an alert message to the browser...
+                message.error({ content: 'Error! Please select at least one collection to add to!', key, duration: 2 });
+            }, 1000);
+    };
+
     // Add book to collection(s) and increment 'Count' for collection
     const onSubmit = (data) => {
-        data.selectedCollections.map(collection => {
-            var split = collection.split(',');
-            axios.post('http://127.0.0.1:8000/api/contains/' , {
-                collection: parseInt(split[0]),
-                book: parseInt(split[1]),
-            })
-            .then(res => {
-                collections.map(collection => {
-                    if(collection.id === parseInt(split[0])) {
-                        axios.patch(`http://127.0.0.1:8000/api/collections/${split[0]}/` , {
-                            count: collection.count + 1,
-                        })
-                        .then(res => {
-                            console.log(res);
-                        }).catch(err => {
-                            console.log(err);
-                        })
-                    }
+        if(data.selectedCollections !== undefined) {
+            data.selectedCollections.map(collection => {
+                var split = collection.split(',');
+                axios.post('http://127.0.0.1:8000/api/contains/' , {
+                    collection: parseInt(split[0]),
+                    book: parseInt(split[1]),
                 })
-            }).catch(err => {
-                console.log(err);
+                .then(res => {
+                    collections.map(collection => {
+                        if(collection.id === parseInt(split[0])) {
+                            axios.patch(`http://127.0.0.1:8000/api/collections/${split[0]}/` , {
+                                count: collection.count + 1,
+                            })
+                            .then(res => {
+                                console.log(res);
+                            }).catch(err => {
+                                console.log(err);
+                            })
+                        }
+                    })
+                }).catch(err => {
+                    console.log(err);
+                })
             })
-        })
+        } else {
+            addBookError();
+        } 
     }
 
     const removeBookSuccess = () => {

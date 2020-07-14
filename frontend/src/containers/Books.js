@@ -90,13 +90,22 @@ function Books(props) {
             {
                 books.length === 0 ? 
                     <div>
-                        <Alert
-                            message="Hey there!"
-                            description="Seems like you've got no books in this colleciton. Head over to the Book Directory to start adding some books!"
-                            type="info"
-                            showIcon
-                        />
-                        <Button style={{ position: 'relative', left: 25, top: 15 }} type="primary"><Link to="/book_dir">Go To Book Directory</Link></Button>
+                        {
+                            (collection && collection.collection_type !== "Finished") ? 
+                                <Alert
+                                    message="Hey there!"
+                                    description="Seems like you've got no books in this colleciton. Head over to the Book Directory to start adding some books!"
+                                    type="info"
+                                    showIcon
+                                /> : 
+                                <Alert
+                                    message="Hey there!"
+                                    description="This is your finished collection! Only books that have been marked as 'read' appear in here!"
+                                    type="info"
+                                    showIcon
+                                />
+                        }
+                        {(collection && collection.collection_type !== "Finished") ? <Button style={{ position: 'relative', left: 25, top: 15 }} type="primary"><Link to="/book_dir">Go To Book Directory</Link></Button> : null}
                     </div>
                 : 
                 <CustomCard 
