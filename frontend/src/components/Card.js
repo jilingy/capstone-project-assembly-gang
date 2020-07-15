@@ -3,7 +3,8 @@ import { Card, Col, Row, Button, Popover, Select, message } from 'antd';
 import BookCover from '../images/book_cover.jpg';
 import { useForm, Controller } from 'react-hook-form';
 import { connect } from 'react-redux';
-import axios from 'axios';
+
+import { apiCollections, apiContains } from '../api/utilities/API';
 
 const { Option } = Select;
 const key = 'updatable';
@@ -15,7 +16,7 @@ function CustomCard(props) {
     const { handleSubmit, control } = useForm({});
 
     useEffect(() => {
-        axios.get('http://127.0.0.1:8000/api/collections/')
+        apiCollections.getAll()
             .then(res => {
                 var filtered = res.data.filter(collection => {
                     if(parseInt(props.user_id) === collection.owner) {
@@ -25,6 +26,8 @@ function CustomCard(props) {
                     }
                 })
                 setCollections(filtered);
+            }).catch(err => {
+                console.log(err);
             })
     } , [])
 
@@ -51,14 +54,13 @@ function CustomCard(props) {
         if(data.selectedCollections !== undefined) {
             data.selectedCollections.map(collection => {
                 var split = collection.split(',');
-                axios.post('http://127.0.0.1:8000/api/contains/' , {
+                apiContains.post({
                     collection: parseInt(split[0]),
                     book: parseInt(split[1]),
-                })
-                .then(res => {
+                }).then(res => {
                     collections.map(collection => {
                         if(collection.id === parseInt(split[0])) {
-                            axios.patch(`http://127.0.0.1:8000/api/collections/${split[0]}/` , {
+                            apiCollections.patch(split[0] , {
                                 count: collection.count + 1,
                             })
                             .then(res => {
@@ -106,58 +108,53 @@ function CustomCard(props) {
     };
 
     const handleDelete = (bookID , collectionID, MarkAsRead) => {
-        axios.get('http://127.0.0.1:8000/api/contains/')
+        apiContains.getAll()
             .then(res => {
-                    var objToDelete = res.data.filter(contain => {
-                       if(contain.collection === collectionID && contain.book === bookID) {
-                           return contain;
-                       } else {
-                           return null;
-                       }
-                    });
-                    const triggerDelete = async() => {
-                        axios.delete(`http://127.0.0.1:8000/api/contains/${objToDelete[0].id}`)
-                            .then(res => {
-                                if(MarkAsRead) {
-                                    markBookAsReadSuccess();
-                                    handleMarkAsRead(bookID, collectionID);
-                                } else {
-                                    removeBookSuccess();
-                                }
-                            }).catch(err => {
-                                console.log(err);
-                            })
-                        }
-                    const updateCollectionCount = async() => {
-                        axios.get(`http://127.0.0.1:8000/api/collections/${collectionID}`)
-                            .then(res => {
-                                axios.patch(`http://127.0.0.1:8000/api/collections/${collectionID}/` , {
-                                    count: res.data.count - 1,
-                                })
-                                .catch(err => {
-                                    console.log(err);
-                                })
-                            })
-                            .catch(err => {
-                                console.log(err);
-                            })
+                var objToDelete = res.data.filter(contain => {
+                    if(contain.collection === collectionID && contain.book === bookID) {
+                        return contain;
+                    } else {
+                        return null;
                     }
-                    triggerDelete();
-                    updateCollectionCount();
+                });
+                const triggerDelete = async() => {
+                    apiContains.remove(objToDelete[0].id).then(res => {
+                        if(MarkAsRead) {
+                            markBookAsReadSuccess();
+                            handleMarkAsRead(bookID, collectionID);
+                        } else {
+                            removeBookSuccess();
+                        }
+                    }).catch(err => {
+                        console.log(err);
+                    })
+                }
+                const updateCollectionCount = async() => {
+                    apiContains.getSingle(collectionID).then(res => {
+                        apiCollections.patch(collectionID , {
+                            count: res.data.count - 1,
+                        }).catch(err => {
+                            console.log(err);
+                        })
+                    }).catch(err => {
+                        console.log(err);
+                    })
+                }
+                triggerDelete();
+                updateCollectionCount();
             })
     }
 
     const handleMarkAsRead = (bookID, collectionID) => {
         collections.filter(collection => {
             if(collection.collection_type === "Finished") {
-                axios.post('http://127.0.0.1:8000/api/contains/' , {
+                apiContains.post({
                     collection: collection.id,
                     book: bookID,
-                }
-            )
-            axios.patch(`http://127.0.0.1:8000/api/collections/${collection.id}/` , {
-                count: collection.count + 1,
-            })
+                })
+                apiCollections.patch(collection.id , {
+                    count: collection.count + 1,
+                })
             } else {
                 return null;
             }

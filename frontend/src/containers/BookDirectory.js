@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
+
+import { apiBooks } from '../api/utilities/API';
+
 import CustomCard from '../components/Card';
 import { Input, Button, Dropdown, Menu, message } from 'antd';
-import axios from 'axios';
 import { connect } from 'react-redux';
 const key = 'updatable';
+
+
 
 const { Search } = Input;
 
@@ -16,10 +20,10 @@ function BookDirectory(props) {
 
     useEffect(() => {
         if(cancel === false) {
-            axios.get('http://127.0.0.1:8000/api/books/')
+            apiBooks.getAll()
                 .then(res => {
                     updateBooks(res.data);
-                });
+                })
         }
         execSearch();
       } , [query]);  

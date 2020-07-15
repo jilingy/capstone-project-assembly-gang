@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { Form, Input, Button, Checkbox, Typography, Alert } from 'antd'
-import { Link,Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as actions from '../store/actions/auth';
 
 function Login(props) {
   
-   const [toCollection, setToCollection] = useState(false);
+	const [toCollection, setToCollection] = useState(false);
 
     const {Title} = Typography
     const layout = {
@@ -39,8 +39,8 @@ function Login(props) {
 
       */}
 
-      props.onAuth(values.username, values.password);
-      setToCollection(true);
+	  props.onAuth(values.username, values.password);
+	  setToCollection(true);
     };
   
     const onSubmitFailed = errorInfo => {
