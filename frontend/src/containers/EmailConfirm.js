@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import {apiCollections } from '../api/utilities/API';
+import {apiCollections } from '../services/utilities/API';
 
 // Use this component to do the necessary backend tasks after user sets up 
 // account -- like set up default collections etc.

@@ -4,7 +4,7 @@ import BookCover from '../images/book_cover.jpg';
 import { useForm, Controller } from 'react-hook-form';
 import { connect } from 'react-redux';
 
-import { apiCollections, apiContains } from '../api/utilities/API';
+import { apiCollections, apiContains } from '../services/utilities/API';
 
 const { Option } = Select;
 const key = 'updatable';

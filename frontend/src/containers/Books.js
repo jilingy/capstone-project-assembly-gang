@@ -4,7 +4,7 @@ import { Button, Alert } from 'antd';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux'
 
-import { apiCollections, apiBooks, apiContains } from '../api/utilities/API';
+import { apiCollections, apiBooks, apiContains } from '../services/utilities/API';
 
 function Books(props) {
 

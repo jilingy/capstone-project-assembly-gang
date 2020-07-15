@@ -5,7 +5,7 @@ import { Form, Input, Button, Popover, Table, message } from 'antd';
 import { connect } from 'react-redux';
 import moment from 'moment';
 
-import { apiCollections } from '../api/utilities/API';
+import { apiCollections } from '../services/utilities/API';
 
 import {
     EditOutlined,
