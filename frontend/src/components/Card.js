@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Col, Row, Button, Popover, Select, message } from 'antd';
 import BookCover from '../images/book_cover.jpg';
+import BookDetail from '../containers/BookDetail';
 import { useForm, Controller } from 'react-hook-form';
 import { connect } from 'react-redux';
 import axios from 'axios';
@@ -11,7 +12,14 @@ const key = 'updatable';
 function CustomCard(props) {
 
     const [collections, setCollections] = useState([]);
+    const [modalVisible, setModal] = useState(false);
 
+    const showDetails = () => {
+        setModal(true)
+    }
+    const hideDetails = () => {
+        setModal(false)
+      }
     const { handleSubmit, control } = useForm({});
 
     useEffect(() => {
@@ -233,7 +241,8 @@ function CustomCard(props) {
                             >
                                 {book.book_synopsis}                       
                             </Card>
-                            <Button style={{ position : 'relative', bottom: 50 }} type="primary" shape="round">View Details</Button>
+                            <Button style={{ position : 'relative', bottom: 50 }} type="primary" shape="round" onClick={showDetails}>View Details</Button>
+                            <BookDetail {...book} show={modalVisible} hide={hideDetails}/>
                             {props.partOf ? 
                                 <Button 
                                     style={{ 
