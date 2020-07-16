@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Col, Row, Button, Popover, Select, message } from 'antd';
+import { Card, Col, Row, Button, Popover, Select, message, Modal } from 'antd';
 import BookCover from '../images/book_cover.jpg';
 import { useForm, Controller } from 'react-hook-form';
 import { connect } from 'react-redux';
+import Review from './Review';
 
 import { apiCollections, apiContains } from '../services/utilities/API';
 
@@ -12,6 +13,7 @@ const key = 'updatable';
 function CustomCard(props) {
 
     const [collections, setCollections] = useState([]);
+    const [visible, updateVisible] = useState(false);
 
     const { handleSubmit, control } = useForm({});
 
@@ -162,9 +164,7 @@ function CustomCard(props) {
     }
 
     const handleAddReview = () => {
-        // Get started on adding reviews from here
-        // @MichaelP
-        console.log("Add review button clicked!");
+        updateVisible(true);
     }
 
     return (
@@ -251,6 +251,7 @@ function CustomCard(props) {
                 })
             }
             </Row>
+            <Review visible={visible} updateVisible={updateVisible}/>
         </div>
     )
 }
