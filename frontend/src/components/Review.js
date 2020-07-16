@@ -8,7 +8,9 @@ import { connect } from 'react-redux';
 function Review(props) {
 
     const handleOk = () => {
-       // Send data through to backend here...
+        // We passed in the book from the Card Component 
+        // and access it using props!
+        console.log(props.book);
     };
     
     const handleCancel = () => {
@@ -17,16 +19,23 @@ function Review(props) {
 
     return (
         <Modal
-            title="Basic Modal"
+            title={props.book.book_title}
             visible={props.visible}
             onOk={handleOk}
             onCancel={handleCancel}
             >
-            <p>Some contents...</p>
-            <p>Some contents...</p>
+            <p>{props.book.book_synopsis}</p>
+            <p>USER ID - {props.user_id}</p>
             <p>Some contents...</p>
         </Modal>
     )
 }
 
-export default Review;
+const mapStateToProps = state => {
+    return {
+        user_id: state.user_id,
+    }
+}
+
+
+export default connect(mapStateToProps)(Review);

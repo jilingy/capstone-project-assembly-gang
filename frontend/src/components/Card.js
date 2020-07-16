@@ -173,6 +173,7 @@ function CustomCard(props) {
             {
                 props.booksData.map((book, index) => {
                     return (
+                        <div>
                         <Col key={index}>
                             <Card 
                                 title={book.book_title} 
@@ -247,11 +248,12 @@ function CustomCard(props) {
                                 null
                             }
                         </Col>
+                        <Review visible={visible} updateVisible={updateVisible} book={book}/>
+                        </div>
                     )
                 })
             }
             </Row>
-            <Review visible={visible} updateVisible={updateVisible}/>
         </div>
     )
 }
