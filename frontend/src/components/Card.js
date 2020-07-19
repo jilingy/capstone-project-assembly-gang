@@ -14,6 +14,7 @@ function CustomCard(props) {
 
     const [collections, setCollections] = useState([]);
     const [visible, updateVisible] = useState(false);
+    const [loading, updateLoading] = useState(false);
 
     const { handleSubmit, control } = useForm({});
 
@@ -248,7 +249,7 @@ function CustomCard(props) {
                                 null
                             }
                         </Col>
-                        <Review visible={visible} updateVisible={updateVisible} book={book}/>
+                        <Review visible={visible} updateVisible={updateVisible} book={book} loading={loading} updateLoading={updateLoading}  />
                         </div>
                     )
                 })
