@@ -14,6 +14,7 @@ function CustomCard(props) {
 
     const [collections, setCollections] = useState([]);
     const [visible, updateVisible] = useState(false);
+    const [bookToReview , setBookToReview] = useState();
 
     const { handleSubmit, control } = useForm({});
 
@@ -163,7 +164,8 @@ function CustomCard(props) {
         })
     }
 
-    const handleAddReview = () => {
+    const handleAddReview = (book) => {
+        setBookToReview(book);
         updateVisible(true);
     }
 
@@ -240,7 +242,7 @@ function CustomCard(props) {
                                     }} 
                                     type="primary" 
                                     shape="round"
-                                    onClick={props.collection.collection_type !== "Finished" ? (() => handleDelete(book.id, props.collectionID, true)) : handleAddReview}
+                                    onClick={props.collection.collection_type !== "Finished" ? (() => handleDelete(book.id, props.collectionID, true)) : (() => handleAddReview(book))}
                                 >
                                         {(props.collection.collection_type === "Finished") ? "Add Review" : "Mark As Read"}
                                 </Button> 
@@ -248,7 +250,7 @@ function CustomCard(props) {
                                 null
                             }
                         </Col>
-                        <Review visible={visible} updateVisible={updateVisible} book={book}/>
+                        {bookToReview ? <Review visible={visible} updateVisible={updateVisible} book={bookToReview}/> : null}
                         </div>
                     )
                 })
