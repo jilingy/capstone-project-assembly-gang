@@ -13,13 +13,16 @@ function CustomCard(props) {
 
     const [collections, setCollections] = useState([]);
     const [modalVisible, setModal] = useState(false);
+    //const [bookState, updateBook] = useState({id:0,book_title:"",book_synopsis:"", book_publisher:"",publication_date:1/1/2020,genre:"",average_rating:0.0})
 
     const showDetails = () => {
         setModal(true)
+        //updateBook(book)
     }
     const hideDetails = () => {
         setModal(false)
       }
+
     const { handleSubmit, control } = useForm({});
 
     useEffect(() => {

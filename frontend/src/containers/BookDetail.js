@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { WhiteSpace,Row,Col,Typography,Card ,Modal } from 'antd';
+import {Row,Col,Typography,Card ,Modal } from 'antd';
 import BookCover from '..//images/book_cover.jpg';
 //import axios from 'axios';
 import { connect } from 'react-redux';
@@ -35,7 +35,6 @@ function BookDetail(props){
           </Title>
           </Col>
           </Row>
-          <WhiteSpace/>
           <p>{props.book_synopsis}</p>
           <p>{props.book_publisher}</p>
           <p>{props.publication_date}</p>
