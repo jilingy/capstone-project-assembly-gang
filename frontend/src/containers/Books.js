@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import CustomCard from '../components/Card';
 import { Button, Alert } from 'antd';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import { connect } from 'react-redux'
+
+import { apiCollections, apiBooks, apiContains } from '../services/utilities/API';
 
 function Books(props) {
 
@@ -30,30 +31,28 @@ function Books(props) {
     const [bookDelete, setBookDelete] = useState(0);
 
     useEffect(() => {
-        const getCollection = async () => {
-            await axios.get(`http://127.0.0.1:8000/api/collections/${collectionID}`)
-                .then(res => {
-                    setCollection(res.data);
-                }
-            )
-        }
-        const getBooks = async () => {
-            await axios.get('http://127.0.0.1:8000/api/contains/')
-                .then(res => {
-                    res.data.filter(contain => {
-                        if(collectionID === contain.collection) {
-                            axios.get(`http://127.0.0.1:8000/api/books/${contain.book}`)
-                                .then(res => {
-                                    addToBooks(res.data);
-                                }
-                            )
-                        }
-                    })
-                })
-            }
             getCollection();
             getBooks();
       } , [bookDelete]);  
+
+    const getCollection = () => {
+        apiCollections.getSingle(collectionID).then(res => {
+            setCollection(res.data);
+        })
+    }
+
+    const getBooks = () => {
+        apiContains.getAll()
+            .then(res => {
+                res.data.filter(contain => {
+                    if(collectionID === contain.collection) {
+                        apiBooks.getSingle(contain.book).then(res => {
+                            addToBooks(res.data);
+                        })
+                    }
+                })
+            })
+    }
 
     const addToBooks = (book) => {
         setBooks(prevBooks => ([...prevBooks , book]));

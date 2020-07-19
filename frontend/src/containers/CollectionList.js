@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { Form, Input, Button, Popover, Table, message } from 'antd';
 import { connect } from 'react-redux';
-import axios from 'axios';
 import moment from 'moment';
+
+import { apiCollections } from '../services/utilities/API';
 
 import {
     EditOutlined,
@@ -39,14 +40,13 @@ function AddCollectionForm({ props: Props, setLen: setLength, len: Length }) {
     const onSubmit = (data) => {
         // UPDATE: Add new collection for user by sending POST request to 
         // relevant API endpoint (making use of user_id from redux store)
-        axios.post('http://127.0.0.1:8000/api/collections/', {
+        apiCollections.post({
             collection_type: "Named",
             is_private: false,
             description: data.collectionDesc,
             collection_name: data.collectionTitle,
             owner: Props.user_id,
-        })
-        .catch(err => {
+        }).catch(err => {
             console.log(err);
         })
     }
@@ -127,7 +127,7 @@ function CollectionList(props) {
     });
 
     useEffect(() => {
-        axios.get('http://127.0.0.1:8000/api/collections/')
+        apiCollections.getAll()
             .then(res => {
                 var filtered = res.data.filter(collection => {
                     if (parseInt(props.user_id) === collection.owner) {
@@ -137,6 +137,8 @@ function CollectionList(props) {
                     }
                 })
                 updateCollections(filtered);
+            }).catch(err => {
+                console.log(err);
             })
     }, [len, collectionToUpdate])
 
@@ -150,20 +152,18 @@ function CollectionList(props) {
 
     // Collection Delete
     const handleDelete = (collection_id) => {
-        // UPDATE: Delete collection matching given ID by sending axios DELETE request 
-        // to relevant API endpoint 
-        axios.delete(`http://127.0.0.1:8000/api/collections/${collection_id}`)
-            .then(res => {
-                // Triggers useEffect() to re-render component,
-                // fetching new colletions
-                deleteCollectionSuccess();
-            }).catch(err => {
-                console.log(err);
-            })
+        // UPDATE: Delete collection matching given ID by 
+        // sending axios DELETE request to relevant API endpoint
+        apiCollections.remove(collection_id).then(res => {
+            deleteCollectionSuccess();
+        }).catch(err => {
+            console.log(err);
+        })
     }
 
+    // Collection Update
     const onSubmit = (data) => {
-        axios.put(`http://127.0.0.1:8000/api/collections/${collectionToUpdate[0].id}/`, {
+        apiCollections.put(collectionToUpdate[0].id , {
             collection_name: data.collectionTitle,
             description: data.collectionDesc
         }).then(res => {
@@ -210,7 +210,7 @@ function CollectionList(props) {
             key: 'date_created',
             sorter: (a, b) => { return moment(a.date_created || 0).unix() - moment(b.date_created || 0).unix() },
             sortDirections: ['descend'],
-            render: date_created => <p>{date_created}</p>
+            render: date_created => <p>{date_created.slice(0, 10)}</p>
         },
         {
             title: 'Actions',

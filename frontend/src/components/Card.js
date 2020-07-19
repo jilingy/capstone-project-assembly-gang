@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Col, Row, Button, Popover, Select, message } from 'antd';
+import { Card, Col, Row, Button, Popover, Select, message, Modal } from 'antd';
 import BookCover from '../images/book_cover.jpg';
 import BookDetail from '../containers/BookDetail';
 import { useForm, Controller } from 'react-hook-form';
 import { connect } from 'react-redux';
-import axios from 'axios';
+import Review from './Review';
+
+import { apiCollections, apiContains } from '../services/utilities/API';
 
 const { Option } = Select;
 const key = 'updatable';
@@ -12,6 +14,7 @@ const key = 'updatable';
 function CustomCard(props) {
 
     const [collections, setCollections] = useState([]);
+<<<<<<< HEAD
     const [modalVisible, setModal] = useState(false);
     //const [bookState, updateBook] = useState({id:0,book_title:"",book_synopsis:"", book_publisher:"",publication_date:1/1/2020,genre:"",average_rating:0.0})
 
@@ -22,11 +25,14 @@ function CustomCard(props) {
     const hideDetails = () => {
         setModal(false)
       }
+=======
+    const [visible, updateVisible] = useState(false);
+>>>>>>> dev
 
     const { handleSubmit, control } = useForm({});
 
     useEffect(() => {
-        axios.get('http://127.0.0.1:8000/api/collections/')
+        apiCollections.getAll()
             .then(res => {
                 var filtered = res.data.filter(collection => {
                     if(parseInt(props.user_id) === collection.owner) {
@@ -36,6 +42,8 @@ function CustomCard(props) {
                     }
                 })
                 setCollections(filtered);
+            }).catch(err => {
+                console.log(err);
             })
     } , [])
 
@@ -62,14 +70,13 @@ function CustomCard(props) {
         if(data.selectedCollections !== undefined) {
             data.selectedCollections.map(collection => {
                 var split = collection.split(',');
-                axios.post('http://127.0.0.1:8000/api/contains/' , {
+                apiContains.post({
                     collection: parseInt(split[0]),
                     book: parseInt(split[1]),
-                })
-                .then(res => {
+                }).then(res => {
                     collections.map(collection => {
                         if(collection.id === parseInt(split[0])) {
-                            axios.patch(`http://127.0.0.1:8000/api/collections/${split[0]}/` , {
+                            apiCollections.patch(split[0] , {
                                 count: collection.count + 1,
                             })
                             .then(res => {
@@ -117,58 +124,53 @@ function CustomCard(props) {
     };
 
     const handleDelete = (bookID , collectionID, MarkAsRead) => {
-        axios.get('http://127.0.0.1:8000/api/contains/')
+        apiContains.getAll()
             .then(res => {
-                    var objToDelete = res.data.filter(contain => {
-                       if(contain.collection === collectionID && contain.book === bookID) {
-                           return contain;
-                       } else {
-                           return null;
-                       }
-                    });
-                    const triggerDelete = async() => {
-                        axios.delete(`http://127.0.0.1:8000/api/contains/${objToDelete[0].id}`)
-                            .then(res => {
-                                if(MarkAsRead) {
-                                    markBookAsReadSuccess();
-                                    handleMarkAsRead(bookID, collectionID);
-                                } else {
-                                    removeBookSuccess();
-                                }
-                            }).catch(err => {
-                                console.log(err);
-                            })
-                        }
-                    const updateCollectionCount = async() => {
-                        axios.get(`http://127.0.0.1:8000/api/collections/${collectionID}`)
-                            .then(res => {
-                                axios.patch(`http://127.0.0.1:8000/api/collections/${collectionID}/` , {
-                                    count: res.data.count - 1,
-                                })
-                                .catch(err => {
-                                    console.log(err);
-                                })
-                            })
-                            .catch(err => {
-                                console.log(err);
-                            })
+                var objToDelete = res.data.filter(contain => {
+                    if(contain.collection === collectionID && contain.book === bookID) {
+                        return contain;
+                    } else {
+                        return null;
                     }
-                    triggerDelete();
-                    updateCollectionCount();
+                });
+                const triggerDelete = async() => {
+                    apiContains.remove(objToDelete[0].id).then(res => {
+                        if(MarkAsRead) {
+                            markBookAsReadSuccess();
+                            handleMarkAsRead(bookID, collectionID);
+                        } else {
+                            removeBookSuccess();
+                        }
+                    }).catch(err => {
+                        console.log(err);
+                    })
+                }
+                const updateCollectionCount = async() => {
+                    apiCollections.getSingle(collectionID).then(res => {
+                        apiCollections.patch(collectionID , {
+                            count: res.data.count - 1,
+                        }).catch(err => {
+                            console.log(err);
+                        })
+                    }).catch(err => {
+                        console.log(err);
+                    })
+                }
+                triggerDelete();
+                updateCollectionCount();
             })
     }
 
     const handleMarkAsRead = (bookID, collectionID) => {
         collections.filter(collection => {
             if(collection.collection_type === "Finished") {
-                axios.post('http://127.0.0.1:8000/api/contains/' , {
+                apiContains.post({
                     collection: collection.id,
                     book: bookID,
-                }
-            )
-            axios.patch(`http://127.0.0.1:8000/api/collections/${collection.id}/` , {
-                count: collection.count + 1,
-            })
+                })
+                apiCollections.patch(collection.id , {
+                    count: collection.count + 1,
+                })
             } else {
                 return null;
             }
@@ -176,9 +178,7 @@ function CustomCard(props) {
     }
 
     const handleAddReview = () => {
-        // Get started on adding reviews from here
-        // @MichaelP
-        console.log("Add review button clicked!");
+        updateVisible(true);
     }
 
     return (
@@ -187,6 +187,7 @@ function CustomCard(props) {
             {
                 props.booksData.map((book, index) => {
                     return (
+                        <div>
                         <Col key={index}>
                             <Card 
                                 title={book.book_title} 
@@ -262,6 +263,8 @@ function CustomCard(props) {
                                 null
                             }
                         </Col>
+                        <Review visible={visible} updateVisible={updateVisible} book={book}/>
+                        </div>
                     )
                 })
             }

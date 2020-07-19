@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import axios from 'axios';
+import {apiCollections } from '../services/utilities/API';
 
 // Use this component to do the necessary backend tasks after user sets up 
 // account -- like set up default collections etc.
@@ -8,27 +8,24 @@ import axios from 'axios';
 function EmailConfirm(props) {
 
     useEffect(() => {
-            const createDefaultCollections = async () => {
-                if(props.user_id !== null) {
-                    await axios.post(`http://127.0.0.1:8000/api/collections/` , {
+        const createDefaultCollections = async () => {
+            if(props.user_id !== null) {
+                apiCollections.post({
                     collection_type : "Main",
                     is_private      : false,
                     description     : 'This is your Main Collection',
                     collection_name : 'Main Collection',
                     owner           : props.user_id,
-
-                })
-                .catch(err => {
+                }).catch(err => {
                     console.log(err);
                 });
-                await axios.post(`http://127.0.0.1:8000/api/collections/` , {
+                apiCollections.post({
                     collection_type : "Finished",
                     is_private      : false,
                     description     : 'This is your Finished Collection',
                     collection_name : 'Finished Collection',
                     owner           : props.user_id,
-                })
-                .catch(err => {
+                }).catch(err => {
                     console.log(err);
                 });
             }
