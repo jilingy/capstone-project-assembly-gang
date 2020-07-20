@@ -77,6 +77,6 @@ class ContainSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contains
         fields = (
-            'id', 'collection', 'book',
+            'id', 'collection', 'book', 'time_added',
         )
 

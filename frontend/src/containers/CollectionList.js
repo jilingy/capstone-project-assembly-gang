@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
-import { Form, Input, Button, Popover, Table, message } from 'antd';
+import { Form, Input, Button, Popover, Table, message, Tag, Spin, Carousel } from 'antd';
 import { connect } from 'react-redux';
 import moment from 'moment';
 
-import { apiCollections } from '../services/utilities/API';
+import { apiCollections, apiContains, apiBooks } from '../services/utilities/API';
 
 import {
     EditOutlined,
@@ -46,6 +46,8 @@ function AddCollectionForm({ props: Props, setLen: setLength, len: Length }) {
             description: data.collectionDesc,
             collection_name: data.collectionTitle,
             owner: Props.user_id,
+        }).then(res => {
+            addCollectionSuccess();
         }).catch(err => {
             console.log(err);
         })
@@ -97,7 +99,7 @@ function AddCollectionForm({ props: Props, setLen: setLength, len: Length }) {
                                 paddingRight: 20
                             }}
                         />
-                        <Button onClick={addCollectionSuccess} type="primary" htmlType="submit">Submit</Button>
+                        <Button type="primary" htmlType="submit">Submit</Button>
                         <Button type="danger" onClick={() => hideForm(false)} style={{ left: 4 }}>Cancel</Button>
                     </form>
                 }
@@ -115,9 +117,13 @@ function AddCollectionForm({ props: Props, setLen: setLength, len: Length }) {
 
 function CollectionList(props) {
 
-    const [collectionToUpdate, setCollectionToUpdate] = useState();
     const [collections, updateCollections] = useState([]);
+    const [collectionToUpdate, setCollectionToUpdate] = useState();
+    
     const [len, setLen] = useState(collections.length);
+    const [loading, setLoading] = useState(true);
+    
+    const [books, setBooks] = useState();
 
     const { handleSubmit, errors, control } = useForm({
         defaultValues: {
@@ -127,27 +133,64 @@ function CollectionList(props) {
     });
 
     useEffect(() => {
+        setLoading(true);
+        getCollections();
+        getCarouselData();
+    }, [len, collectionToUpdate])
+
+    const getCollections = async () => {
         apiCollections.getAll()
             .then(res => {
-                var filtered = res.data.filter(collection => {
-                    if (parseInt(props.user_id) === collection.owner) {
+                var coll_filtered = res.data.filter(collection => {
+                    if(parseInt(props.user_id) === collection.owner) {
                         return collection;
                     } else {
                         return null;
                     }
                 })
-                updateCollections(filtered);
+                updateCollections(coll_filtered);
             }).catch(err => {
                 console.log(err);
             })
-    }, [len, collectionToUpdate])
+    }
+
+    const getCarouselData = async () => {
+        var finalData = [];
+        apiCollections.getAll()
+            .then(res => {
+                res.data.filter(collection => {
+                    if(parseInt(props.user_id) === collection.owner) {
+                        var booksData = {};
+                        booksData[collection.collection_name] = [];
+                        apiContains.getAll()
+                        .then(res => {
+                            res.data.filter(contain => {
+                                if(contain.collection === collection.id) {
+                                    apiBooks.getSingle(contain.book).then(res => {
+                                        booksData[collection.collection_name].push({
+                                            "title" : res.data.book_title , 
+                                            "time_created" : contain.time_added
+                                        }) 
+                                    })
+                                }
+                            })
+                            finalData.push(booksData);
+                        })
+                    }
+                })
+        })
+        setBooks(finalData);
+        setTimeout(() => {
+            setLoading(false);
+        }, 5000);
+    }
 
     const deleteCollectionSuccess = () => {
         message.loading({ content: 'Processing...', key });
             setTimeout(() => {
                 message.success({ content: 'Collection deleted successfully!', key, duration: 2 });
                 setLen(len - 1);
-            }, 1000);
+            }, 2000);
     };
 
     // Collection Delete
@@ -211,6 +254,60 @@ function CollectionList(props) {
             sorter: (a, b) => { return moment(a.date_created || 0).unix() - moment(b.date_created || 0).unix() },
             sortDirections: ['descend'],
             render: date_created => <p>{date_created.slice(0, 10)}</p>
+        },
+        {
+            title: 'Recently Added',
+            align: "center",
+            dataIndex: 'collection_name',
+            key: 'collection_name',
+            width: 400,
+            render: (collection_name) => {
+                if(loading) {
+                    return (
+                        <Spin />
+                    )
+                } else {
+                    var toRender = books.filter(book => {
+                        var data = book[collection_name];
+                        if(data) {
+                            return data;
+                        } 
+                    })
+                    if(toRender[0]) {
+                        var data = toRender[0][collection_name];
+                        return (
+                            <div>
+                                <Carousel 
+                                    autoplay 
+                                    dots={false} 
+                                    style={{ 
+                                        width: 400, 
+                                        background: "#364d79", 
+                                        color: 'white', 
+                                        borderRadius: 10, 
+                                        paddingTop: 20 
+                                    }}>
+                                    {
+                                        data.reverse().map(b => {  
+                                            if(b !== undefined) { 
+                                                return (
+                                                    <p style={{ 
+                                                        color: '#FFFFFF' 
+                                                    }}>
+                                                        {b.title} at {b.time_created.slice(0, 10)} 
+                                                        {`(${(b.time_created.slice(11, 16))})`}
+                                                    </p>
+                                                )
+                                            }                        
+                                        })
+                                    }
+                                </Carousel>
+                            </div>
+                        )
+                    }
+                    
+                }
+            }
         },
         {
             title: 'Actions',
