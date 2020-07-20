@@ -103,7 +103,7 @@ export const authSignup = (username, email, first_name, last_name, password) => 
             dispatch(checkAuthTimeout(300));
         })
         .catch(err => {
-            dispatch(authFail('Invalid login credentials!'))
+            dispatch(authFail('Sign up failed!'))
         })
     }
 }

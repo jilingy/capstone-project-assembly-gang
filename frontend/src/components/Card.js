@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Col, Row, Button, Popover, Select, message } from 'antd';
+import { Card, Col, Row, Button, Popover, Select, message, Modal } from 'antd';
 import BookCover from '../images/book_cover.jpg';
 import { useForm, Controller } from 'react-hook-form';
 import { connect } from 'react-redux';
+import Review from './Review';
 
 import { apiCollections, apiContains } from '../services/utilities/API';
 
@@ -12,6 +13,8 @@ const key = 'updatable';
 function CustomCard(props) {
 
     const [collections, setCollections] = useState([]);
+    const [visible, updateVisible] = useState(false);
+    const [bookToReview , setBookToReview] = useState();
 
     const { handleSubmit, control } = useForm({});
 
@@ -161,10 +164,9 @@ function CustomCard(props) {
         })
     }
 
-    const handleAddReview = () => {
-        // Get started on adding reviews from here
-        // @MichaelP
-        console.log("Add review button clicked!");
+    const handleAddReview = (book) => {
+        setBookToReview(book);
+        updateVisible(true);
     }
 
     return (
@@ -173,6 +175,7 @@ function CustomCard(props) {
             {
                 props.booksData.map((book, index) => {
                     return (
+                        <div>
                         <Col key={index}>
                             <Card 
                                 title={book.book_title} 
@@ -239,7 +242,7 @@ function CustomCard(props) {
                                     }} 
                                     type="primary" 
                                     shape="round"
-                                    onClick={props.collection.collection_type !== "Finished" ? (() => handleDelete(book.id, props.collectionID, true)) : handleAddReview}
+                                    onClick={props.collection.collection_type !== "Finished" ? (() => handleDelete(book.id, props.collectionID, true)) : (() => handleAddReview(book))}
                                 >
                                         {(props.collection.collection_type === "Finished") ? "Add Review" : "Mark As Read"}
                                 </Button> 
@@ -247,6 +250,8 @@ function CustomCard(props) {
                                 null
                             }
                         </Col>
+                        {bookToReview ? <Review visible={visible} updateVisible={updateVisible} book={bookToReview}/> : null}
+                        </div>
                     )
                 })
             }
