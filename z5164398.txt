@@ -19,5 +19,7 @@ week 6
 we have decided to up the velocity of our assignment, since we have all learnt react and django, we are able to start coding more rapidly. we have finished a lot of features and started new epics. personally coordinating everything between us has be a struggle since we all have other work but its slowly coming together. most things are being finished although certain user stories are needed before we can progress further. we have planned to more sprints. 
 
 week 7
+we have increased our velocity and been getting more and more done. we finished most of collection list, as well as other epics. im working on review and rating but having an issue that modals dont allow forms unless you make it a custom class. but next sprint we should have everything done and ready for the demo.
 
+week 8.
 
