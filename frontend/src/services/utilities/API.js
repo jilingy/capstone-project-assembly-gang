@@ -3,6 +3,17 @@ import APICore from './Core';
 const collectionsURL = 'collections';
 const booksURL = 'books';
 const containsURL = 'contains';
+const accountURL = 'user';
+
+export const apiAccount = new APICore({
+    getAll: true,
+    getSingle: true,
+    post: true,
+    put: false,
+    patch: true,
+    remove: true,
+    url: accountURL,  
+});
 
 export const apiCollections = new APICore({
     getAll: true,

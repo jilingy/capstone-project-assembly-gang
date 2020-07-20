@@ -1,32 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import CustomCard from '../components/Card';
-import axios from 'axios';
-import { fixControlledValue } from 'antd/lib/input/Input';
+import { apiAccount } from '../services/utilities/API';
 import { useForm, Controller } from 'react-hook-form';
-import { Form, Input, Button, Popover, Table } from 'antd';
+import { Input, Button, Form, Popover } from 'antd';
+import { connect } from 'react-redux';
 
-export default function Account() {
+function Account(props) {
+    const userId = parseInt(props.user_id);
+    console.log(userId);
     const [visible, hideForm] = useState(false);
     const { handleSubmit, errors, reset, control, defaultValues } = useForm({});
-    const [account, setAccount] = useState({ id: 2, name: "Farhan Ghazi", email: "farhansghazi@outlook.com", username: "farhanghazi"})
+    const [account, setAccount] = useState({});
+
+    useEffect(() => {
+        getUserAccount();
+    }, []);
+
+    const getUserAccount = () => {
+        apiAccount.getSingle(userId).then(res => {
+            setAccount(res.data);
+        })
+    };
 
     const handleVisibleChange = visible => {
         hideForm(visible)
-    }
+    };
 
     const onSubmit = (data) => {
-        // After a form submit, we usually make an axios POST request to update
-        // the backend. For the sake of simplicity, we only update our frontend.
-        console.log(data);
-        if(!data) return;
-        if(data.newName === "") return;
-        setAccount(
-            {
-                ...account,
-                name: data.newName
-            }
+        if(!data || data.newName === "") return;
+
+        apiAccount.patch(userId, {
+            first_name: data.firstName,
+        }).then(
+            setAccount(data.firstName)
         )
-    }
+
+    };
 
     return (
         <div>
@@ -43,8 +51,8 @@ export default function Account() {
                 }}
             >
                 <h5>
-                    <strong>Name: </strong>
-                    {account.name}
+                    <strong>First Name: </strong>
+                    {account.first_name}
 
                     <Popover
                         content={
@@ -53,11 +61,11 @@ export default function Account() {
                                 onSubmit={handleSubmit(onSubmit)}
                             >
                                 <Controller
-                                    name="newName"
+                                    name="firstName"
                                     control={control}
                                     as={
                                         <Form.Item
-                                            label="Name"
+                                            label="First Name"
                                         >
                                             <Input />
                                         </Form.Item>
@@ -96,5 +104,13 @@ export default function Account() {
 
 
         </div>
-    )
-}
+    );
+};
+
+const mapStateToProps = state => {
+    return {
+        user_id: state.user_id,
+    }
+};
+
+export default connect(mapStateToProps)(Account);
