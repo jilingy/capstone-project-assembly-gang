@@ -6,9 +6,8 @@ import { connect } from 'react-redux';
 
 function Account(props) {
     const userId = parseInt(props.user_id);
-    console.log(userId);
     const [visible, hideForm] = useState(false);
-    const { handleSubmit, errors, reset, control, defaultValues } = useForm({});
+    const { handleSubmit, control } = useForm({});
     const [account, setAccount] = useState({});
 
     useEffect(() => {
