@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Col, Row, Button, Popover, Select, message, Modal } from 'antd';
 import BookCover from '../images/book_cover.jpg';
-import BookDetail from '../containers/BookDetail';
+import BookDetail from './BookDetail';
 import { useForm, Controller } from 'react-hook-form';
 import { connect } from 'react-redux';
 import Review from './Review';
@@ -14,18 +14,10 @@ const key = 'updatable';
 function CustomCard(props) {
 
     const [collections, setCollections] = useState([]);
-    const [modalVisible, setModal] = useState(false);
-    //const [bookState, updateBook] = useState({id:0,book_title:"",book_synopsis:"", book_publisher:"",publication_date:1/1/2020,genre:"",average_rating:0.0})
-
-    const showDetails = () => {
-        setModal(true)
-        //updateBook(book)
-    }
-    const hideDetails = () => {
-        setModal(false)
-      }
+    const [modalVisible, updateModalVisible] = useState(false);
     const [visible, updateVisible] = useState(false);
     const [bookToReview , setBookToReview] = useState();
+    const [bookToDetail , setBookToDetail] = useState();
 
     const { handleSubmit, control } = useForm({});
 
@@ -180,6 +172,11 @@ function CustomCard(props) {
         updateVisible(true);
     }
 
+    const showDetails = (book) => {
+        setBookToDetail(book)
+        updateModalVisible(true)
+    }
+
     return (
         <div className="site-card-wrapper" style={{ position: 'relative' , bottom: 50, left: -20}}>
             <Row gutter={16}>
@@ -244,8 +241,8 @@ function CustomCard(props) {
                             >
                                 {book.book_synopsis}                       
                             </Card>
-                            <Button style={{ position : 'relative', bottom: 50 }} type="primary" shape="round" onClick={showDetails}>View Details</Button>
-                            <BookDetail {...book} show={modalVisible} hide={hideDetails}/>
+                            <Button style={{ position : 'relative', bottom: 50 }} type="primary" shape="round" onClick={(()=>showDetails(book))}>View Details</Button>
+                            <BookDetail visible={modalVisible} updateModalVisible={updateModalVisible} {...bookToDetail} />
                             {props.partOf ? 
                                 <Button 
                                     style={{ 
