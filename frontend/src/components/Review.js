@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Col, Row, Button, Popover, Select, message, Modal, Form, Input} from 'antd';
+import { Button, Modal, Form, Input, Rate} from 'antd';
 import BookCover from '../images/book_cover.jpg';
 import { useForm, Controller } from 'react-hook-form';
 import { connect } from 'react-redux';
@@ -8,12 +8,21 @@ import { apiBooks, apiReviews } from '../services/utilities/API';
 
 function Review(props) {
 
-    const handleOk = () => {
+    const [value, setValue] = useState(0);
+
+    const { handleSubmit, errors, reset, control, defaultValues } = useForm({
+        defaultValues: {
+            "reviewText": '',
+            "reviewRating": '',
+        },
+    });
+
+    const handleOk = (data) => {
         apiReviews.post({
             user: props.user_id,
-            book: props.book.book_title,
-            review: data,
-            rating: data,
+            book: props.book.id,
+            review: data.reviewText,
+            rating: data.reviewRating,
 
         }).catch(err => {
             console.log(err)
@@ -30,20 +39,18 @@ function Review(props) {
         props.updateVisible(!props.visible);
     };
 
-    const layout = {
-        labelCol: {
-          span: 4
-        }
+    const handleChange = value => {
+        setValue(value)
       };
+
+    
 
     return (
         <Modal
             title= {props.book.book_title}
             visible={props.visible}
             onOk={handleOk}
-            onCancel={handleCancel}
-            
-            
+            onCancel={handleCancel}          
            
             footer={[
                 <Button key="back" onClick={handleCancel}>
@@ -57,16 +64,43 @@ function Review(props) {
                 >
                     Submit
                 </Button>
-                ]}
+            ]}
                 >
-                
-                <Form {...layout} name="nest-messages">
-                <Form.Item name={["user", "review"]} label="Review">
-                <Input.TextArea rows={8} />
-                </Form.Item>
-                </Form>
+            <form
+            className="reviewForm"
+            onSubmit={handleSubmit(handleOk)}>
+                <Controller
+                    name="reviewText"
+                    control={control}
+                    rules={{ required: "Please enter a review" }}
+                    as={
+                        
+                        <Form.Item  label="Review" 
+                                    validateStatus={errors.reviewText && "error"}
+                                    help={errors.reviewText && errors.reviewText.message}
+                        >
+                        <Input.TextArea rows={8} />
+                        </Form.Item>
+                        
+                    }  
+                />
 
-            
+                <Controller
+                    name="reviewRating"
+                    control={control}
+                    type= "number"
+                    rules={{ required: "Please enter a rating" }}
+                    as={
+                        <Rate>
+                        onChange={handleChange} 
+                        value={value}    
+                        </Rate>
+                    }  
+                />   
+                
+            </form>    
+                         
+
             <p>{props.book.book_synopsis}</p>
             <p>USER ID - {props.user_id}</p>
             <p>Some contents...</p>
