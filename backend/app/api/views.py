@@ -18,9 +18,14 @@ from .serializers import (
     AuthorSerializer,
     WrittenBySerializer,
     CollectionSerializer,
-    ContainSerializer
+    ContainSerializer,
+    UserSerializer
 )
 
+class UserSet(viewsets.ModelViewSet):
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
+    
 class BooksSet(viewsets.ModelViewSet):
     serializer_class = BookSerializer
     queryset = Books.objects.all()
@@ -42,10 +47,8 @@ class WrittenBySet(viewsets.ModelViewSet):
     queryset = WrittenBy.objects.all()
 
 class CollectionsSet(viewsets.ModelViewSet):
-    
     serializer_class = CollectionSerializer
     queryset = Collections.objects.all()
-
 
 class ContainsSet(viewsets.ModelViewSet):
     serializer_class = ContainSerializer

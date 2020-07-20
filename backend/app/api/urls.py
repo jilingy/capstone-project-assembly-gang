@@ -8,7 +8,8 @@ from .views import (
     AuthorsSet,
     WrittenBySet,
     CollectionsSet,
-    ContainsSet
+    ContainsSet,
+    UserSet
 )
 
 router = DefaultRouter()
@@ -20,6 +21,7 @@ router.register(r'authors', AuthorsSet)
 router.register(r'writtenby', WrittenBySet)
 router.register(r'collections', CollectionsSet, basename='collections')
 router.register(r'contains', ContainsSet)
+router.register(r'user', UserSet)
 
 urlpatterns = router.urls
 
