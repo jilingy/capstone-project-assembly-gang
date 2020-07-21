@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'knox',
-    'accounts'
+    'accounts',
+    'simple_email_confirmation'
 ]
 
 SITE_ID = 1
