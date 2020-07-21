@@ -84,7 +84,7 @@ class Reviews(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="by_user")
     book = models.ForeignKey(Books, on_delete=models.CASCADE, related_name="for_book")
     review = models.TextField(blank=True, default="default_review_text")
-    rating = models.DecimalField(blank=False, max_digits=1, choices=RATINGS, decimal_places=1)
+    rating = models.IntegerField(blank=False, choices=RATINGS)
     date = models.DateField(default=date.today)
 
 class Authors(models.Model):

@@ -10,12 +10,23 @@ function Account(props) {
     const [visibleLast, hideLastForm] = useState(false);
     const [visibleEmail, hideEmailForm] = useState(false);
     const [visibleUsername, hideUsernameForm] = useState(false);
+    const [visiblePassword, hidePasswordForm] = useState(false);
     const { handleSubmit, control } = useForm({});
     const [account, setAccount] = useState({});
+    const [firstName, setFirstName] = useState();
+    const [lastName, setLastName] = useState();
+    const [email, setEmail] = useState();
+    const [username, setUsername] = useState();
+    const [password, setPassword] = useState();
+
 
     useEffect(() => {
         getUserAccount();
     }, []);
+
+    useEffect(() => {
+        getUserAccount();
+    }, [firstName, lastName, email, username, password]);
 
     const getUserAccount = () => {
         apiAccount.getSingle(userId).then(res => {
@@ -39,32 +50,66 @@ function Account(props) {
         hideUsernameForm(visibleUsername)
     };
 
-    const onSubmit = (data) => {
+    const handlePasswordVisibleChange = visiblePassword => {
+        hidePasswordForm(visiblePassword)
+    };
+
+    const onSubmitFirst = (data) => {
         if(!data) return;
 
-        if (data.firstName != "") {
+        if (data.firstName && data.firstName !== "") {
             apiAccount.patch(userId, {
                 first_name: data.firstName,
             }).then(
-                setAccount(data.firstName)
+                setFirstName(data.firstName)
             )
-        } else if (data.lastName != "") {
+        }
+    };
+
+    const onSubmitLast = (data) => {
+        if(!data) return;
+
+        if (data.lastName && data.lastName !== "") {
             apiAccount.patch(userId, {
                 last_name: data.lastName,
             }).then(
-                setAccount(data.lastName)
+                setLastName(data.lastName)
             )
-        } else if (data.email != "") {
+        }
+    };
+
+    const onSubmitEmail = (data) => {
+        if(!data) return;
+
+        if (data.email && data.email !== "") {
             apiAccount.patch(userId, {
-                last_name: data.lastName,
+                email: data.email,
             }).then(
-                setAccount(data.email)
+                setEmail(data.email)
             )
-        } else if (data.username != "") {
+        }
+    };
+
+    const onSubmitUsername = (data) => {
+        if(!data) return;
+
+        if (data.username && data.username !== "") {
             apiAccount.patch(userId, {
                 username: data.username,
             }).then(
-                setAccount(data.username)
+                setUsername(data.username)
+            )
+        }
+    };
+
+    const onSubmitPassword = (data) => {
+        if(!data) return;
+
+        if (data.password && data.password !== "") {
+            apiAccount.patch(userId, {
+                password: data.password,
+            }).then(
+                setPassword(data.password)
             )
         }
     };
@@ -91,7 +136,7 @@ function Account(props) {
                         content={
                             <form
                                 style = {{ width: 500}}
-                                onSubmit={handleSubmit(onSubmit)}
+                                onSubmit={handleSubmit(onSubmitFirst)}
                             >
                                 <Controller
                                     name="firstName"
@@ -104,7 +149,7 @@ function Account(props) {
                                         </Form.Item>
                                     }
                                 />
-                                <Button type="primary" htmlType="submit">Submit</Button>
+                                <Button type="primary" onClick={() => hideFirstForm(false)} htmlType="submit">Submit</Button>
                                 <Button type="danger" onClick={() => hideFirstForm(false)} style={{ left: 4 }}>Cancel</Button>
                             </form>
                         }
@@ -133,7 +178,7 @@ function Account(props) {
                         content={
                             <form
                                 style = {{ width: 500}}
-                                onSubmit={handleSubmit(onSubmit)}
+                                onSubmit={handleSubmit(onSubmitLast)}
                             >
                                 <Controller
                                     name="lastName"
@@ -146,7 +191,7 @@ function Account(props) {
                                         </Form.Item>
                                     }
                                 />
-                                <Button type="primary" htmlType="submit">Submit</Button>
+                                <Button type="primary" onClick={() => hideLastForm(false)} htmlType="submit">Submit</Button>
                                 <Button type="danger" onClick={() => hideLastForm(false)} style={{ left: 4 }}>Cancel</Button>
                             </form>
                         }
@@ -172,7 +217,7 @@ function Account(props) {
                     content={
                         <form
                             style = {{ width: 500}}
-                            onSubmit={handleSubmit(onSubmit)}
+                            onSubmit={handleSubmit(onSubmitEmail)}
                         >
                             <Controller
                                 name="email"
@@ -185,7 +230,7 @@ function Account(props) {
                                     </Form.Item>
                                 }
                             />
-                            <Button type="primary" htmlType="submit">Submit</Button>
+                            <Button type="primary" onClick={() => hideEmailForm(false)} htmlType="submit">Submit</Button>
                             <Button type="danger" onClick={() => hideEmailForm(false)} style={{ left: 4 }}>Cancel</Button>
                         </form>
                     }
@@ -210,7 +255,7 @@ function Account(props) {
                     content={
                         <form
                             style = {{ width: 500}}
-                            onSubmit={handleSubmit(onSubmit)}
+                            onSubmit={handleSubmit(onSubmitUsername)}
                         >
                             <Controller
                                 name="username"
@@ -223,7 +268,7 @@ function Account(props) {
                                     </Form.Item>
                                 }
                             />
-                            <Button type="primary" htmlType="submit">Submit</Button>
+                            <Button type="primary" onClick={() => hideUsernameForm(false)} htmlType="submit">Submit</Button>
                             <Button type="danger" onClick={() => hideUsernameForm(false)} style={{ left: 4 }}>Cancel</Button>
                         </form>
                     }
@@ -231,6 +276,44 @@ function Account(props) {
                     visible={visibleUsername}
                     onVisibleChange={handleUsernameVisibleChange}
                     title="Update Username"
+                >
+                    <Button type="primary" style={{marginLeft:'25px'}}>Edit</Button>
+                </Popover>
+
+            </h5>
+
+            <h5 style={{ 
+                position: 'relative',
+                textAlign: 'left'
+            }}>
+                <strong>Password: </strong>
+                {account.password}
+
+                <Popover
+                    content={
+                        <form
+                            style = {{ width: 500}}
+                            onSubmit={handleSubmit(onSubmitPassword)}
+                        >
+                            <Controller
+                                name="password"
+                                control={control}
+                                as={
+                                    <Form.Item
+                                        label="Password"
+                                    >
+                                        <Input />
+                                    </Form.Item>
+                                }
+                            />
+                            <Button type="primary" onClick={() => hidePasswordForm(false)} htmlType="submit">Submit</Button>
+                            <Button type="danger" onClick={() => hidePasswordForm(false)} style={{ left: 4 }}>Cancel</Button>
+                        </form>
+                    }
+                    trigger='click'
+                    visible={visiblePassword}
+                    onVisibleChange={handlePasswordVisibleChange}
+                    title="Update Password"
                 >
                     <Button type="primary" style={{marginLeft:'25px'}}>Edit</Button>
                 </Popover>
