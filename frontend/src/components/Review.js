@@ -44,20 +44,23 @@ function Review(props) {
         setValue(value)
       };
 
-    
+    const { TextArea } = Input;
 
     return (
         <Modal
             title= {props.book.book_title}
             visible={props.visible}
             onCancel={handleCancel}          
-           
+            
             footer={[
-                <Button key="back" onClick={handleCancel} style={{right: 100, position: 'relative'}}>
+                <Button key="back" onClick={handleCancel} style={{right: 95, position: 'relative'}}>
                     Cancel
                 </Button>,
             ]}
-                >
+        >
+
+            <p>{props.book.book_synopsis}</p>
+
             <form
             className="reviewForm"
             onSubmit={handleSubmit(handleOk)}>
@@ -72,7 +75,7 @@ function Review(props) {
                             validateStatus={errors.reviewText && "error"}
                             help={errors.reviewText && errors.reviewText.message}
                         >
-                            <Input name="reviewText" style={{height : 250}} />
+                            <TextArea rows={8} name="reviewText" />
                         </Form.Item>
                         
                     }  
