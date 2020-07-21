@@ -53,7 +53,7 @@ function Review(props) {
             onCancel={handleCancel}          
            
             footer={[
-                <Button key="back" onClick={handleCancel}>
+                <Button key="back" onClick={handleCancel} style={{right: 100, position: 'relative'}}>
                     Cancel
                 </Button>,
             ]}
@@ -84,13 +84,20 @@ function Review(props) {
                     type= "number"
                     rules={{ required: "Please enter a rating" }}
                     as={
-                        <Rate name="reviewRating">
-                            onChange={handleChange} 
-                            value={value}    
-                        </Rate>
+                        <Form.Item  
+                            label="Rating" 
+                            validateStatus={errors.reviewRating && "error"}
+                            help={errors.reviewRating && errors.reviewRating.message}
+                        >
+                            <Rate name="reviewRating">
+                                onChange={handleChange} 
+                                value={value}    
+                            </Rate>
+                        </Form.Item>  
                     }  
+                    
                 />   
-                 <Button type="primary" htmlType="submit" loading={props.loading} onClick={handleOk}>Submit</Button>
+                 <Button type="primary" htmlType="submit" loading={props.loading} onClick={handleOk} style={{left: 400, top: 67, position: 'relative'}}>Submit</Button>
             </form>    
 
         </Modal>
