@@ -39,74 +39,80 @@ function Login(props) {
 
       */}
 
-	  props.onAuth(values.username, values.password);
-	  setToCollection(true);
+      props.onAuth(values.username, values.password);
+      setToCollection(true);
     };
   
     const onSubmitFailed = errorInfo => {
       console.log('Failed:', errorInfo);
     };
 
-    return(
-    <div>
-      {toCollection ? <Redirect to="/col_list" /> : null}
-      <Title level={3}>Login</Title>
-      <Form
-        {...layout}
-        name="basic"
-        initialValues={{
-          remember: true,
-        }}
-        onFinish={onSubmit}
-        onFinishFailed={onSubmitFailed}
-      >
-        <Form.Item
-          label="Username"
-          name="username"
-          rules={[
-            {
-              required: true,
-              message: 'Please input your username!',
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item
-          label="Password"
-          name="password"
-          rules={[
-            {
-              required: true,
-              message: 'Please input your password!',
-            },
-          ]}
-        >
-          <Input.Password />
-        </Form.Item>
-
-        <Form.Item {...headLayout} name="remember" valuePropName="checked" >
-          <Checkbox>Remember me</Checkbox>
-        </Form.Item>
-
-        {props.error ? <Alert
-          message="Error"
-          description={props.error ? 'Invalid Login Credentials!' : null}
-          type="error"
-          showIcon
-          style={{ width: 500, left: 650, marginBottom: 10 }}
-        /> : null}
-
-        <Form.Item {...tailLayout}>
-          <Button type="primary" htmlType="submit" style={{ right: 117, position: 'relative' }}>
-            Log In 
-          </Button>
-        </Form.Item>
-      </Form>
-      <Link to="/register">Register for an Account</Link>
-    </div>
-    )
+    if(props.isAuthenticated) {
+      return (
+        toCollection ? <Redirect to="/col_list" /> : null
+      )
+    } else {
+      return(
+        <div>
+          {/* {toCollection ? <Redirect to="/col_list" /> : null} */}
+          <Title level={3}>Login</Title>
+          <Form
+            {...layout}
+            name="basic"
+            initialValues={{
+              remember: true,
+            }}
+            onFinish={onSubmit}
+            onFinishFailed={onSubmitFailed}
+          >
+            <Form.Item
+              label="Username"
+              name="username"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please input your username!',
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+  
+            <Form.Item
+              label="Password"
+              name="password"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please input your password!',
+                },
+              ]}
+            >
+              <Input.Password />
+            </Form.Item>
+  
+            <Form.Item {...headLayout} name="remember" valuePropName="checked" >
+              <Checkbox>Remember me</Checkbox>
+            </Form.Item>
+  
+            {props.error ? <Alert
+              message="Error"
+              description={props.error ? 'Invalid Login Credentials!' : null}
+              type="error"
+              showIcon
+              style={{ width: 500, left: 650, marginBottom: 10 }}
+            /> : null}
+  
+            <Form.Item {...tailLayout}>
+              <Button type="primary" htmlType="submit" style={{ right: 117, position: 'relative' }}>
+                Log In 
+              </Button>
+            </Form.Item>
+          </Form>
+          <Link to="/register">Register for an Account</Link>
+        </div>
+      )
+    }
 
 }
 
@@ -114,7 +120,8 @@ const mapStateToProps = (state) => {
   return {
     loading : state.loading,
     error   : state.error,
-    user_id : state.user_id,
+	user_id : state.user_id,
+	isAuthenticated: state.token,
   }
 }
 

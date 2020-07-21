@@ -182,7 +182,7 @@ function CollectionList(props) {
         setBooks(finalData);
         setTimeout(() => {
             setLoading(false);
-        }, 5000);
+        }, 3000);
     }
 
     const deleteCollectionSuccess = () => {
