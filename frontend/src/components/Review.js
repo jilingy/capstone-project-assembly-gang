@@ -24,15 +24,15 @@ function Review(props) {
             book: props.book.id,
             review: data.reviewText,
             rating: data.reviewRating,
-
+        }).then(res => {
+            props.updateLoading(!props.loading);
+            setTimeout(() => {
+                props.updateLoading(props.loading);
+                props.updateVisible(!props.visible);
+            }, 3000);
         }).catch(err => {
             console.log(err)
         })
-        props.updateLoading(!props.loading);
-        setTimeout(() => {
-            props.updateLoading(props.loading);
-            props.updateVisible(!props.visible);
-        }, 3000);
         //console.log(props.book);
     };
     
@@ -50,7 +50,6 @@ function Review(props) {
         <Modal
             title= {props.book.book_title}
             visible={props.visible}
-            onOk={handleOk}
             onCancel={handleCancel}          
            
             footer={[
@@ -69,11 +68,11 @@ function Review(props) {
                     as={
                         
                         <Form.Item  
-                                        label="Review" 
-                                    validateStatus={errors.reviewText && "error"}
-                                    help={errors.reviewText && errors.reviewText.message}
+                            label="Review" 
+                            validateStatus={errors.reviewText && "error"}
+                            help={errors.reviewText && errors.reviewText.message}
                         >
-                        <Input style={{height : 250}} />
+                            <Input name="reviewText" style={{height : 250}} />
                         </Form.Item>
                         
                     }  
@@ -85,20 +84,14 @@ function Review(props) {
                     type= "number"
                     rules={{ required: "Please enter a rating" }}
                     as={
-                        <Rate>
-                        onChange={handleChange} 
-                        value={value}    
+                        <Rate name="reviewRating">
+                            onChange={handleChange} 
+                            value={value}    
                         </Rate>
                     }  
                 />   
                  <Button type="primary" htmlType="submit" loading={props.loading} onClick={handleOk}>Submit</Button>
             </form>    
-                         
-
-            <p>{props.book.book_synopsis}</p>
-            <p>USER ID - {props.user_id}</p>
-            <p>Some contents...</p>
-
 
         </Modal>
     )
