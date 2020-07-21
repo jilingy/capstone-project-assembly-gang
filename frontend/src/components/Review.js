@@ -13,11 +13,12 @@ function Review(props) {
     const { handleSubmit, errors, reset, control, defaultValues } = useForm({
         defaultValues: {
             "reviewText": '',
-            "reviewRating": '',
+            "reviewRating": 0,
         },
     });
 
     const handleOk = (data) => {
+        console.log(data);
         apiReviews.post({
             user: props.user_id,
             book: props.book.id,
@@ -32,7 +33,7 @@ function Review(props) {
             props.updateLoading(props.loading);
             props.updateVisible(!props.visible);
         }, 3000);
-        console.log(props.book);
+        //console.log(props.book);
     };
     
     const handleCancel = () => {
@@ -56,14 +57,6 @@ function Review(props) {
                 <Button key="back" onClick={handleCancel}>
                     Cancel
                 </Button>,
-                <Button
-                    key="submit"
-                    type="primary"
-                    loading={props.loading}
-                    onClick={handleOk}
-                >
-                    Submit
-                </Button>
             ]}
                 >
             <form
@@ -75,11 +68,12 @@ function Review(props) {
                     rules={{ required: "Please enter a review" }}
                     as={
                         
-                        <Form.Item  label="Review" 
+                        <Form.Item  
+                                        label="Review" 
                                     validateStatus={errors.reviewText && "error"}
                                     help={errors.reviewText && errors.reviewText.message}
                         >
-                        <Input.TextArea rows={8} />
+                        <Input style={{height : 250}} />
                         </Form.Item>
                         
                     }  
@@ -97,7 +91,7 @@ function Review(props) {
                         </Rate>
                     }  
                 />   
-                
+                 <Button type="primary" htmlType="submit" loading={props.loading} onClick={handleOk}>Submit</Button>
             </form>    
                          
 
