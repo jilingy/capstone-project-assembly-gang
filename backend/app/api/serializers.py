@@ -36,12 +36,6 @@ class ReadSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
 
-    date = serializers.DateField(
-        format="%b %d, %Y", 
-        input_formats=["%b %d, %Y", 'iso-8601'], 
-        allow_null=True
-    )
-
     class Meta:
         model = Reviews
         fields = (
