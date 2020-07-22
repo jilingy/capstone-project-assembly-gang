@@ -8,7 +8,7 @@ from .views import (
     AuthorsSet,
     WrittenBySet,
     CollectionsSet,
-    ContainsSet
+    ContainsSet,
 )
 
 router = DefaultRouter()

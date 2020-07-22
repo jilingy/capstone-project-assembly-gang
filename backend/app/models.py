@@ -3,6 +3,7 @@ from django.core.validators import RegexValidator
 from django.utils import timezone
 from datetime import datetime, date
 from django.contrib.auth.models import User
+from simple_email_confirmation.models import SimpleEmailConfirmationUserMixin
 
 class Books(models.Model):
 
@@ -135,7 +136,11 @@ class Contains(models.Model):
     time_added = models.DateTimeField(default=datetime.now)
 
 
+class Profiles(SimpleEmailConfirmationUserMixin, models.Model):
 
+    class Meta:
+        db_table = 'profiles'
+            
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    verification_code = models.CharField(max_length=100, default="XYZ")
 
-
-    

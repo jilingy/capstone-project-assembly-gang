@@ -7,7 +7,8 @@ from app.models import (
     Authors,
     WrittenBy,
     Collections,
-    Contains
+    Contains,
+    Profiles
 )
 
 class BookSerializer(serializers.ModelSerializer):
