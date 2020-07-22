@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {Row,Col,Typography,Card ,Modal, Comment, Avatar, Empty , IconText, List } from 'antd';
+import {Row,Col,Typography,Card ,Modal, Comment, Avatar, Empty , List } from 'antd';
 import { MessageOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
 import BookCover from '..//images/book_cover.jpg';
 //import axios from 'axios';
@@ -70,8 +70,8 @@ function BookDetail(props){
               cover={<img alt="example" src={BookCover} />}
             />
           </Col>
-          <Col span={9}>
-          <Title>
+          <Col offset={1} span={8}>
+          <Title style={{ textAlign : "center", fontFamily:"Book Antiqua,Georgia,Times New Roman,serif" }}>
               {props.book_title}
           </Title>
           
