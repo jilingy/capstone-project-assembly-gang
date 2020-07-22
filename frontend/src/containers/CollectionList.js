@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
-import { Form, Input, Button, Popover, Table, message, Tag, Spin, Carousel } from 'antd';
+import { Form, Input, Button, Popover, Table, message, Spin, Carousel } from 'antd';
 import { connect } from 'react-redux';
 import moment from 'moment';
 

@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+from app.models import Profiles
 
 # User Serializer
 
@@ -43,6 +44,22 @@ class LoginSerializer(serializers.Serializer):
         if user and user.is_active:
             return user
         raise serializers.ValidationError("Incorrect credentials!")
+
+# Profiles Serializer
+class ProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Profiles
+        fields = (
+            'id', 'user', 'verification_code',
+        )
+
+    def create(self, validated_data):
+        profile = Profiles.objects.create(
+            user=validated_data['user'],
+            verification_code=validated_data['verification_code']
+        )
+        return profile
 
     
 

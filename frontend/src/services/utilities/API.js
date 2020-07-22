@@ -4,6 +4,17 @@ const collectionsURL = 'collections';
 const booksURL = 'books';
 const containsURL = 'contains';
 const reviewsURL = 'reviews'
+const profilesURL = 'auth/profiles';
+
+export const apiProfiles = new APICore({
+    getAll: true,
+    getSingle: true,
+    post: true,
+    put: true,
+    patch: true,
+    remove: true,
+    url: profilesURL,
+})
 
 export const apiCollections = new APICore({
     getAll: true,
