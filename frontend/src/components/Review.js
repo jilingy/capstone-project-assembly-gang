@@ -59,6 +59,7 @@ function Review(props) {
             ]}
         >
 
+            <b><label>Book Synopsis</label></b>
             <p>{props.book.book_synopsis}</p>
 
             <form
@@ -69,15 +70,10 @@ function Review(props) {
                     control={control}
                     rules={{ required: "Please enter a review" }}
                     as={
-                        
-                        <Form.Item  
-                            label="Review" 
-                            validateStatus={errors.reviewText && "error"}
-                            help={errors.reviewText && errors.reviewText.message}
-                        >
+                        <div>
+                            <b><label>Review</label></b>
                             <TextArea rows={8} name="reviewText" />
-                        </Form.Item>
-                        
+                        </div>
                     }  
                 />
 
@@ -87,18 +83,11 @@ function Review(props) {
                     type= "number"
                     rules={{ required: "Please enter a rating" }}
                     as={
-                        <Form.Item  
-                            label="Rating" 
-                            validateStatus={errors.reviewRating && "error"}
-                            help={errors.reviewRating && errors.reviewRating.message}
-                        >
-                            <Rate name="reviewRating">
-                                onChange={handleChange} 
-                                value={value}    
-                            </Rate>
-                        </Form.Item>  
+                        <Rate name="reviewRating">
+                            onChange={handleChange} 
+                            value={value}    
+                        </Rate>
                     }  
-                    
                 />   
                  <Button type="primary" htmlType="submit" loading={props.loading} onClick={handleOk} style={{left: 400, top: 67, position: 'relative'}}>Submit</Button>
             </form>    
