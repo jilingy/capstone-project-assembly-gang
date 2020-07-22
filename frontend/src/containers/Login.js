@@ -120,8 +120,8 @@ const mapStateToProps = (state) => {
   return {
     loading : state.loading,
     error   : state.error,
-	user_id : state.user_id,
-	isAuthenticated: state.token,
+    user_id : state.user_id,
+    isAuthenticated: state.token,
   }
 }
 
