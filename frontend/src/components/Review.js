@@ -4,6 +4,7 @@ import BookCover from '../images/book_cover.jpg';
 import { useForm, Controller } from 'react-hook-form';
 import { connect } from 'react-redux';
 import { apiBooks, apiReviews } from '../services/utilities/API';
+import TextArea from 'antd/lib/input/TextArea';
 
 
 function Review(props) {
@@ -38,6 +39,7 @@ function Review(props) {
     
     const handleCancel = () => {
         props.updateVisible(!props.visible);
+        
     };
 
     const handleChange = value => {
@@ -70,13 +72,13 @@ function Review(props) {
                     rules={{ required: "Please enter a review" }}
                     as={
                         
-                        <Form.Item  
+                        /*<Form.Item  
                             label="Review" 
                             validateStatus={errors.reviewText && "error"}
                             help={errors.reviewText && errors.reviewText.message}
-                        >
-                            <TextArea rows={8} name="reviewText" />
-                        </Form.Item>
+                        >*/
+                        <Input name="reviewText" />
+                        //</Form.Item>
                         
                     }  
                 />
@@ -101,6 +103,17 @@ function Review(props) {
                     
                 />   
                  <Button type="primary" htmlType="submit" loading={props.loading} onClick={handleOk} style={{left: 400, top: 67, position: 'relative'}}>Submit</Button>
+                 <input type="button" onClick={reset} />
+                <input
+                    type="button"
+                    onClick={() => {
+                    reset({
+                        firstName: "bill",
+                        lastName: "luo"
+                    });
+                    }}
+                />
+ 
             </form>    
 
         </Modal>
