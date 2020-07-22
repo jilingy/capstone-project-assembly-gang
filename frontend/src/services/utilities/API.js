@@ -3,6 +3,7 @@ import APICore from './Core';
 const collectionsURL = 'collections';
 const booksURL = 'books';
 const containsURL = 'contains';
+const reviewsURL = 'reviews'
 const profilesURL = 'auth/profiles';
 
 export const apiProfiles = new APICore({
@@ -44,5 +45,17 @@ export const apiContains = new APICore({
     remove: true,
     url: containsURL,
 });
+
+export const apiReviews = new APICore({
+    getAll: true,
+    getSingle: true,
+    post: true,
+    put: true,
+    patch: true,
+    remove: true,
+    url: reviewsURL,
+});
+
+
 
 export default apiCollections;
