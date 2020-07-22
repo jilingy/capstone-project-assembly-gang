@@ -61,7 +61,7 @@ function EmailConfirm(props) {
     const triggerVerificationSuccess = () => {
         message.loading({ content: 'Verifiying...', key });
             setTimeout(() => {
-                message.success({ content: 'Account verified!', key, duration: 2 });
+                message.success({ content: 'Account verified! You\'re good to go', key, duration: 5 });
                 setVerified(true);
             }, 3000);
     };
