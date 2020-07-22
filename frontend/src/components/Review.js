@@ -72,13 +72,13 @@ function Review(props) {
                     rules={{ required: "Please enter a review" }}
                     as={
                         
-                        /*<Form.Item  
+                        <Form.Item  
                             label="Review" 
                             validateStatus={errors.reviewText && "error"}
                             help={errors.reviewText && errors.reviewText.message}
-                        >*/
+                        >
                         <Input name="reviewText" />
-                        //</Form.Item>
+                        </Form.Item>
                         
                     }  
                 />
@@ -103,16 +103,7 @@ function Review(props) {
                     
                 />   
                  <Button type="primary" htmlType="submit" loading={props.loading} onClick={handleOk} style={{left: 400, top: 67, position: 'relative'}}>Submit</Button>
-                 <input type="button" onClick={reset} />
-                <input
-                    type="button"
-                    onClick={() => {
-                    reset({
-                        firstName: "bill",
-                        lastName: "luo"
-                    });
-                    }}
-                />
+                
  
             </form>    
 
