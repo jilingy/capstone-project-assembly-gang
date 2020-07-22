@@ -1,18 +1,54 @@
 import React, { useState, useEffect } from 'react';
-import {Row,Col,Typography,Card ,Modal, Comment, Avatar, Pagination, IconText, List,TreeSelect } from 'antd';
+import {Row,Col,Typography,Card ,Modal, Comment, Avatar, Empty , IconText, List } from 'antd';
 import { MessageOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
 import BookCover from '..//images/book_cover.jpg';
 //import axios from 'axios';
 import { connect } from 'react-redux';
+import { apiReviews } from '../services/utilities/API';
 
 function BookDetail(props){
 
     const {Title, Text} = Typography
 
-    const handleCancel = () => {
-      props.updateVisible(!props.visible);
-    };
+    const [reviews, setReviews] = useState([]);
+    const [userReview, setUserReview] = useState();
 
+    useEffect(() => {
+      getReviews();
+    }, []);
+
+    /*useEffect(() => {
+      getReviews();
+    }, [reviews, bookReviews]);
+    */
+   
+    const getReviews = () => {
+      apiReviews.getAll()
+      .then(res => {
+          var filtered = res.data.filter(review => {
+              if(parseInt(props.id) === review.book) {
+                  return review;
+              } else {
+                  return null;
+              }
+          })
+          var doubleFiltered = res.data.find(review => {
+            if(parseInt(props.id) === review.book && parseInt(props.user_id) === review.user) {
+                return review;
+            } else {
+                return null;
+            }
+          })
+          setReviews(filtered);
+          setUserReview(doubleFiltered);
+      }).catch(err => {
+          console.log(err);
+      })
+    }
+
+    const handleCancel = () => {
+      props.updateModalVisible(!props.visible);
+    };
     return(
       <div>
         <Modal
@@ -47,9 +83,9 @@ function BookDetail(props){
           </Col>
           <Col span={9}>
             <Title level={4}>Your Review</Title>
-            <Comment
+            {userReview ? <Comment
               //actions={actions}
-              author={<a>Eric Shen</a>}
+            author={<a>{userReview.rating}</a>}
               avatar={
                 <Avatar
                   src={BookCover}
@@ -58,38 +94,47 @@ function BookDetail(props){
               }
             content={
               <p>
-                This book fucking sucks
+                {userReview.review}
               </p>
             }
-            />
+            /> :
+            <Empty description = "You do not have a review yet">
+            </Empty>
+          }
             <Title level={4}>Other Reviews</Title>
             <List
               itemLayout="vertical"
               size="large"
               pagination={{
                 showSizeChanger : false,
-                total : 85,
+                total : reviews.length,
                 //showTotal : {(total, range) => `${range[0]}-${range[1]} of ${total} items`},
                 pageSize : 5,
                 defaultCurrent: 1,
-                pageSize: 3,
               }}
-              //dataSource={listData}
+              dataSource={reviews}
               renderItem={item => (
               <List.Item
-                key={item.title}
+                key={item}
                 //actions={[
-                  //<IconText icon={StarOutlined} text="156" key="list-vertical-star-o" />,
-                  //<IconText icon={LikeOutlined} text="156" key="list-vertical-like-o" />,
-                  //<IconText icon={MessageOutlined} text="2" key="list-vertical-message" />,
+                  //<IconText icon={LikeOutlined} text="156" key="list-vertical-like-o" />
                 //]}
                 >
               <List.Item.Meta
                 avatar={<Avatar src={BookCover} />}
-                title={<a>Book sucks</a>}
-                description={<a>Book hater</a>}
               />
-                {<a>One of the worst books I have ever laid eyes on</a>}
+                <Comment
+              //actions={actions}
+              author={<a>{item.user}<b>{item.rating}</b></a>}
+              avatar={
+                  <Avatar
+                    src={BookCover}
+                    alt="Han Solo"
+                  />
+                }
+              content={item.review}
+              datetime={item.date}
+                />
               </List.Item>
               )}
           />

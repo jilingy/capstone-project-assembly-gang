@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Col, Row, Button, Popover, Select, message, Modal } from 'antd';
 import BookCover from '../images/book_cover.jpg';
-import BookDetail from './BookDetail';
+import BookDetail from '../containers/BookDetail';
 import { useForm, Controller } from 'react-hook-form';
 import { connect } from 'react-redux';
 import Review from './Review';
@@ -16,6 +16,7 @@ function CustomCard(props) {
     const [collections, setCollections] = useState([]);
     const [modalVisible, updateModalVisible] = useState(false);
     const [visible, updateVisible] = useState(false);
+    const [loading, updateLoading] = useState(false);
     const [bookToReview , setBookToReview] = useState();
     const [bookToDetail , setBookToDetail] = useState();
 
@@ -259,7 +260,8 @@ function CustomCard(props) {
                                 null
                             }
                         </Col>
-                        {bookToReview ? <Review visible={visible} updateVisible={updateVisible} book={bookToReview}/> : null}
+                        
+                        {bookToReview ? <Review visible={visible} updateVisible={updateVisible} book={bookToReview} loading={loading} updateLoading={updateLoading}/> : null}
                         </div>
                     )
                 })
