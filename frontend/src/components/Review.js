@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Modal, Form, Input, Rate} from 'antd';
+import { Button, Modal, Form, Input, Rate, message} from 'antd';
 import BookCover from '../images/book_cover.jpg';
 import { useForm, Controller } from 'react-hook-form';
 import { connect } from 'react-redux';
 import { apiBooks, apiReviews } from '../services/utilities/API';
 import TextArea from 'antd/lib/input/TextArea';
 
+const key = 'updatable';
 
-function Review(props) {
+function Review({props, setLen: setLength, len: Length}) {
 
     const [value, setValue] = useState(0);
 
@@ -18,6 +19,14 @@ function Review(props) {
         },
     });
 
+    const addReviewSuccess = () => {
+        message.loading({ content: 'Processing...', key });
+            setTimeout(() => {
+                message.success({ content: 'Review created successfully!', key, duration: 2 });
+                setLength(Length + 1);
+            }, 1000);
+    };
+
     const handleOk = (data) => {
         console.log(data);
         apiReviews.post({
@@ -27,6 +36,7 @@ function Review(props) {
             rating: data.reviewRating,
         }).then(res => {
             props.updateLoading(!props.loading);
+            addReviewSuccess();
             setTimeout(() => {
                 props.updateLoading(props.loading);
                 props.updateVisible(!props.visible);
@@ -72,13 +82,9 @@ function Review(props) {
                     rules={{ required: "Please enter a review" }}
                     as={
                         
-                        <Form.Item  
-                            label="Review" 
-                            validateStatus={errors.reviewText && "error"}
-                            help={errors.reviewText && errors.reviewText.message}
-                        >
-                        <Input name="reviewText" />
-                        </Form.Item>
+                        
+                        <TextArea rows={8} name="reviewText" />
+                        
                         
                     }  
                 />
@@ -89,16 +95,12 @@ function Review(props) {
                     type= "number"
                     rules={{ required: "Please enter a rating" }}
                     as={
-                        <Form.Item  
-                            label="Rating" 
-                            validateStatus={errors.reviewRating && "error"}
-                            help={errors.reviewRating && errors.reviewRating.message}
-                        >
+                        
                             <Rate name="reviewRating">
                                 onChange={handleChange} 
                                 value={value}    
                             </Rate>
-                        </Form.Item>  
+                       
                     }  
                     
                 />   
