@@ -4,7 +4,7 @@ import { updateObject } from '../utility';
 const initialState = {
     token: null,
     error: null,
-    user_id: null,
+    user_id: localStorage.getItem('user_id'),
     loading: false
 }
 

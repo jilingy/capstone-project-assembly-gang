@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.contrib.auth.models import User
 
 from app.models import (
     Books,
@@ -9,6 +10,14 @@ from app.models import (
     Collections,
     Contains
 )
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'id', 'username', 'email', 'first_name', 'last_name', 'password'
+        )
+        extra_kwargs = {'password' : {'write_only' : True}}
 
 class BookSerializer(serializers.ModelSerializer):
 
@@ -34,12 +43,6 @@ class ReadSerializer(serializers.ModelSerializer):
         )
 
 class ReviewSerializer(serializers.ModelSerializer):
-
-    date = serializers.DateField(
-        format="%b %d, %Y", 
-        input_formats=["%b %d, %Y", 'iso-8601'], 
-        allow_null=True
-    )
 
     class Meta:
         model = Reviews
@@ -77,6 +80,6 @@ class ContainSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contains
         fields = (
-            'id', 'collection', 'book',
+            'id', 'collection', 'book', 'time_added',
         )
 
