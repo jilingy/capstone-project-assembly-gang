@@ -8,3 +8,4 @@ backend/app/__pycache__/
 backend/project/__pycache__/
 backend/app/api/__pycache__/
 backend/app/migrations/__pycache__/
+backend/accounts/__pycache__/
