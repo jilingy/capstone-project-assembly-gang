@@ -19,7 +19,7 @@ function BookDetail(props){
     useEffect(() => {
       getReviews();
       getUsers();
-    }, []);
+    }, [props.id]);
 
     /*useEffect(() => {
       getReviews();
