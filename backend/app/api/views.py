@@ -28,7 +28,7 @@ from .serializers import (
 class BooksSet(viewsets.ModelViewSet):
     
     serializer_class = BookSerializer
-
+    queryset = Books.objects.all()
     def list(self, request, pk=None):
         books = Books.objects.all()
         serializer = BookSerializer(books, many=True)
