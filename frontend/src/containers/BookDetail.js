@@ -57,7 +57,7 @@ function BookDetail(props){
           footer={false}
           onCancel={handleCancel}
           mask={true}
-          maskClosable={false}
+          maskClosable={true}
           maskStyle ={{marginLeft:200, marginTop:60}}
           style ={{marginLeft:200,marginTop:-40}}
           bodyStyle={{height: 882}}
