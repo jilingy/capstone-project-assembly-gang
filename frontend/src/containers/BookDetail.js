@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {Row,Col,Typography,Card ,Modal, Comment, Avatar, Empty , List } from 'antd';
+import {Row,Col,Typography,Card ,Modal, Comment, Avatar, Empty , List, Rate } from 'antd';
 import { MessageOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
 import BookCover from '..//images/book_cover.jpg';
 //import axios from 'axios';
@@ -7,14 +7,18 @@ import { connect } from 'react-redux';
 import { apiReviews } from '../services/utilities/API';
 
 function BookDetail(props){
-
+    console.log("hello")
+    console.log(props.id)
+    console.log("hello")
     const {Title, Text} = Typography
 
     const [reviews, setReviews] = useState([]);
     const [userReview, setUserReview] = useState();
+    const [userIdMap, setUserIdMap] = useState(new Map());
 
     useEffect(() => {
       getReviews();
+      getUsers();
     }, []);
 
     /*useEffect(() => {
@@ -22,11 +26,14 @@ function BookDetail(props){
     }, [reviews, bookReviews]);
     */
    
+    const getUsers = () => {
+    }
+
     const getReviews = () => {
       apiReviews.getAll()
       .then(res => {
           var filtered = res.data.filter(review => {
-              if(parseInt(props.id) === review.book) {
+              if(parseInt(props.id) === review.book && parseInt(props.user_id) !== review.user) {
                   return review;
               } else {
                   return null;
@@ -74,7 +81,6 @@ function BookDetail(props){
           <Title style={{ textAlign : "center", fontFamily:"Book Antiqua,Georgia,Times New Roman,serif" }}>
               {props.book_title}
           </Title>
-          
           <p><b>Synopsis:</b> {props.book_synopsis}</p>
           <p><b>Publisher:</b> {props.book_publisher}</p>
           <p><b>Date Published:</b> {props.publication_date}</p>
@@ -85,7 +91,7 @@ function BookDetail(props){
             <Title level={4}>Your Review</Title>
             {userReview ? <Comment
               //actions={actions}
-            author={<a>{userReview.rating}</a>}
+            author={<Rate disabled value={userReview.rating}/>}
               avatar={
                 <Avatar
                   src={BookCover}
@@ -120,12 +126,9 @@ function BookDetail(props){
                   //<IconText icon={LikeOutlined} text="156" key="list-vertical-like-o" />
                 //]}
                 >
-              <List.Item.Meta
-                avatar={<Avatar src={BookCover} />}
-              />
                 <Comment
               //actions={actions}
-              author={<a>{item.user}<b>{item.rating}</b></a>}
+              author={<p><b>{item.user}</b><Rate disabled value={item.rating}/></p>}
               avatar={
                   <Avatar
                     src={BookCover}
