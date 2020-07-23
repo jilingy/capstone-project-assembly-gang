@@ -243,7 +243,7 @@ function CustomCard(props) {
                                 {book.book_synopsis}                       
                             </Card>
                             <Button style={{ position : 'relative', bottom: 50 }} type="primary" shape="round" onClick={(()=>showDetails(book))}>View Details</Button>
-                            <BookDetail visible={modalVisible} updateModalVisible={updateModalVisible} {...bookToDetail} />
+                            {bookToDetail ?<BookDetail visible={modalVisible} updateModalVisible={updateModalVisible} {...bookToDetail} /> : null}
                             {props.partOf ? 
                                 <Button 
                                     style={{ 
