@@ -128,7 +128,7 @@ function BookDetail(props){
                 >
                 <Comment
               //actions={actions}
-              author={<p><b>{item.user}{'         '}</b><Rate disabled value={item.rating}/></p>}
+              author={<p><b>{item.user}</b><Rate disabled value={item.rating}/></p>}
               avatar={
                   <Avatar
                     src={BookCover}
