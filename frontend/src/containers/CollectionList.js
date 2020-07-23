@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
-import { Form, Input, Button, Popover, Table, message, Spin, Carousel } from 'antd';
+import { Form, Input, Button, Popover, Table, message, Spin, Carousel, Switch } from 'antd';
 import { connect } from 'react-redux';
 import moment from 'moment';
 
@@ -225,6 +225,30 @@ function CollectionList(props) {
         setCollectionToUpdate(obj);
     }
 
+    const handlePrivacyUpdate = (data , id) => {
+        apiCollections.patch(id , {
+            is_private: data,
+        }).then(res => {
+            triggerPrivacyUpdateSuccess();
+        }).catch(err => {
+            triggerPrivacyUpdateError();
+        })
+    }
+
+    const triggerPrivacyUpdateSuccess = () => {
+        message.loading({ content: 'Processing...', key });
+            setTimeout(() => {
+                message.success({ content: 'Privacy settings updated successfully!', key, duration: 2 });
+            }, 2000);
+    };
+
+    const triggerPrivacyUpdateError = () => {
+        message.loading({ content: 'Processing...', key });
+            setTimeout(() => {
+                message.error({ content: 'Privacy update failed!', key, duration: 2 });
+            }, 2000);
+    };
+
     const columns = [
         {
             title: 'Collection Name',
@@ -307,6 +331,24 @@ function CollectionList(props) {
                     }
                     
                 }
+            }
+        },
+        {
+            title: 'Privacy',
+            align: "center",
+            dataIndex: 'is_private',
+            key: 'is_private',
+            render: (is_private , record) => {
+                return(
+                    <div>
+                        <Switch 
+                            unCheckedChildren="Public" 
+                            checkedChildren="Private"
+                            defaultChecked={is_private} 
+                            onClick={(e) => handlePrivacyUpdate(e , record.id)}
+                        /> 
+                    </div>
+                )
             }
         },
         {
