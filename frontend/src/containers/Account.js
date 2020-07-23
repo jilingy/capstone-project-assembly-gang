@@ -3,6 +3,7 @@ import { apiAccount } from '../services/utilities/API';
 import { useForm, Controller } from 'react-hook-form';
 import { Input, Button, Form, Popover } from 'antd';
 import { connect } from 'react-redux';
+import axios from 'axios';
 
 function Account(props) {
     const userId = parseInt(props.user_id);
@@ -106,11 +107,14 @@ function Account(props) {
         if(!data) return;
 
         if (data.password && data.password !== "") {
-            apiAccount.patch(userId, {
+            axios.patch('http://localhost:8000/api/auth/register', {
                 password: data.password,
-            }).then(
-                setPassword(data.password)
-            )
+            });
+            // apiAccount.patch(userId, {
+            //     password: data.password,
+            // }).then(
+            //     setPassword(data.password)
+            // )
         }
     };
 
