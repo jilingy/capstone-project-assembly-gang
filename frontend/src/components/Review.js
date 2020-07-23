@@ -71,6 +71,7 @@ function Review({props, setLen: setLength, len: Length}) {
             ]}
         >
 
+            <b><label>Book Synopsis</label></b>
             <p>{props.book.book_synopsis}</p>
 
             <form
@@ -81,11 +82,10 @@ function Review({props, setLen: setLength, len: Length}) {
                     control={control}
                     rules={{ required: "Please enter a review" }}
                     as={
-                        
-                        
-                        <TextArea rows={8} name="reviewText" />
-                        
-                        
+                        <div>
+                            <b><label>Review</label></b>
+                            <TextArea rows={8} name="reviewText" />
+                        </div>
                     }  
                 />
 
@@ -95,14 +95,11 @@ function Review({props, setLen: setLength, len: Length}) {
                     type= "number"
                     rules={{ required: "Please enter a rating" }}
                     as={
-                        
-                            <Rate name="reviewRating">
-                                onChange={handleChange} 
-                                value={value}    
-                            </Rate>
-                       
+                        <Rate name="reviewRating">
+                            onChange={handleChange} 
+                            value={value}    
+                        </Rate>
                     }  
-                    
                 />   
                  <Button type="primary" htmlType="submit" loading={props.loading} onClick={handleOk} style={{left: 400, top: 67, position: 'relative'}}>Submit</Button>
                 
