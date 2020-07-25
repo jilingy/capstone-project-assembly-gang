@@ -26,7 +26,7 @@ function Review(props) {
 
     useEffect(() => {
         getAllReviews();
-    }, [addedReview, triggerUpdate])
+    }, [addedReview, triggerUpdate, props.id])
 
 
     const addReviewSuccess = () => {
