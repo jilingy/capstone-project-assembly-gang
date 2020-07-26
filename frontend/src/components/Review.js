@@ -6,15 +6,17 @@ import { connect } from 'react-redux';
 import { apiBooks, apiReviews } from '../services/utilities/API';
 import TextArea from 'antd/lib/input/TextArea';
 
+
 const key = 'updatable';
+const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
 
 function Review(props) {
 
-    const [value, setValue] = useState(0);
-    const [text, setText] = useState("");
+    
     const [addedReview, setAddedReview] = useState(false);
     const [allReviews, setAllReviews] = useState([]);
     const [triggerUpdate, setTriggerUpdate] = useState(0);
+    const [value, setValue] = useState(0)
 
 
     const { handleSubmit, errors, reset, control, defaultValues } = useForm({
@@ -24,24 +26,12 @@ function Review(props) {
         },
     });
 
-    useEffect(() => {
-        getAllReviews();
-    }, [addedReview, triggerUpdate, props.id])
-
-
     const addReviewSuccess = () => {
         message.loading({ content: 'Processing...', key });
             setTimeout(() => {
                 message.success({ content: 'Review created successfully!', key, duration: 2 });
             }, 1000);
     };
-
-    const getAllReviews = () =>{
-        apiReviews.getAll()
-        .then(res => {
-            setAllReviews(res.data)
-        })
-    }
 
     const handleOk = (data) => {
         console.log(data);
@@ -56,8 +46,9 @@ function Review(props) {
             setTimeout(() => {
                 props.updateLoading(props.loading);
                 props.updateVisible(!props.visible);
+                setAddedReview(true);
             }, 1000);
-            setAddedReview(true);
+            
         }).catch(err => {
             console.log(err)
         })
@@ -69,32 +60,14 @@ function Review(props) {
         
     };
 
-    const handleChange = value => {
-        setValue(value)
-      };
-
-    const changingText = text => {
-        setText(text)
+    const handleError = () => {
+        
+        
     };
 
-    const handleEdit = book_id => {
-        //console.log(allReviews)
-        var filtered = allReviews.filter(review => {
-            if(props.book.id === review.book && parseInt(props.user_id) === review.user){
-                return review;
-            }
-        })
-        console.log(filtered)
-        setText(filtered[0].review)
-        setTriggerUpdate(triggerUpdate+1)
-    };
-
-    let button;
-    if (addedReview) {
-        button = <Button type= "primary" onClick={handleEdit} style={{left: 100, bottom: 400, position: 'relative'}} >Edit</Button>
-    } else {
-        button = null
-    }
+    
+   
+    
 
     const { TextArea } = Input;
 
@@ -102,6 +75,7 @@ function Review(props) {
         <Modal
             title= {props.book.book_title}
             visible={props.visible}
+            destroyOnClose={true}
             onCancel={handleCancel}          
             
             footer={[
@@ -125,9 +99,8 @@ function Review(props) {
                         <div>
                             <b><label>Review</label></b>
                             <p>
-                            <TextArea rows={8} name="reviewText" defaultValue={text} >
-                            onChange={changingText} 
-                            value={text}  
+                            <TextArea rows={8} name="reviewText" > 
+                            
                             </TextArea>
                             </p>
                         </div>
@@ -141,15 +114,15 @@ function Review(props) {
                     type= "number"
                     rules={{ required: "Please enter a rating" }}
                     as={
-                        <Rate name="reviewRating">
-                            onChange={handleChange} 
-                            value={value}    
-                        </Rate>
+                        <Rate />
+                        
+                       
                     }  
-                />   
-                 <Button type="primary" htmlType="submit" loading={props.loading} onClick={handleOk} style={{left: 260, top: 67, position: 'relative'}}>Submit</Button>
                     
-                 {button}   
+                />   
+                 <Button type="primary" htmlType="submit" loading={props.loading} onClick={handleOk, handleError} style={{left: 260, top: 67, position: 'relative'}}>Submit</Button>
+                    
+               
  
             </form>    
 
