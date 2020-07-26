@@ -3,6 +3,7 @@ import { Form, Input, Button,Typography} from 'antd'
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as actions from '../store/actions/auth';
+import Fade from 'react-reveal/Fade';
 
 function Register(props) {
 
@@ -43,11 +44,32 @@ function Register(props) {
     return(
     <div>
     {toLogin ? <Redirect to="/emailconfirm" /> : null}
-    <Title
-      level={3}
-    >
-      Account Registration
-    </Title>
+    <Title 
+      level={3} 
+      style={{
+        paddingTop: 100, 
+        color: 'white', 
+        fontSize: 100, 
+        textAlign : "center", 
+        fontFamily:"Book Antiqua,Georgia,Times New Roman,serif" 
+      }}>ReadRecommend</Title>
+    <Fade left cascade>
+      <p style={{ 
+        bottom: 60, 
+        position: 'relative', 
+        textAlign : "center", 
+        fontSize: 25, 
+        color: 'white' 
+      }}>More than just a book haven...</p>
+    </Fade>
+    <Title 
+      level={3} 
+      style={{ 
+        color: 'white', 
+        fontSize: 30, 
+        textAlign : "center", 
+        fontFamily:"Book Antiqua,Georgia,Times New Roman,serif" 
+      }}>      Account Registration</Title>
     <Form
       {...layout}
       name="basic"
