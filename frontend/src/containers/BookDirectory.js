@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-
 import { apiBooks } from '../services/utilities/API';
-
+import Fade from 'react-reveal/Fade';
 import CustomCard from '../components/Card';
-import { Input, Button, Dropdown, Menu, message } from 'antd';
+import { Input, Button, Dropdown, Menu, message, Typography } from 'antd';
 import { connect } from 'react-redux';
 const key = 'updatable';
 
@@ -17,6 +16,7 @@ function BookDirectory(props) {
     const [filter, setFilter] = useState('Title');
     const [cancel, setCancel] = useState(false);
     const [query, setQuery] = useState(undefined);
+    const {Title} = Typography
 
     useEffect(() => {
         if(cancel === false) {
@@ -114,41 +114,57 @@ function BookDirectory(props) {
 
     return (
         <div>
-            <h1 style={{
-                position: 'relative',
-                right: 710,
-                bottom: 25,
-            }}>{'Book Directory'}</h1>
-            <Search 
-                placeholder="Search book by title, author, genre..." 
-                onSearch={value => setSearchFlag(value)} 
-                enterButton 
-                style={{ 
-                    position: 'relative',
-                    width: 535, 
-                    right: 210,
-                    bottom: 70,
-                }}
-            />
-            <Button 
-                type={cancel ? "danger" : "primary"}
-                style={
-                    filter !== 'Publisher' ?
-                    { 
-                        bottom: 70,
-                        right: 100,
-                    } : 
-                    {
-                        bottom: 70,
-                        right: 80,
-                    }
-                }
-                onClick={cancelSearch}
-            >Cancel</Button>
-            <Dropdown.Button overlay={menu} style={{ position: 'relative', bottom: 70, right: 280}} type="primary"> 
-                {filter ? filter : 'Filters'}
-            </Dropdown.Button>
-            {/* We pass the 'books' array as a prop to the 'CustomCard' component */}
+            <div style={{ height: 100, border: '2px solid black', background: `linear-gradient(#283048 , #859398)`}}>
+                <Fade cascade>
+                    <Title 
+                        level={3} 
+                        style={{
+                            fontFamily:"Book Antiqua,Georgia,Times New Roman,serif",
+                            position: 'relative',
+                            right: 565,
+                            fontSize: 50, 
+                            color: 'white',
+                            textAlign : "center", 
+                        }}>Book Directory
+                    </Title>
+                    <p style={{ color: 'white', fontSize: 24, position: 'relative', bottom: 40, right: 575 }}>Browse through our books or...</p>
+                    <Search 
+                    placeholder="Search book by title, author, genre..." 
+                    onSearch={value => setSearchFlag(value)} 
+                    enterButton 
+                    style={{ 
+                        position: 'relative',
+                        width: 535, 
+                        right: 130,
+                        bottom: 90,
+                    }}
+                    />
+                    <Button 
+                        type={cancel ? "danger" : "primary"}
+                        style={
+                            filter !== 'Publisher' ?
+                            { 
+                                bottom: 122,
+                                left: 280
+                            } : 
+                            {
+                                bottom: 122,
+                                left: 310,
+                            }
+                        }
+                        onClick={cancelSearch}
+                    >Cancel</Button>
+                    <Dropdown.Button overlay={menu} style={{ position: 'relative',
+                        width: 535, 
+                        bottom: 154,
+                        left: 410
+                    }} type="primary"> 
+                        {filter ? filter : 'Filters'}
+                    </Dropdown.Button>
+                </Fade>
+                
+                {/* We pass the 'books' array as a prop to the 'CustomCard' component */}
+                </div>
             <CustomCard partOf={false} booksData={books}/>
         </div>
     )

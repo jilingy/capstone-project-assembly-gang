@@ -179,8 +179,8 @@ function CustomCard(props) {
     }
 
     return (
-        <div className="site-card-wrapper" style={{ position: 'relative' , bottom: 50, left: -20}}>
-            <Row gutter={16}>
+        <div className="site-card-wrapper" style={{ position: 'relative' , bottom: props.partOf ? 60 : -10, left: 215}}>
+            <Row gutter={32}>
             {
                 props.booksData.map((book, index) => {
                     return (
@@ -190,11 +190,13 @@ function CustomCard(props) {
                                 title={book.book_title} 
                                 bordered={true}
                                 cover={<img alt="example" src={BookCover} />}
-                                style={{ width: 300, height: 600, background: '#cfcdc6'}}
+                                headStyle={{ color: 'white', background: `linear-gradient(#FFA17F , #00223E)` }}
+                                style={{ width: 300, height: 600, background: '#cfcdc6', border: '2px solid black'}}
                                 hoverable
                                 extra={
                                     props.partOf ? 
                                         (<Popover
+                                            className="popover-title"
                                             placement="topLeft"
                                             content={
                                                 collections ?
@@ -242,8 +244,8 @@ function CustomCard(props) {
                             >
                                 {book.book_synopsis}                       
                             </Card>
-                            <Button style={{ position : 'relative', bottom: 50 }} type="primary" shape="round" onClick={(()=>showDetails(book))}>View Details</Button>
                             {bookToDetail ?<BookDetail visible={modalVisible} updateModalVisible={updateModalVisible} {...bookToDetail} /> : null}
+                            <Button style={{ position : 'relative', bottom: 50 }} type="primary" shape="round" onClick={(()=>showDetails(book))}>View Details</Button>
                             {props.partOf ? 
                                 <Button 
                                     style={{ 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import {apiCollections } from '../services/utilities/API';
 import { useForm, Controller } from 'react-hook-form';
-import { Form, Input, Button,  message } from 'antd';
+import { Form, Input, Button, message, Typography } from 'antd';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 const key = 'updatable';
@@ -11,6 +11,8 @@ const key = 'updatable';
 // account -- like set up default collections etc.
 
 function EmailConfirm(props) {
+
+    const {Title} = Typography
 
     const [verified , setVerified] = useState(false);
 
@@ -75,9 +77,17 @@ function EmailConfirm(props) {
 
     return (
         <div>
-            <p>Confirmation Email Sent! Check your email and enter the verification code below to activate your account.</p>
+            <Title 
+                level={3} 
+                style={{  
+                    fontSize: 24, 
+                    textAlign : "center", 
+                    fontFamily:"New Roman",
+                    paddingTop: 20, 
+                }}>Confirmation Email Sent! Check your email and enter the verification code below to activate your account.
+            </Title>
             <form
-                style={{ width: 500, position: 'relative', top: 20, left: 650 }}
+                style={{ background: '#2F4F4F', borderRadius: 10, padding: 24, border: '2px solid black', width: 500, position: 'relative', top: 20, left: 650 }}
                 onSubmit={handleSubmit(onSubmit)}>
                 <Controller
                     name="verification_code"
