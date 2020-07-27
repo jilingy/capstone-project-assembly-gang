@@ -7,9 +7,7 @@ import { connect } from 'react-redux';
 import { apiReviews } from '../services/utilities/API';
 
 function BookDetail(props){
-    console.log("hello")
-    console.log(props.id)
-    console.log("hello")
+
     const {Title, Text} = Typography
 
     const [reviews, setReviews] = useState([]);

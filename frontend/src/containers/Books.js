@@ -4,7 +4,7 @@ import { Button, Alert } from 'antd';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux'
 
-import { apiCollections, apiBooks, apiContains } from '../services/utilities/API';
+import { apiCollections, apiBooks, apiContains, apiReviews } from '../services/utilities/API';
 
 function Books(props) {
 
@@ -26,6 +26,7 @@ function Books(props) {
 
     const collectionID = props.location.state.collectionID;
     const partOf = props.location.state.partOf;
+    const reviews = props.location.state.reviews;
     const [books, setBooks] = useState([])
     const [collection, setCollection] = useState()
     const [bookDelete, setBookDelete] = useState(0);
@@ -119,7 +120,8 @@ function Books(props) {
                     collectionID={collectionID}
                     collection={collection} 
                     partOf={partOf} 
-                    booksData={books} 
+                    booksData={books}
+                    reviews={reviews}
                 />
             }            
         </div>

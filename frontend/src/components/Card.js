@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import Review from './Review';
 import _ from "lodash";
 
-import { apiCollections, apiContains, apiReviews } from '../services/utilities/API';
+import { apiCollections, apiContains } from '../services/utilities/API';
 
 const { Option } = Select;
 const key = 'updatable';
@@ -20,7 +20,7 @@ function CustomCard(props) {
     const [loading, updateLoading] = useState(false);
     const [bookToReview , setBookToReview] = useState();
     const [bookToDetail , setBookToDetail] = useState();
-    const [reviews, setReviews] = useState([]);
+    const [addedReview, setAddedReview] = useState(0);
 
     const { handleSubmit, control } = useForm({});
 
@@ -37,10 +37,6 @@ function CustomCard(props) {
                 setCollections(filtered);
             }).catch(err => {
                 console.log(err);
-            })
-        apiReviews.getAll()
-            .then(res => {
-                setReviews(res.data);
             })
     } , [])
 
@@ -184,24 +180,28 @@ function CustomCard(props) {
         updateModalVisible(true)
     }
 
+    const checkIfReviewExists = (book) => {
+        var exist = false;
+        for(var i = 0; i < props.reviews.length; i++) {
+            var rev = props.reviews[i];
+            console.log(rev);
+            if(rev.book === book.id) {
+                exist = true;
+                break;
+            }
+        }
+        return exist;
+    }
+
     return (
         <div className="site-card-wrapper" style={{ position: 'relative' , bottom: props.partOf ? 60 : -10, left: 215}}>
             <Row gutter={32}>
             {
-                _.zipWith(props.booksData, reviews, function(book, review) {
-                    
-                    let buttonText = '';
-                    if(props.collection.collection_type !== "Finished") {
-                        buttonText = "Mark as Read"
-                    } else if(props.collection.collection_type === "Finished" && review) {
-                        buttonText = "View Review"  
-                    } else if(props.collection.collection_type === "Finished"){
-                        buttonText = "Add Review"
-                    }
-                    
+                props.booksData.map((book, index) => {
+                    var hasReview = props.reviews && checkIfReviewExists(book);
                     return (
                         <div>
-                        <Col>
+                        <Col key={index}>
                             <Card 
                                 title={book.book_title} 
                                 bordered={true}
@@ -266,13 +266,14 @@ function CustomCard(props) {
                                 <Button 
                                     style={{ 
                                         position : 'relative', 
-                                        bottom: 50, left: 5 
+                                        bottom: 50, left: 5,
+                                        color: hasReview ? 'black' : 'white'
                                     }} 
                                     type="primary" 
                                     shape="round"
                                     onClick={props.collection.collection_type !== "Finished" ? (() => handleDelete(book.id, props.collectionID, true)) : (() => handleAddReview(book))}
                                 >
-                                    {buttonText}
+                                    {props.collection.collection_type === "Finished" ? (hasReview ? "Edit Review" : "Add Review") : "Mark As Read"}
                                 </Button> 
                                     : 
                                 null

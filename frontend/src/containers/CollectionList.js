@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import Fade from 'react-reveal/Fade';
 
-import { apiCollections, apiContains, apiBooks } from '../services/utilities/API';
+import { apiCollections, apiContains, apiBooks, apiReviews } from '../services/utilities/API';
 
 import {
     EditOutlined,
@@ -120,11 +120,10 @@ function CollectionList(props) {
 
     const [collections, updateCollections] = useState([]);
     const [collectionToUpdate, setCollectionToUpdate] = useState();
-    
     const [len, setLen] = useState(collections.length);
     const [loading, setLoading] = useState(true);
-    
     const [books, setBooks] = useState();
+    const [reviews, setReviews] = useState([]);
 
     const {Title} = Typography
 
@@ -139,6 +138,7 @@ function CollectionList(props) {
         setLoading(true);
         getCollections();
         getCarouselData();
+        getReviews();
     }, [len, collectionToUpdate])
 
     const getCollections = async () => {
@@ -154,6 +154,18 @@ function CollectionList(props) {
                 updateCollections(coll_filtered);
             }).catch(err => {
                 console.log(err);
+            })
+    }
+
+    const getReviews = () => {
+        apiReviews.getAll()
+            .then(res => {
+                var filtered = res.data.filter(review => {
+                    if(review.user === parseInt(props.user_id)) {
+                        return review;
+                    }
+                })
+                setReviews(filtered);
             })
     }
 
@@ -423,7 +435,7 @@ function CollectionList(props) {
                     >
                         {(record.collection_type === 'Named') ? <Button onClick={() => getCollectionData(id)} type="primary" icon={<EditOutlined theme="outlined" style={{ position: 'relative', bottom: 3 }} />}>Edit</Button> : null}
                     </Popover>
-                    <Button type="primary" style={{ left: 5 }}><Link to={{pathname: "/books", state: {collectionID: id , partOf: true} }}>View Collection</Link></Button>
+                    <Button type="primary" style={{ left: 5 }}><Link to={{pathname: "/books", state: {collectionID: id , partOf: true, reviews: reviews} }}>View Collection</Link></Button>
                     <Popover
                         placement="topLeft"
                         content={
