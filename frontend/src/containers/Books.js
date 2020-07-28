@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import CustomCard from '../components/Card';
-import { Button, Alert } from 'antd';
+import { Button, Alert, Typography } from 'antd';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
+import Fade from 'react-reveal/Fade';
 
 import { apiCollections, apiBooks, apiContains, apiReviews } from '../services/utilities/API';
 
@@ -26,14 +27,20 @@ function Books(props) {
 
     const collectionID = props.location.state.collectionID;
     const partOf = props.location.state.partOf;
+
+    const publicProfile = props.location.state.profile;
+    const publicAccess = props.location.state.publicAccess;
+
     const reviews = props.location.state.reviews;
     const [books, setBooks] = useState([])
     const [collection, setCollection] = useState()
     const [bookDelete, setBookDelete] = useState(0);
 
+    const {Title} = Typography
+
     useEffect(() => {
-            getCollection();
-            getBooks();
+        getCollection();
+        getBooks();
       } , [bookDelete]);  
 
     const getCollection = () => {
@@ -56,64 +63,140 @@ function Books(props) {
     }
 
     const addToBooks = (book) => {
-        setBooks(prevBooks => ([...prevBooks , book]));
+        setBooks(prevBooks => [...prevBooks , book]);
     }
 
     return (
-        <div style={{ paddingTop: 30}}>
+        <div style={{ paddingTop: publicAccess ? 0 : 0 }}>
             <div>
-                <h1 style={{
-                    position: 'relative',
-                    right:580,
-                    bottom: 25,
-                }}>{collection ? collection.collection_name : 'Search Results'}</h1>
+                {
+                    publicAccess ? (
+                        <div style= {{ paddingTop:50, height: 100, border: '2px solid black', background: `linear-gradient(#283048 , #859398)` }}>
+                            <Fade cascade>
+                                <Title 
+                                    level={3}
+                                    style={{
+                                        position: 'relative',
+                                        right: 370,
+                                        bottom: 25,
+                                        fontSize: 50, 
+                                        color: 'white',
+                                        textAlign : "center",
+                                        fontFamily:"Book Antiqua,Georgia,Times New Roman,serif"
+                                    }}
+                                >{collection ? `${publicProfile.username}'s ${collection.collection_name}` : 'Search Results'}
+                                </Title>
+                            </Fade>
+                        </div>
+                    ) : (
+                        <div style= {{ paddingTop:20, height: 100, border: '2px solid black', background: `linear-gradient(#283048 , #859398)` }}>
+                            <Fade cascade>
+                                <Title 
+                                    level={3}
+                                    style={{
+                                        position: 'relative',
+                                        right: 530,
+                                        fontSize: 50, 
+                                        color: 'white',
+                                        textAlign : "center",
+                                        fontFamily:"Book Antiqua,Georgia,Times New Roman,serif"
+                                    }}
+                                >{collection ? `${collection.collection_name}` : 'Search Results'}
+                                </Title>
+                            </Fade>
+                        </div>
+                    )
+                }
             </div>
             <div style={{ paddingLeft: 110 }}>
-                {books.length === 0 ? <Link to="/col_list"><Button style={{
-                    position: 'relative',
-                    bottom: 73,
-                    right: 410
-                }} 
-                type="primary"
-                >Back to Collections</Button></Link> : <Link to="/col_list"><Button style={{
-                    position: 'relative',
-                    bottom: 73,
-                    right: 330
-                }} 
-                type="primary"
-                >Back to Collections</Button></Link>}
-
-                {books.length > 0 ? <Link to="/book_dir"><Button style={{
-                    position: 'relative',
-                    bottom: 73,
-                    right: 320
-                }} 
-                type="primary"
-                >Add Books</Button></Link> : null}
+                {
+                    !publicAccess ? (
+                        books.length === 0 ? <Link to="/col_list"><Button style={{
+                            position: 'relative',
+                            bottom: 60,
+                            right: 310
+                        }} 
+                        type="primary"
+                        >Back to Collections</Button></Link> : 
+                        <div>
+                            <Link to="/col_list">
+                                <Button style={{
+                                    position: 'relative',
+                                    bottom: 60,
+                                    right: 240
+                                }} 
+                                type="primary"
+                                >Back to Collections
+                                </Button>
+                            </Link>
+                            <Link to="/book_dir">
+                                <Button style={{
+                                    position: 'relative',
+                                    bottom: 60,
+                                    right: 230
+                                }} 
+                                type="primary">Add Books
+                                </Button>
+                            </Link>
+                        </div>
+                    ) : <Link to="/collections">
+                            <Button style={{
+                                position: 'relative',
+                                bottom: 55,
+                                left: 25,
+                            }} 
+                            type="primary">Back to Collections
+                            </Button>
+                        </Link>
+                }
             </div>
             {
                 books.length === 0 ? 
                     <div style={{ width: 1200, margin:'auto' }}>
                         {
                             (collection && collection.collection_type !== "Finished") ?
-                                 
-                                <Alert
-                                    message="Hey there!"
-                                    description="Seems like you've got no books in this colleciton. Head over to the Book Directory to start adding some books!"
-                                    type="info"
-                                    showIcon
-                                /> : 
-                                <Alert
-                                    message="Hey there!"
-                                    description="This is your finished collection! Only books that have been marked as 'read' appear in here!"
-                                    type="info"
-                                    showIcon
-                                />
+                                publicAccess ? (
+                                    <Alert
+                                        message="Hey there!"
+                                        description={`Looks like ${publicProfile.username} is still working on their collection! Check back in later.`}
+                                        type="info"
+                                        showIcon
+                                    />
+                                ) : 
+                                (
+                                    <Alert
+                                        message="Hey there!"
+                                        description="Seems like you've got no books in this colleciton. Head over to the Book Directory to start adding some books!"
+                                        type="info"
+                                        showIcon
+                                    /> 
+                                ) : 
+                                (
+                                    <Alert
+                                        message="Hey there!"
+                                        description="This is your finished collection! Only books that have been marked as 'read' appear in here!"
+                                        type="info"
+                                        showIcon
+                                    />
+                                )
                         }
-                        {(collection && collection.collection_type !== "Finished") ? <Button style={{ position: 'relative', left: 25, top: 15 }} type="primary"><Link to="/book_dir">Go To Book Directory</Link></Button> : null}
+                        {
+                            publicAccess ? null : ((collection && collection.collection_type !== "Finished") ? 
+                                <Button 
+                                    style={{ 
+                                        position: 'relative', 
+                                        left: 25, 
+                                        top: 15 
+                                    }} 
+                                    type="primary">
+                                        <Link to="/book_dir">Go To Book Directory</Link>
+                                </Button> : null
+                            )
+                        }
                     </div>
                 : 
-                <CustomCard 
+                <div style={{ paddingTop: publicAccess ? 0 : 40 }}>
+                    <CustomCard 
                     setBooks={setBooks} 
                     bookDelete={bookDelete} 
                     setBookDelete={setBookDelete} 
@@ -122,7 +205,9 @@ function Books(props) {
                     partOf={partOf} 
                     booksData={books}
                     reviews={reviews}
+                    publicAccess={publicAccess}
                 />
+                </div>
             }            
         </div>
     )
