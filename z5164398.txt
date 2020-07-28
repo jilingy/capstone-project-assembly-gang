@@ -22,4 +22,6 @@ week 7
 we have increased our velocity and been getting more and more done. we finished most of collection list, as well as other epics. im working on review and rating but having an issue that modals dont allow forms unless you make it a custom class. but next sprint we should have everything done and ready for the demo.
 
 week 8.
+we finsihed off our demo and sprints, we now have one epic each to finish and it seems to be on track, no clue about how reccomender systems work but will brush up on that soon. by next sprint we should have everything ready to submit, i think we might want to comment our code a little to make it look better for our code review but for now just focusing on getting all the user stories done
 
+week 9.
