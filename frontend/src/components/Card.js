@@ -254,7 +254,7 @@ function CustomCard(props) {
                                             trigger="click"
                                             arrowPointAtCenter={true}
                                         >
-                                            {props.partOf ? <Button type="danger">Remove</Button> : <Button type="primary">+ Add</Button>}
+                                            {props.publicAccess ? null : (props.partOf ? <Button type="danger">Remove</Button> : <Button type="primary">+ Add</Button>)}
                                         </Popover>)
                                 }
                             >

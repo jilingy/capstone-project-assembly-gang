@@ -6,8 +6,6 @@ import { Input, Button, Dropdown, Menu, message, Typography } from 'antd';
 import { connect } from 'react-redux';
 const key = 'updatable';
 
-
-
 const { Search } = Input;
 
 function BookDirectory(props) {
@@ -121,7 +119,7 @@ function BookDirectory(props) {
                         style={{
                             fontFamily:"Book Antiqua,Georgia,Times New Roman,serif",
                             position: 'relative',
-                            right: 565,
+                            right: 575,
                             fontSize: 50, 
                             color: 'white',
                             textAlign : "center", 
