@@ -1,0 +1,31 @@
+                     List of relations
+ Schema |             Name              | Type  |  Owner   
+--------+-------------------------------+-------+----------
+ public | account_emailaddress          | table | 3900user
+ public | account_emailconfirmation     | table | 3900user
+ public | auth_group                    | table | 3900user
+ public | auth_group_permissions        | table | 3900user
+ public | auth_permission               | table | 3900user
+ public | auth_user                     | table | 3900user
+ public | auth_user_groups              | table | 3900user
+ public | auth_user_user_permissions    | table | 3900user
+ public | authors                       | table | 3900user
+ public | authtoken_token               | table | 3900user
+ public | books                         | table | 3900user
+ public | collection                    | table | 3900user
+ public | contains                      | table | 3900user
+ public | django_admin_log              | table | 3900user
+ public | django_content_type           | table | 3900user
+ public | django_migrations             | table | 3900user
+ public | django_session                | table | 3900user
+ public | django_site                   | table | 3900user
+ public | knox_authtoken                | table | 3900user
+ public | reads                         | table | 3900user
+ public | reviews                       | table | 3900user
+ public | socialaccount_socialaccount   | table | 3900user
+ public | socialaccount_socialapp       | table | 3900user
+ public | socialaccount_socialapp_sites | table | 3900user
+ public | socialaccount_socialtoken     | table | 3900user
+ public | written_by                    | table | 3900user
+(26 rows)
+

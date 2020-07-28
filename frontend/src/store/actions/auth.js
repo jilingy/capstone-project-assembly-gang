@@ -26,11 +26,15 @@ export const authStart = () => {
     }
 }
 
-export const authSuccess = (token, user_id) => {
+export const authSuccess = (token, user_id, fname, lname, uname, email) => {
     return {
         type: actionTypes.AUTH_SUCCESS,
         token: token,
-        user_id: user_id
+        user_id: user_id,
+        fname: fname,
+        lname: lname,
+        uname: uname,
+        email: email,
     }
 }
 
@@ -42,10 +46,16 @@ export const authFail = (error) => {
 }
 
 export const logout = () => {
+    
     localStorage.removeItem('token');
     localStorage.removeItem('expirationDate');
     localStorage.removeItem('user_id');
+    localStorage.removeItem('fname');
+    localStorage.removeItem('lname');
+    localStorage.removeItem('uname');
+    localStorage.removeItem('email');
     localStorage.removeItem('user');
+
     return {
         type: actionTypes.AUTH_LOGOUT
     }
@@ -67,13 +77,25 @@ export const authLogin = (username, password) => {
             password: password
         })
         .then(res => {
+            
             const user_id = res.data.user.id;
+            const fname = res.data.user.first_name;
+            const lname = res.data.user.last_name;
+            const uname = res.data.user.username;
+            const email = res.data.user.email;
+            
             const token = res.data.token;
             const expirationDate = new Date(new Date().getTime() + 3600 * 1000);
+            
             localStorage.setItem('token', token);
             localStorage.setItem('expirationDate', expirationDate);
             localStorage.setItem('user_id', user_id);
-            dispatch(authSuccess(token, user_id));
+            localStorage.setItem('fname', fname);
+            localStorage.setItem('lname', lname);
+            localStorage.setItem('uname', uname);
+            localStorage.setItem('email', email);
+            
+            dispatch(authSuccess(token, user_id, fname, lname, uname, email));
             dispatch(checkAuthTimeout(3600));
         })
         .catch(err => {
@@ -93,13 +115,25 @@ export const authSignup = (username, email, first_name, last_name, password) => 
             last_name: last_name
         })
         .then(res => {
+            
             const user_id = res.data.user.id;
+            const fname = res.data.user.first_name;
+            const lname = res.data.user.last_name;
+            const uname = res.data.user.username;
+            const email = res.data.user.email;
+            
             const token = res.data.key;
             const expirationDate = new Date(new Date().getTime() + 3600 * 1000);
+            
             localStorage.setItem('token', token);
             localStorage.setItem('expirationDate', expirationDate);
             localStorage.setItem('user_id', user_id);
-            dispatch(authSuccess(token, user_id));
+            localStorage.setItem('fname', fname);
+            localStorage.setItem('lname', lname);
+            localStorage.setItem('uname', uname);
+            localStorage.setItem('email', email);
+            
+            dispatch(authSuccess(token, user_id, fname, lname, uname, email));
             dispatch(checkAuthTimeout(3600));
         })
         .catch(err => {
@@ -110,8 +144,14 @@ export const authSignup = (username, email, first_name, last_name, password) => 
 
 export const authCheckState = () => {
     return dispatch => {
+        
         const token = localStorage.getItem('token');
         const user_id = localStorage.getItem('user_id');
+        const fname = localStorage.getItem('fname');
+        const lname = localStorage.getItem('lname');
+        const uname = localStorage.getItem('uname');
+        const email = localStorage.getItem('email');
+        
         if(token === undefined) {
             dispatch(logout())
         } else {
@@ -119,7 +159,7 @@ export const authCheckState = () => {
             if (expirationDate <= new Date()) {
                 dispatch(logout()); 
             } else {
-                dispatch(authSuccess(token, user_id));
+                dispatch(authSuccess(token, user_id, fname, lname, uname, email));
                 dispatch(checkAuthTimeout((expirationDate.getTime() - new Date().getTime()) / 1000));
             }
         }

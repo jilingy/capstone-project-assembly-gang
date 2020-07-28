@@ -6,13 +6,13 @@ import { connect } from 'react-redux';
 import { apiBooks, apiReviews } from '../services/utilities/API';
 import TextArea from 'antd/lib/input/TextArea';
 
-
 const key = 'updatable';
-const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
 
 function Review(props) {
 
     
+
+
     const { handleSubmit, errors, reset, control, defaultValues } = useForm({
         defaultValues: {
             "reviewText": '',
@@ -20,27 +20,37 @@ function Review(props) {
         },
     });
 
-    const addReviewSuccess = () => {
+   
+
+
+    const editReviewSuccess = () => {
         message.loading({ content: 'Processing...', key });
             setTimeout(() => {
-                message.success({ content: 'Review created successfully!', key, duration: 2 });
+                message.success({ content: 'Review edited successfully!', key, duration: 2 });
             }, 1000);
     };
 
+    const deleteReviewSuccess = () => {
+        message.loading({ content: 'Processing...', key });
+            setTimeout(() => {
+                message.success({ content: 'Review deleted successfully!', key, duration: 2 });
+            }, 1000);
+    };
+
+   
+
     const handleOk = (data) => {
-        console.log(data);
-        apiReviews.post({
-            user: props.user_id,
-            book: props.book.id,
+        console.log(data, props.review.id);
+        apiReviews.patch(props.review.id,{
             review: data.reviewText,
             rating: data.reviewRating,
         }).then(res => {
             props.updateLoading(!props.loading);
-            addReviewSuccess();
+            editReviewSuccess();
             setTimeout(() => {
                 props.updateLoading(props.loading);
-                props.updateVisible(!props.visible);
-                
+                props.updateEditVisible(!props.visible);
+               
             }, 1000);
             
         }).catch(err => {
@@ -50,15 +60,34 @@ function Review(props) {
     };
     
     const handleCancel = () => {
-        props.updateVisible(!props.visible);
+        props.updateEditVisible(!props.visible);
         
     };
 
-   
+    const handleDelete = () => {
+            apiReviews.remove(props.review.id
+                ).then(res => {
+                props.updateLoading(!props.loading);
+                deleteReviewSuccess();
+                setTimeout(() => {
+                    props.updateLoading(props.loading);
+                    props.updateEditVisible(!props.visible);
+                    
+                }, 1000);
+                
+            }).catch(err => {
+                console.log(err)
+            })
+            //console.log(props.book);
+    
+        
+    };
 
-    
-   
-    
+    let text;
+    if(props.review !== undefined){
+        text = <div> Your previous rating was : {props.review.rating}</div>
+    }
+
 
     const { TextArea } = Input;
 
@@ -90,8 +119,8 @@ function Review(props) {
                         <div>
                             <b><label>Review</label></b>
                             <p>
-                            <TextArea rows={8} name="reviewText" > 
-                            
+                            <TextArea rows={8} name="reviewText" defaultValue={(props.review === undefined) ? "" : props.review.review}> 
+                           
                             </TextArea>
                             </p>
                         </div>
@@ -102,24 +131,27 @@ function Review(props) {
                 <Controller
                     name="reviewRating"
                     control={control}
+                   
                     type= "number"
                     rules={{ required: "Please enter a rating" }}
                     as={
-                        <Rate />
-                        
-                       
+                        <Rate name="reviewRating" >
+                            
+                        </Rate>
                     }  
-                    
                 />   
-                 <Button type="primary" htmlType="submit" loading={props.loading} onClick={handleOk} style={{left: 260, top: 67, position: 'relative'}}>Submit</Button>
+                
+                {text}
+                               
+                 <Button type="primary" htmlType="submit" loading={props.loading} onClick={handleOk} style={{left: 390, top: 67, position: 'relative'}}>Submit</Button>
                     
-               
+                 <Button type= "primary" onClick={handleDelete} style={{left: 280, bottom: 450, position: 'relative'}} >Delete</Button>
  
             </form>    
 
         </Modal>
     )
-}
+} 
 
 const mapStateToProps = state => {
     return {

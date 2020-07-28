@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
-import { Form, Input, Button, Popover, Table, message, Spin, Carousel, Switch } from 'antd';
+import { Form, Input, Button, Popover, Table, message, Spin, Carousel, Switch, Typography } from 'antd';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import Fade from 'react-reveal/Fade';
 
-import { apiCollections, apiContains, apiBooks } from '../services/utilities/API';
+import { apiCollections, apiContains, apiBooks, apiReviews } from '../services/utilities/API';
 
 import {
     EditOutlined,
@@ -109,7 +110,7 @@ function AddCollectionForm({ props: Props, setLen: setLength, len: Length }) {
                 visible={visible}
                 onVisibleChange={handleVisibleChange}
             >
-                <Button type="primary" style={{ left: 730, bottom: 70, position: 'relative' }}>+ Add Collection</Button>
+                <Button type="primary" style={{ bottom: 80, right: 220, position: 'relative' }}>+ Add Collection</Button>
             </Popover>
         </div>
     )
@@ -119,11 +120,12 @@ function CollectionList(props) {
 
     const [collections, updateCollections] = useState([]);
     const [collectionToUpdate, setCollectionToUpdate] = useState();
-    
     const [len, setLen] = useState(collections.length);
     const [loading, setLoading] = useState(true);
-    
     const [books, setBooks] = useState();
+    const [reviews, setReviews] = useState([]);
+
+    const {Title} = Typography
 
     const { handleSubmit, errors, control } = useForm({
         defaultValues: {
@@ -136,6 +138,7 @@ function CollectionList(props) {
         setLoading(true);
         getCollections();
         getCarouselData();
+        getReviews();
     }, [len, collectionToUpdate])
 
     const getCollections = async () => {
@@ -151,6 +154,18 @@ function CollectionList(props) {
                 updateCollections(coll_filtered);
             }).catch(err => {
                 console.log(err);
+            })
+    }
+
+    const getReviews = () => {
+        apiReviews.getAll()
+            .then(res => {
+                var filtered = res.data.filter(review => {
+                    if(review.user === parseInt(props.user_id)) {
+                        return review;
+                    }
+                })
+                setReviews(filtered);
             })
     }
 
@@ -268,6 +283,7 @@ function CollectionList(props) {
             title: 'Number Of Books',
             dataIndex: 'count',
             key: 'count',
+            align: "center",
             sorter: (a, b) => a.count - b.count,
             render: count => <p>{count}</p>
         },
@@ -275,6 +291,7 @@ function CollectionList(props) {
             title: 'Date Created',
             dataIndex: 'date_created',
             key: 'date_created',
+            align: "center",
             sorter: (a, b) => { return moment(a.date_created || 0).unix() - moment(b.date_created || 0).unix() },
             sortDirections: ['descend'],
             render: date_created => <p>{date_created.slice(0, 10)}</p>
@@ -304,7 +321,8 @@ function CollectionList(props) {
                                 <Carousel 
                                     autoplay 
                                     dots={false} 
-                                    style={{ 
+                                    style={{
+                                        borderRadius: 10, 
                                         width: 400, 
                                         background: "#364d79", 
                                         color: 'white', 
@@ -339,16 +357,21 @@ function CollectionList(props) {
             dataIndex: 'is_private',
             key: 'is_private',
             render: (is_private , record) => {
-                return(
-                    <div>
-                        <Switch 
-                            unCheckedChildren="Public" 
-                            checkedChildren="Private"
-                            defaultChecked={is_private} 
-                            onClick={(e) => handlePrivacyUpdate(e , record.id)}
-                        /> 
-                    </div>
-                )
+                if(record.collection_type === "Named") {
+                    return(
+                        <div>
+                            <Switch 
+                                unCheckedChildren="Public" 
+                                checkedChildren="Private"
+                                defaultChecked={is_private} 
+                                onClick={(e) => handlePrivacyUpdate(e , record.id)}
+                            /> 
+                        </div>
+                    )
+                } else {
+                    return null;
+                }
+                
             }
         },
         {
@@ -358,6 +381,7 @@ function CollectionList(props) {
             render: (id, record) =>
                 <div>
                     <Popover
+                        headStyle={{ backgroundColor: 'red' }}
                         placement="topLeft"
                         content={
                             <form
@@ -411,7 +435,7 @@ function CollectionList(props) {
                     >
                         {(record.collection_type === 'Named') ? <Button onClick={() => getCollectionData(id)} type="primary" icon={<EditOutlined theme="outlined" style={{ position: 'relative', bottom: 3 }} />}>Edit</Button> : null}
                     </Popover>
-                    <Button type="primary" style={{ left: 5 }}><Link to={{pathname: "/books", state: {collectionID: id , partOf: true} }}>View Collection</Link></Button>
+                    <Button type="primary" style={{ left: 5 }}><Link to={{pathname: "/books", state: {collectionID: id , partOf: true, reviews: reviews} }}>View Collection</Link></Button>
                     <Popover
                         placement="topLeft"
                         content={
@@ -432,19 +456,30 @@ function CollectionList(props) {
 
     return (
         <div>
-            <h1 style={{
-                position: 'relative',
-                right: 660,
-                bottom: 30,
-            }}>My Book Collections</h1>
+            <div style={{ height: 100, border: '2px solid black', background: `linear-gradient(#283048 , #859398)` }}>
+                <Fade cascade>
+                    <Title 
+                        level={3} 
+                        style={{
+                            color: 'white',
+                            fontSize: 50, 
+                            position: 'relative', 
+                            right: 515,
+                            textAlign : "center", 
+                            fontFamily:"Book Antiqua,Georgia,Times New Roman,serif" 
+                        }}>My Book Collections
+                    </Title>
+                    <p style={{ color: 'white', fontSize: 24, position: 'relative', bottom: 40, right: 460 }}>Welcome {props.fname}! Here is a list of all your collections</p> 
+                </Fade> 
+            </div>
             <AddCollectionForm props={props} setLen={setLen} len={len} />
             {collections ? <Table
                 style={{
                     position: 'relative',
                     border: '2px solid black',
-                    bottom: 55,
+                    bottom: 15,
                     width: 1650,
-                    left: -20,
+                    left: 215
                 }}
                 dataSource={collections}
                 columns={columns}
@@ -456,6 +491,9 @@ function CollectionList(props) {
 const mapStateToProps = state => {
     return {
         user_id: state.user_id,
+        fname: state.fname,
+        lname: state.lname,
+        uname: state.uname,
     }
 }
 

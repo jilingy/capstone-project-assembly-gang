@@ -4,7 +4,7 @@ import { Button, Alert } from 'antd';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux'
 
-import { apiCollections, apiBooks, apiContains } from '../services/utilities/API';
+import { apiCollections, apiBooks, apiContains, apiReviews } from '../services/utilities/API';
 
 function Books(props) {
 
@@ -26,6 +26,7 @@ function Books(props) {
 
     const collectionID = props.location.state.collectionID;
     const partOf = props.location.state.partOf;
+    const reviews = props.location.state.reviews;
     const [books, setBooks] = useState([])
     const [collection, setCollection] = useState()
     const [bookDelete, setBookDelete] = useState(0);
@@ -59,38 +60,43 @@ function Books(props) {
     }
 
     return (
-        <div>
-            <h1 style={{
-                position: 'relative',
-                right: 660,
-                bottom: 25,
-            }}>{collection ? collection.collection_name : 'Search Results'}</h1>
-            
-            {books.length === 0 ? <Link to="/col_list"><Button style={{
-                bottom: 73,
-                right: 410
-            }} 
-            type="primary"
-            >Back to Collections</Button></Link> : <Link to="/col_list"><Button style={{
-                position: 'relative',
-                bottom: 73,
-                right: 360
-            }} 
-            type="primary"
-            >Back to Collections</Button></Link>}
+        <div style={{ paddingTop: 30}}>
+            <div>
+                <h1 style={{
+                    position: 'relative',
+                    right:580,
+                    bottom: 25,
+                }}>{collection ? collection.collection_name : 'Search Results'}</h1>
+            </div>
+            <div style={{ paddingLeft: 110 }}>
+                {books.length === 0 ? <Link to="/col_list"><Button style={{
+                    position: 'relative',
+                    bottom: 73,
+                    right: 410
+                }} 
+                type="primary"
+                >Back to Collections</Button></Link> : <Link to="/col_list"><Button style={{
+                    position: 'relative',
+                    bottom: 73,
+                    right: 330
+                }} 
+                type="primary"
+                >Back to Collections</Button></Link>}
 
-            {books.length > 0 ? <Link to="/book_dir"><Button style={{
-                position: 'relative',
-                bottom: 73,
-                right: 350
-            }} 
-            type="primary"
-            >Add Books</Button></Link> : null}
+                {books.length > 0 ? <Link to="/book_dir"><Button style={{
+                    position: 'relative',
+                    bottom: 73,
+                    right: 320
+                }} 
+                type="primary"
+                >Add Books</Button></Link> : null}
+            </div>
             {
                 books.length === 0 ? 
-                    <div>
+                    <div style={{ width: 1200, margin:'auto' }}>
                         {
-                            (collection && collection.collection_type !== "Finished") ? 
+                            (collection && collection.collection_type !== "Finished") ?
+                                 
                                 <Alert
                                     message="Hey there!"
                                     description="Seems like you've got no books in this colleciton. Head over to the Book Directory to start adding some books!"
@@ -114,7 +120,8 @@ function Books(props) {
                     collectionID={collectionID}
                     collection={collection} 
                     partOf={partOf} 
-                    booksData={books} 
+                    booksData={books}
+                    reviews={reviews}
                 />
             }            
         </div>
