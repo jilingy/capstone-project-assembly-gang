@@ -1,18 +1,52 @@
-import React from 'react';
-import { Skeleton, Card, Avatar, Col, Row, Tooltip, Popconfirm } from 'antd';
+import React, { useState } from 'react';
+import { Skeleton, Card, Avatar, Col, Row, Tooltip, Popconfirm, message } from 'antd';
 import { EyeFilled, CopyFilled } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import _ from "lodash";
 
+import { apiCollections, apiContains } from '../services/utilities/API'; 
+
 const { Meta } = Card;
+
+const key = 'updatable';
 
 function CollectionCard(props) {
 
-    const handleCollectionClone = () => {
-        console.log("Cloning...");
-
+    const handleCollectionClone = (collection, profile) => {
+        var count = 0;
+        apiCollections.post({
+            collection_type: "Cloned",
+            is_private: false,
+            count: collection.count,
+            description: collection.description,
+            collection_name: `${profile.username}'s ${collection.collection_name} collection`,
+            owner: props.user_id,
+        }).then(cloneRes => {
+            apiContains.getAll()
+                .then(res => {
+                    res.data.filter(contain => {
+                        if(contain.collection === collection.id) {
+                            count = count + 1;
+                            apiContains.post({
+                                collection: cloneRes.data.id,
+                                book: contain.book,
+                            })
+                        }
+                    })
+                })
+            cloneCollectionSuccess();
+        }).catch(err => {
+            console.log(err);
+        })
     }
+
+    const cloneCollectionSuccess = () => {
+        message.loading({ content: 'Processing...', key });
+            setTimeout(() => {
+                message.success({ content: 'Collection cloned successfully! Find it in your collection list!', key, duration: 2 });
+            }, 1000);
+    };
 
     return (
         <div style={{ marginLeft: 210, position: 'relative', bottom: 40 }}>
@@ -24,7 +58,7 @@ function CollectionCard(props) {
                                 <Col span={4.5}>
                                     <Card
                                         headStyle={{ background: `linear-gradient(#3a7bd5 , #3a6073)`, color: 'white' }}
-                                        bodyStyle={{ color: 'black', background: `linear-gradient(#eacda3 , #d6ae7b)` }}
+                                        bodyStyle={{ height: 120, color: 'black', background: `linear-gradient(#eacda3 , #d6ae7b)` }}
                                         style={{ color: 'black', background: '#cfcdc6' }}
                                         cover={
                                             <img
@@ -41,7 +75,7 @@ function CollectionCard(props) {
                                                 title="Do you want to add this collection to your collection list?"
                                                 okText="Yes"
                                                 cancelText="No"
-                                                onConfirm={handleCollectionClone}
+                                                onConfirm={() => handleCollectionClone(collection, profile)}
                                             ><CopyFilled/>
                                             </Popconfirm>,
                                         ]}
