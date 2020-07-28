@@ -67,4 +67,7 @@ export const apiReviews = new APICore({
     url: reviewsURL,
 });
 
+
+
+
 export default apiCollections;

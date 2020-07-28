@@ -33,6 +33,8 @@ const remove = (resource, id) => {
       .delete(`${BASE_URL}/${resource}/${id}/`) 
 }; 
 
+
+
 const APIProvider = { 
     getAll, 
     getSingle, 

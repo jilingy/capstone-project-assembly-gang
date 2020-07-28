@@ -5,6 +5,7 @@ import BookDetail from '../containers/BookDetail';
 import { useForm, Controller } from 'react-hook-form';
 import { connect } from 'react-redux';
 import Review from './Review';
+import EditReview from './EditReview';
 import _ from "lodash";
 
 import { apiCollections, apiContains } from '../services/utilities/API';
@@ -17,8 +18,10 @@ function CustomCard(props) {
     const [collections, setCollections] = useState([]);
     const [modalVisible, updateModalVisible] = useState(false);
     const [visible, updateVisible] = useState(false);
+    const [editVisible, updateEditVisible] = useState(false);
     const [loading, updateLoading] = useState(false);
     const [bookToReview , setBookToReview] = useState();
+    const [theReview , setTheReview] = useState();
     const [bookToDetail , setBookToDetail] = useState();
     const [addedReview, setAddedReview] = useState(0);
 
@@ -174,6 +177,15 @@ function CustomCard(props) {
         setBookToReview(book);
         updateVisible(true);
     }
+    
+    const handleEditReview = (book) => {
+        setBookToReview(book);
+        if(findReview(book) != null){
+            setTheReview(findReview(book));
+        }
+        updateEditVisible(true);
+    }
+    
 
     const showDetails = (book) => {
         setBookToDetail(book)
@@ -186,12 +198,28 @@ function CustomCard(props) {
             var rev = props.reviews[i];
             console.log(rev);
             if(rev.book === book.id) {
-                exist = true;
+                exist = true; 
+                
                 break;
             }
         }
         return exist;
     }
+
+    const findReview = (book) => {
+        
+        for(var i = 0; i < props.reviews.length; i++) {
+            var rev = props.reviews[i];
+            console.log(rev);
+            if(rev.book === book.id) {
+                return rev;
+                
+                break;
+            }
+        }
+        return null;
+    }
+
 
     return (
         <div className="site-card-wrapper" style={{ position: 'relative' , bottom: props.partOf ? 60 : -10, left: 215}}>
@@ -271,7 +299,7 @@ function CustomCard(props) {
                                     }} 
                                     type="primary" 
                                     shape="round"
-                                    onClick={props.collection.collection_type !== "Finished" ? (() => handleDelete(book.id, props.collectionID, true)) : (() => handleAddReview(book))}
+                                    onClick={props.collection.collection_type !== "Finished" ? (() => handleDelete(book.id, props.collectionID, true)) :    (hasReview ? (() => handleEditReview(book)) : (() => handleAddReview(book)))}                                     
                                 >
                                     {props.collection.collection_type === "Finished" ? (hasReview ? "Edit Review" : "Add Review") : "Mark As Read"}
                                 </Button> 
@@ -280,6 +308,7 @@ function CustomCard(props) {
                             }
                         </Col>
                         {bookToReview ? <Review visible={visible} updateVisible={updateVisible} book={bookToReview} loading={loading} updateLoading={updateLoading}/> : null}
+                        {bookToReview ? <EditReview visible={editVisible} updateEditVisible={updateEditVisible} book={bookToReview} loading={loading} review={theReview} updateLoading={updateLoading}/> : null}
                         </div>
                     )
                 })
