@@ -32,10 +32,10 @@ function AddCollectionForm({ props: Props, setLen: setLength, len: Length }) {
 
     const addCollectionSuccess = () => {
         message.loading({ content: 'Processing...', key });
-            setTimeout(() => {
-                message.success({ content: 'Collection created successfully!', key, duration: 2 });
-                setLength(Length + 1);
-            }, 1000);
+        setTimeout(() => {
+            message.success({ content: 'Collection created successfully!', key, duration: 2 });
+            setLength(Length + 1);
+        }, 1000);
     };
 
     const onSubmit = (data) => {
@@ -125,7 +125,7 @@ function CollectionList(props) {
     const [books, setBooks] = useState();
     const [reviews, setReviews] = useState([]);
 
-    const {Title} = Typography
+    const { Title } = Typography
 
     const { handleSubmit, errors, control } = useForm({
         defaultValues: {
@@ -145,7 +145,7 @@ function CollectionList(props) {
         apiCollections.getAll()
             .then(res => {
                 var coll_filtered = res.data.filter(collection => {
-                    if(parseInt(props.user_id) === collection.owner) {
+                    if (parseInt(props.user_id) === collection.owner) {
                         return collection;
                     } else {
                         return null;
@@ -161,7 +161,7 @@ function CollectionList(props) {
         apiReviews.getAll()
             .then(res => {
                 var filtered = res.data.filter(review => {
-                    if(review.user === parseInt(props.user_id)) {
+                    if (review.user === parseInt(props.user_id)) {
                         return review;
                     }
                 })
@@ -174,26 +174,26 @@ function CollectionList(props) {
         apiCollections.getAll()
             .then(res => {
                 res.data.filter(collection => {
-                    if(parseInt(props.user_id) === collection.owner) {
+                    if (parseInt(props.user_id) === collection.owner) {
                         var booksData = {};
                         booksData[collection.collection_name] = [];
                         apiContains.getAll()
-                        .then(res => {
-                            res.data.filter(contain => {
-                                if(contain.collection === collection.id) {
-                                    apiBooks.getSingle(contain.book).then(res => {
-                                        booksData[collection.collection_name].push({
-                                            "title" : res.data.book_title , 
-                                            "time_created" : contain.time_added
-                                        }) 
-                                    })
-                                }
+                            .then(res => {
+                                res.data.filter(contain => {
+                                    if (contain.collection === collection.id) {
+                                        apiBooks.getSingle(contain.book).then(res => {
+                                            booksData[collection.collection_name].push({
+                                                "title": res.data.book_title,
+                                                "time_created": contain.time_added
+                                            })
+                                        })
+                                    }
+                                })
+                                finalData.push(booksData);
                             })
-                            finalData.push(booksData);
-                        })
                     }
                 })
-        })
+            })
         setBooks(finalData);
         setTimeout(() => {
             setLoading(false);
@@ -202,10 +202,10 @@ function CollectionList(props) {
 
     const deleteCollectionSuccess = () => {
         message.loading({ content: 'Processing...', key });
-            setTimeout(() => {
-                message.success({ content: 'Collection deleted successfully!', key, duration: 2 });
-                setLen(len - 1);
-            }, 2000);
+        setTimeout(() => {
+            message.success({ content: 'Collection deleted successfully!', key, duration: 2 });
+            setLen(len - 1);
+        }, 2000);
     };
 
     // Collection Delete
@@ -221,7 +221,7 @@ function CollectionList(props) {
 
     // Collection Update
     const onSubmit = (data) => {
-        apiCollections.put(collectionToUpdate[0].id , {
+        apiCollections.put(collectionToUpdate[0].id, {
             collection_name: data.collectionTitle,
             description: data.collectionDesc
         }).then(res => {
@@ -240,8 +240,8 @@ function CollectionList(props) {
         setCollectionToUpdate(obj);
     }
 
-    const handlePrivacyUpdate = (data , id) => {
-        apiCollections.patch(id , {
+    const handlePrivacyUpdate = (data, id) => {
+        apiCollections.patch(id, {
             is_private: data,
         }).then(res => {
             triggerPrivacyUpdateSuccess();
@@ -252,16 +252,16 @@ function CollectionList(props) {
 
     const triggerPrivacyUpdateSuccess = () => {
         message.loading({ content: 'Processing...', key });
-            setTimeout(() => {
-                message.success({ content: 'Privacy settings updated successfully!', key, duration: 2 });
-            }, 2000);
+        setTimeout(() => {
+            message.success({ content: 'Privacy settings updated successfully!', key, duration: 2 });
+        }, 2000);
     };
 
     const triggerPrivacyUpdateError = () => {
         message.loading({ content: 'Processing...', key });
-            setTimeout(() => {
-                message.error({ content: 'Privacy update failed!', key, duration: 2 });
-            }, 2000);
+        setTimeout(() => {
+            message.error({ content: 'Privacy update failed!', key, duration: 2 });
+        }, 2000);
     };
 
     const columns = [
@@ -270,13 +270,24 @@ function CollectionList(props) {
             dataIndex: 'collection_name',
             key: 'collection_name',
             align: "center",
-            sorter: (a, b) => { return a.collection_name.localeCompare(b.collection_name)},
-            render: collection_name => <p><b>{collection_name}</b></p>
+            sorter: (a, b) => { return a.collection_name.localeCompare(b.collection_name) },
+            render: (collection_name, record) => {
+                if(record.collection_type === "Cloned") {
+                    return (
+                        <p style={{ color: 'red', textDecoration: 'underline' }}><b>{collection_name}</b></p>
+                    )
+                } else {
+                    return (
+                        <p><b>{collection_name}</b></p>
+                    )
+                }
+            }
         },
         {
             title: 'Collection Description',
             dataIndex: 'description',
             key: 'description',
+            width: 300,
             render: description => <p>{description}</p>
         },
         {
@@ -284,6 +295,7 @@ function CollectionList(props) {
             dataIndex: 'count',
             key: 'count',
             align: "center",
+            width: 50,
             sorter: (a, b) => a.count - b.count,
             render: count => <p>{count}</p>
         },
@@ -292,6 +304,7 @@ function CollectionList(props) {
             dataIndex: 'date_created',
             key: 'date_created',
             align: "center",
+            width: 50,
             sorter: (a, b) => { return moment(a.date_created || 0).unix() - moment(b.date_created || 0).unix() },
             sortDirections: ['descend'],
             render: date_created => <p>{date_created.slice(0, 10)}</p>
@@ -303,51 +316,51 @@ function CollectionList(props) {
             key: 'collection_name',
             width: 400,
             render: (collection_name) => {
-                if(loading) {
+                if (loading) {
                     return (
                         <Spin />
                     )
                 } else {
                     var toRender = books.filter(book => {
                         var data = book[collection_name];
-                        if(data) {
+                        if (data) {
                             return data;
-                        } 
+                        }
                     })
-                    if(toRender[0]) {
+                    if (toRender[0]) {
                         var data = toRender[0][collection_name];
                         return (
                             <div>
-                                <Carousel 
-                                    autoplay 
-                                    dots={false} 
+                                <Carousel
+                                    autoplay
+                                    dots={false}
                                     style={{
-                                        borderRadius: 10, 
-                                        width: 400, 
-                                        background: "#364d79", 
-                                        color: 'white', 
-                                        borderRadius: 10, 
-                                        paddingTop: 20 
+                                        borderRadius: 10,
+                                        width: 400,
+                                        background: "#364d79",
+                                        color: 'white',
+                                        borderRadius: 10,
+                                        paddingTop: 20
                                     }}>
                                     {
-                                        data.reverse().map(b => {  
-                                            if(b !== undefined) { 
+                                        data.reverse().map(b => {
+                                            if (b !== undefined) {
                                                 return (
-                                                    <p style={{ 
-                                                        color: '#FFFFFF' 
+                                                    <p style={{
+                                                        color: '#FFFFFF'
                                                     }}>
-                                                        {b.title} at {b.time_created.slice(0, 10)} 
+                                                        {b.title} at {b.time_created.slice(0, 10)}
                                                         {`(${(b.time_created.slice(11, 16))})`}
                                                     </p>
                                                 )
-                                            }                        
+                                            }
                                         })
                                     }
                                 </Carousel>
                             </div>
                         )
                     }
-                    
+
                 }
             }
         },
@@ -356,22 +369,22 @@ function CollectionList(props) {
             align: "center",
             dataIndex: 'is_private',
             key: 'is_private',
-            render: (is_private , record) => {
-                if(record.collection_type === "Named") {
-                    return(
+            render: (is_private, record) => {
+                if (record.collection_type === "Named") {
+                    return (
                         <div>
-                            <Switch 
-                                unCheckedChildren="Public" 
+                            <Switch
+                                unCheckedChildren="Public"
                                 checkedChildren="Private"
-                                defaultChecked={is_private} 
-                                onClick={(e) => handlePrivacyUpdate(e , record.id)}
-                            /> 
+                                defaultChecked={is_private}
+                                onClick={(e) => handlePrivacyUpdate(e, record.id)}
+                            />
                         </div>
                     )
                 } else {
                     return null;
                 }
-                
+
             }
         },
         {
@@ -433,9 +446,9 @@ function CollectionList(props) {
                         trigger="click"
                         arrowPointAtCenter={true}
                     >
-                        {(record.collection_type === 'Named') ? <Button onClick={() => getCollectionData(id)} type="primary" icon={<EditOutlined theme="outlined" style={{ position: 'relative', bottom: 3 }} />}>Edit</Button> : null}
+                        {(record.collection_type === 'Named' || record.collection_type === 'Cloned') ? <Button onClick={() => getCollectionData(id)} type="primary" icon={<EditOutlined theme="outlined" style={{ position: 'relative', bottom: 3 }} />}>Edit</Button> : null}
                     </Popover>
-                    <Button type="primary" style={{ left: 5 }}><Link to={{pathname: "/books", state: {publicAccess: false, collectionID: id , partOf: true, reviews: reviews} }}>View Collection</Link></Button>
+                    <Button type="primary" style={{ left: 5 }}><Link to={{ pathname: "/books", state: { publicAccess: false, collectionID: id, partOf: true, reviews: reviews } }}>View Collection</Link></Button>
                     <Popover
                         placement="topLeft"
                         content={
@@ -448,7 +461,7 @@ function CollectionList(props) {
                         trigger="click"
                         arrowPointAtCenter={true}
                     >
-                        {(record.collection_type === 'Named') ? <Button type="danger" style={{ left: 10 }}>Delete Collection</Button> : null}
+                        {(record.collection_type === 'Named' || record.collection_type === 'Cloned') ? <Button type="danger" style={{ left: 10 }}>Delete Collection</Button> : null}
                     </Popover>
                 </div>
         }
@@ -458,19 +471,19 @@ function CollectionList(props) {
         <div>
             <div style={{ height: 100, border: '2px solid black', background: `linear-gradient(#283048 , #859398)` }}>
                 <Fade cascade>
-                    <Title 
-                        level={3} 
+                    <Title
+                        level={3}
                         style={{
                             color: 'white',
-                            fontSize: 50, 
-                            position: 'relative', 
+                            fontSize: 50,
+                            position: 'relative',
                             right: 515,
-                            textAlign : "center", 
-                            fontFamily:"Book Antiqua,Georgia,Times New Roman,serif" 
+                            textAlign: "center",
+                            fontFamily: "Book Antiqua,Georgia,Times New Roman,serif"
                         }}>My Book Collections
                     </Title>
-                    <p style={{ color: 'white', fontSize: 24, position: 'relative', bottom: 40, right: 460 }}>Welcome {props.fname}! Here is a list of all your collections</p> 
-                </Fade> 
+                    <p style={{ color: 'white', fontSize: 24, position: 'relative', bottom: 40, right: 460 }}>Welcome {props.fname}! Here is a list of all your collections</p>
+                </Fade>
             </div>
             <AddCollectionForm props={props} setLen={setLen} len={len} />
             {collections ? <Table
