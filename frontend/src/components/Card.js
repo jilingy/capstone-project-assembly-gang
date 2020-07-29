@@ -6,7 +6,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { connect } from 'react-redux';
 import Review from './Review';
 import EditReview from './EditReview';
-import _, { sum } from "lodash";
+import _, { sum, filter } from "lodash";
 
 import { apiCollections, apiContains, apiReviews } from '../services/utilities/API';
 
@@ -192,27 +192,27 @@ function CustomCard(props) {
         setBookToDetail(book)
         apiReviews.getAll()
         .then(res => {
-            var summ;
+            var summ = 0;
             var filtered = res.data.filter(review => {
+                
                 if(parseInt(book.id) === review.book ) {
-                    console.log("avg is: " + avgrate);
-                    summ = (avgrate + review.rating);
-                    console.log(review.rating+ " = ratings")
-                    console.log(summ + " = summs");
+                    summ = (summ + review.rating);
                     return review;
                 }
             })
+            if(filtered.length == 0){
+                summ = 0;    
+            }
+            else{
+                summ = (summ / filtered.length);
+            }
             setAvgrate(summ);
-            console.log("avg after :" + avgrate);
-            console.log(filtered);
-           
-            //console.log(filtered.length);
             
         }).catch(err => {
             console.log(err);
         })
         updateModalVisible(true) 
-        setAvgrate(0);
+        
     }
 
     const checkIfReviewExists = (book) => {
@@ -311,7 +311,7 @@ function CustomCard(props) {
                             >
                                 {book.book_synopsis}                       
                             </Card>
-                            {bookToDetail ?<BookDetail visible={modalVisible} updateModalVisible={updateModalVisible} {...bookToDetail} /> : null}
+                            {bookToDetail ?<BookDetail visible={modalVisible} updateModalVisible={updateModalVisible} averagerating={avgrate} {...bookToDetail} /> : null}
                             <Button style={{ position : 'relative', bottom: 50 }} type="primary" shape="round" onClick={(()=>showDetails(book))}>View Details</Button>
                             {props.partOf ? 
                                 <Button 

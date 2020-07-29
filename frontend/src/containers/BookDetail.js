@@ -83,7 +83,7 @@ function BookDetail(props){
           <p><b>Publisher:</b> {props.book_publisher}</p>
           <p><b>Date Published:</b> {props.publication_date}</p>
           <p><b>Genre:</b> {props.genre}</p>
-          <p><b>Average Rating:</b> {props.average_rating}</p>
+          <p><b>Average Rating:</b> {props.averagerating}</p>
           </Col>
           <Col span={9}>
             <Title level={4}>Your Review</Title>
