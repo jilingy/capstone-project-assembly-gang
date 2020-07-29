@@ -135,7 +135,7 @@ function Review(props) {
                     type= "number"
                     rules={{ required: "Please enter a rating" }}
                     as={
-                        <Rate name="reviewRating" >
+                        <Rate value={(props.review === undefined) ? "" : props.review.rating}>
                             
                         </Rate>
                     }  
