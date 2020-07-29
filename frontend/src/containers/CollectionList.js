@@ -446,7 +446,7 @@ function CollectionList(props) {
                         trigger="click"
                         arrowPointAtCenter={true}
                     >
-                        {(record.collection_type === 'Named') ? <Button onClick={() => getCollectionData(id)} type="primary" icon={<EditOutlined theme="outlined" style={{ position: 'relative', bottom: 3 }} />}>Edit</Button> : null}
+                        {(record.collection_type === 'Named' || record.collection_type === 'Cloned') ? <Button onClick={() => getCollectionData(id)} type="primary" icon={<EditOutlined theme="outlined" style={{ position: 'relative', bottom: 3 }} />}>Edit</Button> : null}
                     </Popover>
                     <Button type="primary" style={{ left: 5 }}><Link to={{ pathname: "/books", state: { publicAccess: false, collectionID: id, partOf: true, reviews: reviews } }}>View Collection</Link></Button>
                     <Popover

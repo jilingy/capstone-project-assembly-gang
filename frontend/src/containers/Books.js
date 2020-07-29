@@ -95,7 +95,7 @@ function Books(props) {
                                     level={3}
                                     style={{
                                         position: 'relative',
-                                        right: 530,
+                                        right: 390,
                                         fontSize: 50, 
                                         color: 'white',
                                         textAlign : "center",
@@ -114,7 +114,7 @@ function Books(props) {
                         books.length === 0 ? <Link to="/col_list"><Button style={{
                             position: 'relative',
                             bottom: 60,
-                            right: 310
+                            left: 770
                         }} 
                         type="primary"
                         >Back to Collections</Button></Link> : 
@@ -123,7 +123,7 @@ function Books(props) {
                                 <Button style={{
                                     position: 'relative',
                                     bottom: 60,
-                                    right: 240
+                                    left: 735
                                 }} 
                                 type="primary"
                                 >Back to Collections
@@ -133,7 +133,7 @@ function Books(props) {
                                 <Button style={{
                                     position: 'relative',
                                     bottom: 60,
-                                    right: 230
+                                    left: 750
                                 }} 
                                 type="primary">Add Books
                                 </Button>
