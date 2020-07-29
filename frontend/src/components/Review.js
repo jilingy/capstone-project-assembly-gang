@@ -28,7 +28,7 @@ function Review(props) {
     };
 
     const handleOk = (data) => {
-        console.log(data);
+        //console.log(data);
         apiReviews.post({
             user: props.user_id,
             book: props.book.id,

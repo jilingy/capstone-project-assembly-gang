@@ -6,9 +6,9 @@ import { useForm, Controller } from 'react-hook-form';
 import { connect } from 'react-redux';
 import Review from './Review';
 import EditReview from './EditReview';
-import _ from "lodash";
+import _, { sum, filter } from "lodash";
 
-import { apiCollections, apiContains } from '../services/utilities/API';
+import { apiCollections, apiContains, apiReviews } from '../services/utilities/API';
 
 const { Option } = Select;
 const key = 'updatable';
@@ -23,6 +23,7 @@ function CustomCard(props) {
     const [bookToReview , setBookToReview] = useState();
     const [theReview , setTheReview] = useState();
     const [bookToDetail , setBookToDetail] = useState();
+    const [avgrate, setAvgrate] = useState(0);
     const [addedReview, setAddedReview] = useState(0);
 
     const { handleSubmit, control } = useForm({});
@@ -189,14 +190,36 @@ function CustomCard(props) {
 
     const showDetails = (book) => {
         setBookToDetail(book)
-        updateModalVisible(true)
+        apiReviews.getAll()
+        .then(res => {
+            var summ = 0;
+            var filtered = res.data.filter(review => {
+                
+                if(parseInt(book.id) === review.book ) {
+                    summ = (summ + review.rating);
+                    return review;
+                }
+            })
+            if(filtered.length == 0){
+                summ = 0;    
+            }
+            else{
+                summ = (summ / filtered.length);
+            }
+            setAvgrate(summ);
+            
+        }).catch(err => {
+            console.log(err);
+        })
+        updateModalVisible(true) 
+        
     }
 
     const checkIfReviewExists = (book) => {
         var exist = false;
         for(var i = 0; i < props.reviews.length; i++) {
             var rev = props.reviews[i];
-            console.log(rev);
+            //console.log(rev);
             if(rev.book === book.id) {
                 exist = true; 
                 
@@ -210,7 +233,7 @@ function CustomCard(props) {
         
         for(var i = 0; i < props.reviews.length; i++) {
             var rev = props.reviews[i];
-            console.log(rev);
+            //console.log(rev);
             if(rev.book === book.id) {
                 return rev;
                 
@@ -288,7 +311,7 @@ function CustomCard(props) {
                             >
                                 {book.book_synopsis}                       
                             </Card>
-                            {bookToDetail ?<BookDetail visible={modalVisible} updateModalVisible={updateModalVisible} {...bookToDetail} /> : null}
+                            {bookToDetail ?<BookDetail visible={modalVisible} updateModalVisible={updateModalVisible} averagerating={avgrate} {...bookToDetail} /> : null}
                             <Button style={{ position : 'relative', bottom: 50 }} type="primary" shape="round" onClick={(()=>showDetails(book))}>View Details</Button>
                             {props.partOf ? 
                                 <Button 

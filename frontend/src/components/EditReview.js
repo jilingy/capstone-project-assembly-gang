@@ -40,7 +40,7 @@ function Review(props) {
    
 
     const handleOk = (data) => {
-        console.log(data, props.review.id);
+        //console.log(data, props.review.id);
         apiReviews.patch(props.review.id,{
             review: data.reviewText,
             rating: data.reviewRating,
