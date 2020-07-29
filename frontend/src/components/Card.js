@@ -256,7 +256,7 @@ function CustomCard(props) {
                             <Card 
                                 title={book.book_title} 
                                 bordered={true}
-                                cover={<img alt="example" src={BookCover} />}
+                                cover={<img alt="example" src={book.book_thumbnail} style={{ height: 300 }}/>}
                                 headStyle={{ color: 'white', background: `linear-gradient(#FFA17F , #00223E)` }}
                                 style={{ width: 300, height: 600, background: '#cfcdc6', border: '2px solid black'}}
                                 hoverable

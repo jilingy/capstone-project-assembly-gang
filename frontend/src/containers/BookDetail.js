@@ -72,7 +72,7 @@ function BookDetail(props){
           <Col span={6}>
             <Card 
               style={{ width: 400, height: 400, background: '#cfcdc6'}}
-              cover={<img alt="example" src={BookCover} />}
+              cover={<img alt="example" src={props.book_thumbnail} />}
             />
           </Col>
           <Col offset={1} span={8}>

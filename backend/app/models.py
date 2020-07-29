@@ -59,6 +59,7 @@ class Books(models.Model):
     book_publisher = models.CharField(max_length=200, default="default_publisher")
     publication_date = models.DateField(default=date.today)
     genre = models.CharField(max_length=50, choices=GENRES, default=ADVENTURE)
+    book_thumbnail = models.CharField(max_length=200, default="book_thumbnail")
     average_rating = models.FloatField(default=0.0)
 
 class Reads(models.Model):
