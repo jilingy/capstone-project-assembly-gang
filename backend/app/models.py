@@ -111,11 +111,13 @@ class Collections(models.Model):
     MAIN  = 'Main'
     NAMED = 'Named'
     FINISHED = 'Finished'
+    CLONED = 'Cloned'
 
     COLLECTION_TYPES = [
         (MAIN , 'MAIN'),
         (NAMED, 'NAMED'),
         (FINISHED, 'FINISHED'),
+        (CLONED, 'CLONED')
     ]
 
     collection_type = models.CharField(max_length=10, choices=COLLECTION_TYPES, default=MAIN)
