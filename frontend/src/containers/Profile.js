@@ -1,31 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { apiAccount, apiCollections, apiContains, apiBooks, apiReviews } from '../services/utilities/API';
 import { useForm, Controller } from 'react-hook-form';
-import { Link } from 'react-router-dom';
-import { Form, Input, Button, Popover, message, Spin, Carousel, Switch } from 'antd';
 import { connect } from 'react-redux';
 import { Typography as AntType } from 'antd';
-import { Table as AntTable } from 'antd';
-import moment from 'moment';
 import Fade from 'react-reveal/Fade';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import PropTypes from 'prop-types';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import CollectionList from './CollectionList';
+import MuiTableCell from "@material-ui/core/TableCell";
 
-import {
-    EditOutlined,
-} from '@ant-design/icons';
-
-const key = 'updatable';
+const TableCell = withStyles({
+  root: {
+    borderBottom: "none"
+  }
+})(MuiTableCell);
 
 function CircularProgressWithLabel(props) {
   return (
@@ -163,8 +158,8 @@ function Profile(props) {
     const progressCircle = <CircularProgressWithLabel value={progress} />
 
     const rows = [
-        createData('My Monthly Reading Goal', progressCircle, ""),
-        createData('Last Name', account.last_name, ""),
+        createData('My Monthly Reading Goal', "" , ""),
+        createData(progressCircle),
 
     ];
 
