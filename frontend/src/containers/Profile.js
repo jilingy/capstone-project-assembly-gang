@@ -65,6 +65,10 @@ function Profile(props) {
     const { Title } = AntType;
     const [progress, setProgress] = React.useState(10);
 
+    const monthNumber = (new Date().getMonth());
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const monthName = monthNames[monthNumber];
+
     React.useEffect(() => {
         const timer = setInterval(() => {
           setProgress((prevProgress) => (prevProgress >= 100 ? 10 : prevProgress + 10));
@@ -158,7 +162,7 @@ function Profile(props) {
     const progressCircle = <CircularProgressWithLabel value={progress} />
 
     const rows = [
-        createData('My Monthly Reading Goal', "" , ""),
+        createData('My Reading Goal for ' + monthName, "" , ""),
         createData(progressCircle),
 
     ];
