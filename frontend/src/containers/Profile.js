@@ -15,7 +15,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 
 
-function Account(props) {
+function Profile(props) {
     const userId = parseInt(props.user_id);
     const [visibleFirst, hideFirstForm] = useState(false);
     const [visibleLast, hideLastForm] = useState(false);
@@ -313,7 +313,7 @@ function Account(props) {
                             right: 515,
                             textAlign: "center",
                             fontFamily: "Book Antiqua,Georgia,Times New Roman,serif"
-                        }}>My Account
+                        }}>My Profile
                     </Title>
                 </Fade>
             </div>
@@ -346,4 +346,4 @@ const mapStateToProps = state => {
     }
 };
 
-export default connect(mapStateToProps)(Account);
+export default connect(mapStateToProps)(Profile);
