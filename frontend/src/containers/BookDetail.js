@@ -4,7 +4,8 @@ import { MessageOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
 import BookCover from '..//images/book_cover.jpg';
 //import axios from 'axios';
 import { connect } from 'react-redux';
-import { apiReviews } from '../services/utilities/API';
+import apiCollections, { apiReviews, apiAccount, apiContains } from '../services/utilities/API';
+import { createPortal } from 'react-dom';
 
 function BookDetail(props){
 
@@ -12,19 +13,66 @@ function BookDetail(props){
 
     const [reviews, setReviews] = useState([]);
     const [userReview, setUserReview] = useState();
+    const [readCount, setReadCount] = useState(0);
+    const [author, setAuthor]=useState();
     const [userIdMap, setUserIdMap] = useState(new Map());
 
     useEffect(() => {
       getReviews();
-      getUsers();
+      getFinishedCollections();
+      //getAuthor();
     }, [props.id]);
 
-    /*useEffect(() => {
-      getReviews();
-    }, [reviews, bookReviews]);
-    */
-   
-    const getUsers = () => {
+    useEffect(() => {
+      /*console.log("WE UP IN THIS")
+      console.log(props.book_title)
+      console.log(reviews)
+      console.log(reviews.length)*/
+      getUsers();
+    }, [reviews]);
+
+    /*const getAuthor = () => {
+      apiAuthor.getSingle(props.id)
+      .then(res => {
+
+      })
+    } */
+
+    const getFinishedCollections = () => {
+      setReadCount(0);
+      var finished;
+      var containedIn;
+      apiCollections.getAll()
+      .then(res => {
+          finished = res.data.filter(collection => {
+          if(collection.collection_type === "Finished") {
+              return collection;
+          } else {
+              return null;
+          }
+        })
+        apiContains.getAll()
+        .then(res => {
+          containedIn = res.data.filter(contain => {
+          if(contain.book === props.id) {
+              return contain;
+          } else {
+              return null;
+          }
+          })
+          for(var finishedCol of finished){
+            for(var containsBook of containedIn){
+              if(finishedCol.id === containsBook.collection){
+                setReadCount(readCount => readCount + 1);
+              }
+            }
+          }
+        })
+      })
+    }
+
+    const updateMap = (k,v) => {
+      setUserIdMap(userIdMap.set(k,v));
     }
 
     const getReviews = () => {
@@ -48,6 +96,27 @@ function BookDetail(props){
           setUserReview(doubleFiltered);
       }).catch(err => {
           console.log(err);
+      })
+    }
+
+    const getUsers = () => {
+      apiAccount.getAll()
+      .then(res =>{
+        var users;
+        for (var review of reviews){
+          users = res.data.find(account =>{
+            if(review.user = account.id){
+              /*console.log("Review: " + review.review)
+              console.log("Username: " + account.username)*/
+              updateMap(review.user,account.username)
+              //console.log(userIdMap)
+              return account;
+            }
+            else{
+              return null;
+            }
+          })
+        }
       })
     }
 
@@ -84,6 +153,7 @@ function BookDetail(props){
           <p><b>Date Published:</b> {props.publication_date}</p>
           <p><b>Genre:</b> {props.genre}</p>
           <p><b>Average Rating:</b> {props.averagerating}</p>
+          <p><b>Read Count:</b> {readCount}</p>
           </Col>
           <Col span={9}>
             <Title level={4}>Your Review</Title>
@@ -112,7 +182,6 @@ function BookDetail(props){
               pagination={{
                 showSizeChanger : false,
                 total : reviews.length,
-                //showTotal : {(total, range) => `${range[0]}-${range[1]} of ${total} items`},
                 pageSize : 5,
                 defaultCurrent: 1,
               }}
@@ -126,7 +195,7 @@ function BookDetail(props){
                 >
                 <Comment
               //actions={actions}
-              author={<p><b>{item.user}</b><Rate disabled value={item.rating}/></p>}
+              author={<p><b>{/*(()=>userIdMap.get(*/item.user/*))*/}</b><Rate disabled value={item.rating}/></p>}
               avatar={
                   <Avatar
                     src={BookCover}
