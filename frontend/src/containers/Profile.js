@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { apiAccount } from '../services/utilities/API';
 import { useForm, Controller } from 'react-hook-form';
-import { Input, Button, Form, Popover, Typography } from 'antd';
 import { connect } from 'react-redux';
+import { Typography as AntType } from 'antd';
 import axios from 'axios';
 import Fade from 'react-reveal/Fade';
 import Table from '@material-ui/core/Table';
@@ -13,15 +13,43 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
+import PropTypes from 'prop-types';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
 
+function CircularProgressWithLabel(props) {
+  return (
+    <Box position="relative" display="inline-flex">
+      <CircularProgress variant="static" {...props} />
+      <Box
+        top={0}
+        left={0}
+        bottom={0}
+        right={0}
+        position="absolute"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Typography variant="caption" component="div" color="textSecondary">{`${Math.round(
+          props.value,
+        )}%`}</Typography>
+      </Box>
+    </Box>
+  );
+}
+
+CircularProgressWithLabel.propTypes = {
+  /**
+   * The value of the progress indicator for the determinate and static variants.
+   * Value between 0 and 100.
+   */
+  value: PropTypes.number.isRequired,
+};
 
 function Profile(props) {
     const userId = parseInt(props.user_id);
-    const [visibleFirst, hideFirstForm] = useState(false);
-    const [visibleLast, hideLastForm] = useState(false);
-    const [visibleEmail, hideEmailForm] = useState(false);
-    const [visibleUsername, hideUsernameForm] = useState(false);
-    const [visiblePassword, hidePasswordForm] = useState(false);
     const { handleSubmit, control } = useForm({});
     const [account, setAccount] = useState({});
     const [firstName, setFirstName] = useState();
@@ -29,9 +57,17 @@ function Profile(props) {
     const [email, setEmail] = useState();
     const [username, setUsername] = useState();
     const [password, setPassword] = useState();
-    const { Title } = Typography
+    const { Title } = AntType;
+    const [progress, setProgress] = React.useState(10);
 
-
+    React.useEffect(() => {
+        const timer = setInterval(() => {
+          setProgress((prevProgress) => (prevProgress >= 100 ? 10 : prevProgress + 10));
+        }, 800);
+        return () => {
+          clearInterval(timer);
+        };
+    }, []);
 
     useEffect(() => {
         getUserAccount();
@@ -47,25 +83,12 @@ function Profile(props) {
         })
     };
 
-    const handleFirstVisibleChange = visibleFirst => {
-        hideFirstForm(visibleFirst)
+    const getBooksRead = () => {
+        apiAccount.getSingle(userId).then(res => {
+            setAccount(res.data);
+        })
     };
 
-    const handleLastVisibleChange = visibleLast => {
-        hideLastForm(visibleLast)
-    };
-
-    const handleEmailVisibleChange = visibleEmail => {
-        hideEmailForm(visibleEmail)
-    };
-
-    const handleUsernameVisibleChange = visibleUsername => {
-        hideUsernameForm(visibleUsername)
-    };
-
-    const handlePasswordVisibleChange = visiblePassword => {
-        hidePasswordForm(visiblePassword)
-    };
 
     const onSubmitFirst = (data) => {
         if(!data) return;
@@ -115,21 +138,6 @@ function Profile(props) {
         }
     };
 
-    const onSubmitPassword = (data) => {
-        if(!data) return;
-
-        if (data.password && data.password !== "") {
-            axios.patch('http://localhost:8000/api/auth/register', {
-                password: data.password,
-            });
-            // apiAccount.patch(userId, {
-            //     password: data.password,
-            // }).then(
-            //     setPassword(data.password)
-            // )
-        }
-    };
-
     function createData(heading, info, button) {
         return { heading, info, button}
     }
@@ -142,162 +150,12 @@ function Profile(props) {
 
     const classes = useStyles();
 
-    const firstNameButton =
-    <Popover
-        content={
-            <form
-                style = {{ width: 500}}
-                onSubmit={handleSubmit(onSubmitFirst)}
-            >
-                <Controller
-                    name="firstName"
-                    control={control}
-                    as={
-                        <Form.Item
-                            label="First Name"
-                        >
-                            <Input />
-                        </Form.Item>
-                    }
-                />
-                <Button type="primary" onClick={() => hideFirstForm(false)} htmlType="submit">Submit</Button>
-                <Button type="danger" onClick={() => hideFirstForm(false)} style={{ left: 4 }}>Cancel</Button>
-            </form>
-        }
-        trigger='click'
-        visible={visibleFirst}
-        onVisibleChange={handleFirstVisibleChange}
-        title="Update First Name"
-    >
-        <Button type="primary" style={{marginLeft:'25px'}}>Edit</Button>
-    </Popover>
-
-    const lastNameButton =
-    <Popover
-        content={
-            <form
-                style = {{ width: 500}}
-                onSubmit={handleSubmit(onSubmitLast)}
-            >
-                <Controller
-                    name="lastName"
-                    control={control}
-                    as={
-                        <Form.Item
-                            label="Last Name"
-                        >
-                            <Input />
-                        </Form.Item>
-                    }
-                />
-                <Button type="primary" onClick={() => hideLastForm(false)} htmlType="submit">Submit</Button>
-                <Button type="danger" onClick={() => hideLastForm(false)} style={{ left: 4 }}>Cancel</Button>
-            </form>
-        }
-        trigger='click'
-        visible={visibleLast}
-        onVisibleChange={handleLastVisibleChange}
-        title="Update Last Name"
-    >
-        <Button type="primary" style={{marginLeft:'25px'}}>Edit</Button>
-    </Popover>
-
-    const emailButton =
-    <Popover
-        content={
-            <form
-                style = {{ width: 500}}
-                onSubmit={handleSubmit(onSubmitEmail)}
-            >
-                <Controller
-                    name="email"
-                    control={control}
-                    as={
-                        <Form.Item
-                            label="Email"
-                        >
-                            <Input />
-                        </Form.Item>
-                    }
-                />
-                <Button type="primary" onClick={() => hideEmailForm(false)} htmlType="submit">Submit</Button>
-                <Button type="danger" onClick={() => hideEmailForm(false)} style={{ left: 4 }}>Cancel</Button>
-            </form>
-        }
-        trigger='click'
-        visible={visibleEmail}
-        onVisibleChange={handleEmailVisibleChange}
-        title="Update Email"
-    >
-        <Button type="primary" style={{marginLeft:'25px'}}>Edit</Button>
-    </Popover>
-
-    const usernameButton =
-    <Popover
-        content={
-            <form
-                style = {{ width: 500}}
-                onSubmit={handleSubmit(onSubmitUsername)}
-            >
-                <Controller
-                    name="username"
-                    control={control}
-                    as={
-                        <Form.Item
-                            label="Username"
-                        >
-                            <Input />
-                        </Form.Item>
-                    }
-                />
-                <Button type="primary" onClick={() => hideUsernameForm(false)} htmlType="submit">Submit</Button>
-                <Button type="danger" onClick={() => hideUsernameForm(false)} style={{ left: 4 }}>Cancel</Button>
-            </form>
-        }
-        trigger='click'
-        visible={visibleUsername}
-        onVisibleChange={handleUsernameVisibleChange}
-        title="Update Username"
-    >
-        <Button type="primary" style={{marginLeft:'25px'}}>Edit</Button>
-    </Popover>
-
-    const passwordButton =
-    <Popover
-        content={
-            <form
-                style = {{ width: 500}}
-                onSubmit={handleSubmit(onSubmitPassword)}
-            >
-                <Controller
-                    name="password"
-                    control={control}
-                    as={
-                        <Form.Item
-                            label="Password"
-                        >
-                            <Input />
-                        </Form.Item>
-                    }
-                />
-                <Button type="primary" onClick={() => hidePasswordForm(false)} htmlType="submit">Submit</Button>
-                <Button type="danger" onClick={() => hidePasswordForm(false)} style={{ left: 4 }}>Cancel</Button>
-            </form>
-        }
-        trigger='click'
-        visible={visiblePassword}
-        onVisibleChange={handlePasswordVisibleChange}
-        title="Update Password"
-    >
-        <Button type="primary" style={{marginLeft:'25px'}}>Edit</Button>
-    </Popover>
+    const progressCircle = <CircularProgressWithLabel value={progress} />
 
     const rows = [
-        createData('First Name', account.first_name, firstNameButton),
-        createData('Last Name', account.last_name, lastNameButton),
-        createData('Email', account.email, emailButton),
-        createData('Username', account.username, usernameButton),
-        createData('Password', '********', passwordButton)
+        createData('My Monthly Reading Goal', progressCircle, ""),
+        createData('Last Name', account.last_name, ""),
+
     ];
 
     return (
