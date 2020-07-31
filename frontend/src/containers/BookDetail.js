@@ -148,6 +148,7 @@ function BookDetail(props){
           <Title style={{ textAlign : "center", fontFamily:"Book Antiqua,Georgia,Times New Roman,serif" }}>
               {props.book_title}
           </Title>
+          <p><b>Author</b>: {props.authorDetail.author_name}</p>
           <p><b>Synopsis:</b> {props.book_synopsis}</p>
           <p><b>Publisher:</b> {props.book_publisher}</p>
           <p><b>Date Published:</b> {props.publication_date}</p>

@@ -10,55 +10,23 @@ class Books(models.Model):
     class Meta:
         db_table = 'books'
 
-    ACTION     = 'Action' 
-    ADVENTURE  = 'Adventure'
     CHILDRENS  = 'Childrens'
-    CLASSIC    = 'Classic'
-    COMIC      = 'Comic'
-    CRIME      = 'Crime'
-    DRAMA      = 'Drama'
-    FANTASY    = 'Fantasy'
-    HORROR     = 'Horror'
-    MYSTERY    = 'Mystery'
-    POETRY     = 'Poetry'
-    SCIFI      = 'Scifi'
-    SUSPENSE   = 'Suspense'
-    THRILLER   = 'Thriller'
-    HUMOR      = 'Humor'
-    RELIGION   = 'Religion'
-    PHILOSOPHY = 'Philosphy'
-    TEXTBOOK   = 'Textbook'
-    TRAVEL     = 'Travel'
-    SPORTS     = 'Sports'
+    FICTION    = 'Fiction'
+    NONFICTION = 'NonFiction'
+    CRIME = 'Crime'
 
     GENRES = [
-        (ACTION     , 'ACTION'),
-        (ADVENTURE  , 'ADVENTURE'),
-        (CHILDRENS  , 'CHILDRENS'),
-        (CLASSIC    , 'CLASSIC'),
-        (COMIC      , 'COMIC'),
-        (CRIME      , 'CRIME'),
-        (DRAMA      , 'DRAMA'),
-        (FANTASY    , 'FANTASY'),
-        (HORROR     , 'HORROR'),
-        (MYSTERY    , 'MYSTERY'),
-        (POETRY     , 'POETRY'),
-        (SCIFI      , 'SCIFI'),
-        (SUSPENSE   , 'SUSPENSE'),
-        (THRILLER   , 'THRILLER'),
-        (HUMOR      , 'HUMOR'),
-        (RELIGION   , 'RELIGION'),
-        (PHILOSOPHY , 'PHILOSOPHY'),
-        (TEXTBOOK   , 'TEXTBOOK'),
-        (TRAVEL     , 'TRAVEL'),
-        (SPORTS     , 'SPORTS'),
+        (CHILDRENS , 'CHILDRENS'),
+        (FICTION   , 'FICTION'),
+        (NONFICTION, 'NONFICTION'),
+        (CRIME, 'CRIME')
     ]
 
     book_title = models.CharField(max_length=200, default="book_title")
     book_synopsis = models.TextField(default="default_book_synopsis")
     book_publisher = models.CharField(max_length=200, default="default_publisher")
     publication_date = models.DateField(default=date.today)
-    genre = models.CharField(max_length=50, choices=GENRES, default=ADVENTURE)
+    genre = models.CharField(max_length=50, choices=GENRES, default=NONFICTION)
     book_thumbnail = models.CharField(max_length=200, default="book_thumbnail")
     average_rating = models.FloatField(default=0.0)
 
