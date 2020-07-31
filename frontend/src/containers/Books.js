@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Fade from 'react-reveal/Fade';
 
-import { apiCollections, apiBooks, apiContains, apiReviews } from '../services/utilities/API';
+import { apiCollections, apiBooks, apiContains, apiReviews, apiWrittenBy, apiAuthors } from '../services/utilities/API';
 
 function Books(props) {
 
@@ -35,6 +35,8 @@ function Books(props) {
     const [books, setBooks] = useState([])
     const [collection, setCollection] = useState()
     const [bookDelete, setBookDelete] = useState(0);
+    const [writtenBy, updateWrittenBy]= useState([]);
+    const [authors, setAuthors] = useState([]);
 
     const {Title} = Typography
 
@@ -50,14 +52,25 @@ function Books(props) {
     }
 
     const getBooks = () => {
-        apiContains.getAll()
-            .then(res => {
-                res.data.filter(contain => {
-                    if(collectionID === contain.collection) {
-                        apiBooks.getSingle(contain.book).then(res => {
-                            addToBooks(res.data);
-                        })
-                    }
+        apiWrittenBy.getAll()
+            .then(WBres => {
+                apiContains.getAll()
+                    .then(Cres => {
+                        Cres.data.filter(contain => {
+                            if(collectionID === contain.collection) {
+                                apiBooks.getSingle(contain.book).then(bookRes => {
+                                        WBres.data.filter(WB => {
+                                        if(WB.book === bookRes.data.id) {
+                                            apiAuthors.getSingle(WB.author)
+                                                .then(res => {
+                                                    addToBooks(bookRes.data);
+                                                    setAuthors(prevAuthors => [...prevAuthors, res.data]);
+                                                })
+                                        }
+                                    })
+                            })
+                        }
+                    })
                 })
             })
     }
@@ -206,6 +219,7 @@ function Books(props) {
                     booksData={books}
                     reviews={reviews}
                     publicAccess={publicAccess}
+                    authors={authors}
                 />
                 </div>
             }            
