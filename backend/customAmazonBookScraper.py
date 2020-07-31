@@ -4,7 +4,7 @@ import json
 from imgscrape import imgscrape
 import datetime
 
-URL = 'https://api.nytimes.com/svc/books/v3/lists.json?list=series-books&api-key=Ly6oG7blBi7pwEcKjxqH5O0euRQG2z92'
+URL = 'https://api.nytimes.com/svc/books/v3/lists.json?list=young-adult-hardcover&api-key=Ly6oG7blBi7pwEcKjxqH5O0euRQG2z92'
 REQUESTHEADERS = {
 	"Accept": "application/json"
 }
@@ -31,16 +31,44 @@ if __name__ == "__main__":
 			publisher = bookObj['publisher']
 			author 	  = bookObj['author']
 
-			postgres_insert_query = """ INSERT INTO books (book_title, book_synopsis, book_publisher, publication_date, genre, average_rating, book_thumbnail) 
-										VALUES (%s,%s,%s,%s,%s,%s,%s)
-									"""
-			record_to_insert = (title, desc, publisher, date, "Childrens", 0, bookThumbnailURL[0])
+			book_insert_query = """ 
+									INSERT INTO books (book_title, book_synopsis, book_publisher, publication_date, genre, average_rating, book_thumbnail) 
+									VALUES (%s,%s,%s,%s,%s,%s,%s) RETURNING id;
+								"""
+			book_to_insert = (title, desc, publisher, date, "Crime", 0, bookThumbnailURL[0])
 
-			cur.execute(postgres_insert_query, record_to_insert)
+			cur.execute(book_insert_query, book_to_insert)
+			bookID = cur.fetchone()[0]
 
 			conn.commit()
 			count = cur.rowcount
-			print (count, "Record inserted successfully into books table")
+			print (count, "Book inserted successfully into books table")
+
+			author_insert_query = """ 
+									INSERT INTO authors (author_name)
+									VALUES (%s) RETURNING id;
+								  """
+
+			author_to_insert = (author, )
+
+			cur.execute(author_insert_query, author_to_insert)
+			authorID = cur.fetchone()[0]
+
+			conn.commit()
+			count = cur.rowcount
+			print(count, "Author inserted successfully into authors table")
+
+			writtenby_insert_query = """ INSERT INTO written_by (author_id, book_id)
+										 VALUES (%s,%s);
+									 """ 
+
+			writtenby_to_insert = (authorID, bookID)
+
+			cur.execute(writtenby_insert_query, writtenby_to_insert)
+
+			conn.commit()
+			count = cur.rowcount
+			print(count, "WrittenBy inserted successfully into authors table")
 
 	except (Exception, psycopg2.DatabaseError) as error:
 		print(error)
