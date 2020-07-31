@@ -32,7 +32,7 @@ class BookSerializer(serializers.ModelSerializer):
         model = Books
         fields = (
             'id', 'book_title', 'book_synopsis', 'book_publisher',
-            'publication_date', 'genre', 'average_rating',
+            'publication_date', 'genre', 'average_rating', 'book_thumbnail'
         )
 
 class ReadSerializer(serializers.ModelSerializer):

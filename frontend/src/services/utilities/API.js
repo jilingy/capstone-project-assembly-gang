@@ -6,6 +6,8 @@ const containsURL = 'contains';
 const accountURL = 'user';
 const reviewsURL = 'reviews'
 const profilesURL = 'auth/profiles';
+const authorsURL = 'authors';
+const writtenByURL = 'writtenby';
 
 export const apiProfiles = new APICore({
     getAll: true,
@@ -67,7 +69,24 @@ export const apiReviews = new APICore({
     url: reviewsURL,
 });
 
+export const apiAuthors = new APICore({
+    getAll: true,
+    getSingle: true,
+    post: true,
+    put: true,
+    patch: true,
+    remove: true,
+    url: authorsURL,
+});
 
-
+export const apiWrittenBy = new APICore({
+    getAll: true,
+    getSingle: true,
+    post: true,
+    put: true,
+    patch: true,
+    remove: true,
+    url: writtenByURL,
+});
 
 export default apiCollections;
