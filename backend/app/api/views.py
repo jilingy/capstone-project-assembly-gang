@@ -12,7 +12,8 @@ from app.models import (
     WrittenBy,
     Collections,
     Contains,
-    Profiles
+    Profiles,
+    ReadingGoals
 )
 
 from .serializers import (
@@ -23,7 +24,8 @@ from .serializers import (
     WrittenBySerializer,
     CollectionSerializer,
     ContainSerializer,
-    UserSerializer
+    UserSerializer,
+    ReadingGoalSerializer
 )
 
 class UserSet(viewsets.ModelViewSet):
@@ -130,4 +132,9 @@ class ContainsSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_404_NOT_FOUND)
         return Response(status=status.HTTP_200_OK)
 
+class ReadingGoalsSet(viewsets.ModelViewSet):
+
+    serializer_class = ReadingGoalSerializer
+    lookup_field = 'user'
+    queryset = ReadingGoals.objects.all()
 

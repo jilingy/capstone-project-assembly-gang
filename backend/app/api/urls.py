@@ -9,11 +9,13 @@ from .views import (
     WrittenBySet,
     CollectionsSet,
     ContainsSet,
-    UserSet
+    UserSet,
+    ReadingGoalsSet
 )
 
 router = DefaultRouter()
 
+router.register(r'reading_goals', ReadingGoalsSet, basename='reading_goals')
 router.register(r'books', BooksSet, basename='books')
 router.register(r'reads', ReadsSet, basename='reads')
 router.register(r'reviews', ReviewsSet, basename='reviews')
