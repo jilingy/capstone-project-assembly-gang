@@ -50,7 +50,7 @@ function Login(props) {
 
     if(props.isAuthenticated) {
       return (
-        toCollection ? <Redirect to="/col_list" /> : null
+        toCollection ? <Redirect to="/book_dir" /> : null
       )
     } else {
       return(
