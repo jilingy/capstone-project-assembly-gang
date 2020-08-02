@@ -11,7 +11,7 @@ module.exports = override(
       javascriptEnabled: true,
       modifyVars: { 
         '@primary-color'     : '#1DA57A', 
-        '@popover-bg'        : '#606c88', 
+        '@popover-bg'        : '#0080ff', 
         '@border-color-base' : '#000000', 
         '@table-header-bg'   : '#000000',
         '@table-footer-bg'   : '#000000',
