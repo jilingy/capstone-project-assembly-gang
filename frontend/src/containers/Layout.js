@@ -26,10 +26,10 @@ function CustomLayout(props) {
         <div className="logo" />
         <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']} style={{ paddingTop: 60 }}>
           <Menu.Item key="1" icon={<BookOutlined />}>
-            <Link to="/col_list">My Book Collections</Link>
+            <Link to="/book_dir">Book Directory</Link>
           </Menu.Item>
           <Menu.Item key="2" icon={<BookOutlined />}>
-            <Link to="/book_dir">Book Directory</Link>
+            <Link to="/col_list">My Book Collections</Link>
           </Menu.Item>
           <Menu.Item key="3" icon={<BookOutlined />}>
             <Link to="/collections">Public Collections</Link>

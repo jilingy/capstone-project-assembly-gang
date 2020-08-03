@@ -76,18 +76,25 @@ function EmailConfirm(props) {
     };
 
     return (
-        <div>
+        <div style={{ paddingTop: 20 }}>
             <Title 
                 level={3} 
                 style={{  
+                    position: 'relative',
                     fontSize: 24, 
                     textAlign : "center", 
-                    fontFamily:"New Roman",
-                    paddingTop: 20, 
+                    fontFamily:"Book Antiqua,Georgia,Times New Roman,serif",
+                    paddingTop: 10,
+                    paddingBottom: 10, 
+                    borderRadius: 15,
+                    left: 350,
+                    color: 'white',
+                    background: 'black',
+                    width: 1200
                 }}>Confirmation Email Sent! Check your email and enter the verification code below to activate your account.
             </Title>
             <form
-                style={{ background: '#2F4F4F', borderRadius: 10, padding: 24, border: '2px solid black', width: 500, position: 'relative', top: 20, left: 650 }}
+                style={{ background: `linear-gradient(#CB356B, #BD3F32)`, borderRadius: 10, padding: 24, border: '2px solid black', width: 500, position: 'relative', top: 20, left: 650 }}
                 onSubmit={handleSubmit(onSubmit)}>
                 <Controller
                     name="verification_code"

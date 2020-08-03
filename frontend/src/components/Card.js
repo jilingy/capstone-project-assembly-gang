@@ -25,6 +25,7 @@ function CustomCard(props) {
     const [bookToDetail , setBookToDetail] = useState();
     const [avgrate, setAvgrate] = useState(0);
     const [addedReview, setAddedReview] = useState(0);
+    const [authorDetail, setAuthorToDetail] = useState();
 
     const { handleSubmit, control } = useForm({});
 
@@ -188,8 +189,9 @@ function CustomCard(props) {
     }
     
 
-    const showDetails = (book) => {
+    const showDetails = (book, author) => {
         setBookToDetail(book)
+        setAuthorToDetail(author)
         apiReviews.getAll()
         .then(res => {
             var summ = 0;
@@ -236,29 +238,29 @@ function CustomCard(props) {
             //console.log(rev);
             if(rev.book === book.id) {
                 return rev;
-                
                 break;
             }
         }
         return null;
     }
 
-
     return (
         <div className="site-card-wrapper" style={{ position: 'relative' , bottom: props.partOf ? 60 : -10, left: 215}}>
             <Row gutter={32}>
             {
-                props.booksData.map((book, index) => {
+                _.zipWith(props.booksData, props.authors, function(book, author) {
+                    
                     var hasReview = props.reviews && checkIfReviewExists(book);
+
                     return (
                         <div>
-                        <Col key={index}>
-                            <Card 
+                        <Col>
+                            {book ? <Card 
                                 title={book.book_title} 
                                 bordered={true}
-                                cover={<img alt="example" src={BookCover} />}
+                                cover={<img alt="example" src={book.book_thumbnail} style={{ height: 300 }}/>}
                                 headStyle={{ color: 'white', background: `linear-gradient(#FFA17F , #00223E)` }}
-                                style={{ width: 300, height: 600, background: '#cfcdc6', border: '2px solid black'}}
+                                style={{ width: 300, height: 650, background: '#cfcdc6', border: '2px solid black'}}
                                 hoverable
                                 extra={
                                     props.partOf ? 
@@ -309,10 +311,14 @@ function CustomCard(props) {
                                         </Popover>)
                                 }
                             >
-                                {book.book_synopsis}                       
-                            </Card>
-                            {bookToDetail ?<BookDetail visible={modalVisible} updateModalVisible={updateModalVisible} averagerating={avgrate} {...bookToDetail} /> : null}
-                            <Button style={{ position : 'relative', bottom: 50 }} type="primary" shape="round" onClick={(()=>showDetails(book))}>View Details</Button>
+                                <div style={{ height: 100 }}>
+                                    {book.book_synopsis}
+                                </div>
+                                <hr style={{ paddingTop: 20 }}></hr>
+                                <b>Author: {author ? author.author_name : null}</b>           
+                            </Card> : null}
+                            {bookToDetail ?<BookDetail visible={modalVisible} updateModalVisible={updateModalVisible} averagerating={avgrate} {...bookToDetail} authorDetail={authorDetail}/> : null}
+                            <Button style={{ position : 'relative', bottom: 50 }} type="primary" shape="round" onClick={(()=>showDetails(book, author))}>View Details</Button>
                             {props.partOf ? 
                                 <Button 
                                     style={{ 
