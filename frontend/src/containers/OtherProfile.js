@@ -53,29 +53,23 @@ CircularProgressWithLabel.propTypes = {
 };
 
 
-function Profile(props) {
-    const userId = parseInt(props.user_id);
+function OtherProfile(props) {
+    const other = props.location.state.profile
+    const userId = parseInt(other.id);
     const monthNumber = (new Date().getMonth());
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const monthName = monthNames[monthNumber];
     const newGoal = { user: userId, current_month: monthNumber, reading_goal: 0 };
 
-    const { handleSubmit, control } = useForm({});
-    const [visibleUpdate, hideUpdate] = useState(false);
-    const [account, setAccount] = useState({});
+
     const [goal, setGoal] = useState({});
     const { Title } = AntType;
     const [reads, setReads] = useState(0);
     const [goalVal, setGoalVal] = useState();
 
 
-    const handleUpdate = visibleUpdate => {
-        hideUpdate(visibleUpdate)
-    };
-
     useEffect(() => {
         getGoal();
-        getUserAccount();
         getReads();
     }, []);
 
@@ -83,30 +77,18 @@ function Profile(props) {
         getGoal();
     }, [goalVal]);
 
-    const getUserAccount = () => {
-        apiAccount.getSingle(userId).then(res => {
-            setAccount(res.data);
-        })
-    };
 
     const getGoal = () => {
         apiGoal.getSingle(userId).then(res => {
-            if (res.data.current_month === monthNumber) {
-                setGoal(res.data);
-            } else {
-                apiGoal.patch(userId, {
-                    current_month: monthNumber,
-                    reading_goal: 0
-                }).then(
-                    setGoal(apiGoal.getSingle(userId)
-                    .then(res => {
-                        setGoal(res.data)
-                    }))
-                )
+            setGoal(res.data);
+            if (res.data.current_month !== monthNumber) {
+                setGoal( prevGoal => ({
+                    ...prevGoal,
+                    current_month: monthNumber
+                }))
             }
         }).catch(e => {
-            apiGoal.post(newGoal)
-            .then(setGoal(newGoal));
+            setGoal(newGoal);
         })
     };
 
@@ -118,19 +100,6 @@ function Profile(props) {
             }).length);
         });
     }
-
-    const onSubmitUpdate = (data) => {
-        if(!data) return;
-        const newGoal = parseInt(data.updateGoal)
-
-        if (!Number.isNaN(newGoal)) {
-            apiGoal.patch(userId, {
-                reading_goal: newGoal,
-            }).then(
-                setGoalVal(newGoal)
-            )
-        }
-    };
 
 
     function createData(heading, info, button) {
@@ -156,47 +125,18 @@ function Profile(props) {
         size={70}
     />
 
-    const updateButton =
-    <Popover
-        content={
-            <form
-                style = {{ width: 500}}
-                onSubmit={handleSubmit(onSubmitUpdate)}
-            >
-                <Controller
-                    name="updateGoal"
-                    control={control}
-                    as={
-                        <Form.Item
-                            label="New Goal"
-                        >
-                            <Input />
-                        </Form.Item>
-                    }
-                />
-                <Button type="primary" onClick={() => hideUpdate(false)} htmlType="submit">Submit</Button>
-                <Button type="danger" onClick={() => hideUpdate(false)} style={{ left: 4 }}>Cancel</Button>
-            </form>
-        }
-        trigger='click'
-        visible={visibleUpdate}
-        onVisibleChange={handleUpdate}
-        title="Update Your Monthly Goal"
-    >
-        <Button type="primary" style={{marginLeft:'25px'}}>Update Goal</Button>
-    </Popover>
 
     const headRow = [
-        createData("Books Read in " + monthName, 'My Reading Goal for ' + monthName, "Progress"),
+        createData("Books Read in " + monthName, other.username + "'s Reading Goal for " + monthName, "Progress"),
     ];
     const rows = [
         createData(reads, goal.reading_goal, progressCircle),
-        createData("", updateButton, "")
     ];
     
 
     return (
         <div>
+            {console.log(other)}
             <div style={{ height: 100, border: '2px solid black', background: `linear-gradient(#283048 , #859398)` }}>
                 <Fade cascade>
                     <Title
@@ -208,7 +148,7 @@ function Profile(props) {
                             right: 515,
                             textAlign: "center",
                             fontFamily: "Book Antiqua,Georgia,Times New Roman,serif"
-                        }}>My Profile
+                        }}>{other.username + "'s Profile"}
                     </Title>
                 </Fade>
             </div>
@@ -252,4 +192,4 @@ const mapStateToProps = state => {
     }
 };
 
-export default connect(mapStateToProps)(Profile);
+export default connect(mapStateToProps)(OtherProfile);
