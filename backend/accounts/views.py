@@ -34,24 +34,22 @@ class GoogleLogin(SocialLoginView):
             return Response("Unable to Validate User: Invalid Token")
 
         try:
+            # If user exists, simply use that user and token to authenticate
             user = User.objects.get(email=id_info['email'])
-            serializer = UserSerializer(user)
-            return Response({
-                "user": serializer.data,
-                "token": requestJson['access_token'] 
-            }, status=status.HTTP_200_OK)
         except:
+            # If user does not exist, create it using details from google
             user = User.objects.create(
                 first_name = id_info['given_name'],
                 last_name = id_info['family_name'],
                 last_login = datetime.datetime.now(),
                 username = id_info['given_name'] + " " + id_info['family_name'],
-                #Probably wanna hash this
+                #Probably wanna hash this looooool
                 password = "GOOGLEAUTH",
                 email = id_info['email']
             )
+        finally:
             serializer = UserSerializer(user)
             return Response({
                 "user": serializer.data,
                 "token": requestJson['access_token'] 
-            }, status=status.HTTP_201_CREATED)
+            }, status=status.HTTP_200_OK)
