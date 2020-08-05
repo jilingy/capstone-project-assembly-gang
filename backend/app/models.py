@@ -4,6 +4,7 @@ from django.utils import timezone
 from datetime import datetime, date
 from django.contrib.auth.models import User
 from simple_email_confirmation.models import SimpleEmailConfirmationUserMixin
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 class Books(models.Model):
 
@@ -37,6 +38,7 @@ class Reads(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reader")
     book = models.ForeignKey(Books, on_delete=models.CASCADE, related_name="read_by")
+    month_added = models.IntegerField(default=0, validators=[MaxValueValidator(11), MinValueValidator(0)])
 
 class Reviews(models.Model):
 
@@ -115,3 +117,11 @@ class Profiles(SimpleEmailConfirmationUserMixin, models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     verification_code = models.CharField(max_length=100, default="XYZ")
 
+class ReadingGoals(models.Model):
+
+    class Meta:
+        db_table = 'reading_goals'
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    current_month = models.IntegerField(default=0, validators=[MaxValueValidator(11), MinValueValidator(0)])
+    reading_goal = models.IntegerField(default=0)

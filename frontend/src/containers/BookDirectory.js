@@ -20,6 +20,9 @@ function BookDirectory(props) {
 
     useEffect(() => {
         if(cancel === false) {
+            updateBooks([]);
+            updateWrittenBy([]);
+            setAuthors([]);
             const getWrittenBy = () => {
                 apiWrittenBy.getAll()
                     // Strictly creates a 1-1 mapping between book and corresponding author
@@ -55,7 +58,7 @@ function BookDirectory(props) {
                     })
             }
             getWrittenBy();
-        }
+        } 
         execSearch();
       } , [query]);  
 
@@ -87,10 +90,6 @@ function BookDirectory(props) {
                 message.error({ content: 'Oops! Looks like we didn\'t find anything matching your query! Try again!', key, duration: 5 });
             }, 1000);
     };
-
-    const getAuthor = () => {
-        authors.filter()
-    }
 
     const execSearch = () => {
         if(query) {
@@ -198,32 +197,33 @@ function BookDirectory(props) {
                         bottom: 90,
                     }}
                     />
-                    <Button 
-                        type={cancel ? "danger" : "primary"}
-                        style={
-                            filter !== 'Publisher' ?
-                            { 
-                                bottom: 122,
-                                left: 280
-                            } : 
-                            {
-                                bottom: 122,
-                                left: 310,
-                            }
-                        }
-                        onClick={cancelSearch}
-                    >Cancel</Button>
-                    <Dropdown.Button overlay={menu} style={{ position: 'relative',
-                        width: 535, 
-                        bottom: 154,
-                        left: 410
-                    }} type="primary"> 
-                        {filter ? filter : 'Filters'}
-                    </Dropdown.Button>
                 </Fade>
-                
+                <Dropdown.Button overlay={menu} style={{ position: 'relative',
+                    width: 535, 
+                    bottom: 122,
+                    left: 410
+                }} type="primary"> 
+                    {filter ? filter : 'Filters'}
+                </Dropdown.Button>
                 {/* We pass the 'books' array as a prop to the 'CustomCard' component */}
                 </div>
+                <Button 
+                    type={cancel ? "danger" : "primary"}
+                    style={
+                        filter !== 'Publisher' ?
+                        { 
+                            position: 'relative',
+                            left: 290,
+                            bottom: 44
+                        } : 
+                        {
+                            position: 'relative',
+                            left: 305,
+                            bottom: 44
+                        }
+                    }
+                    onClick={cancelSearch}
+                >Cancel</Button>
             <CustomCard partOf={false} booksData={books} authors={authors}/>
         </div>
     )

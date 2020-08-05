@@ -153,14 +153,9 @@ function BookDetail(props){
           <p><b>Publisher:</b> {props.book_publisher}</p>
           <p><b>Date Published:</b> {props.publication_date}</p>
           <p><b>Genre:</b> {props.genre}</p>
-<<<<<<< HEAD
-    <p><b>Average Rating:</b> {<Rate allowHalf={true} value={Number((props.averagerating).toFixed(1))}/>}{Number((props.averagerating).toFixed(1))} </p>
-          </Col> 
-=======
           <p><b>Average Rating:</b> {props.averagerating}</p>
           <p><b>Read Count:</b> {readCount}</p>
           </Col>
->>>>>>> dev
           <Col span={9}>
             <Title level={4}>Your Review</Title>
             {userReview ? <Comment
