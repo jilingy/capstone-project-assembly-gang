@@ -4,7 +4,6 @@ import { Button, message } from "antd";
 import { GoogleOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import * as actions from '../store/actions/auth';
-import axios from 'axios';
  
 const key = 'updatable';
 
