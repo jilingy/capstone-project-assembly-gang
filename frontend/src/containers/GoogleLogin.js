@@ -26,7 +26,7 @@ function GoogleAuth (props) {
 		<GoogleLogin
             clientId="348019820347-dk1i5j2buchlrhs0vb1if5p2dgm3j0j3.apps.googleusercontent.com"
             render={renderProps => (
-				<Button onClick={renderProps.onClick} icon={<GoogleOutlined style={{verticalAlign: 'middle' }}/>} style={{ color: 'white', background: 'red' }}>Login with Google</Button>
+				<Button onClick={renderProps.onClick} icon={<GoogleOutlined style={{verticalAlign: 'middle' }}/>} style={{ color: 'white', background: 'red' }}>Continue with Google</Button>
             )}
             buttonText="Login"
             onSuccess={responseGoogle}
