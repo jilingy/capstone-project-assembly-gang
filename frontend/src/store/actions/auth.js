@@ -1,6 +1,7 @@
 import * as actionTypes from './actionTypes';
 import { alertTypes } from './alertTypes';
 import axios from 'axios';
+import { apiCollections } from "../../services/utilities/API";
 
 export const alert_success = (message) => {
     return {
@@ -75,7 +76,30 @@ export const authGoogleLogin = (access_token, id_token) => {
         axios.post("https://localhost:8000/rest-auth/google/", {
             access_token: id_token,
         }).then(res => {
-            
+
+            // If user account does not exist, create default collections for user
+            if(res.data.exists === false)
+                if(res.data.user.id !== null) {
+                    apiCollections.post({
+                        collection_type : "Main",
+                        is_private      : false,
+                        description     : 'This is your Main Collection',
+                        collection_name : 'Main Collection',
+                        owner           : res.data.user.id,
+                    }).catch(err => {
+                        console.log(err);
+                    });
+                    apiCollections.post({
+                        collection_type : "Finished",
+                        is_private      : false,
+                        description     : 'This is your Finished Collection',
+                        collection_name : 'Finished Collection',
+                        owner           : res.data.user.id,
+                    }).catch(err => {
+                        console.log(err);
+                    });
+                }
+        
             const user_id = res.data.user.id;
             const fname = res.data.user.first_name;
             const lname = res.data.user.last_name;

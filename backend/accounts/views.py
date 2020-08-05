@@ -9,9 +9,13 @@ from .googleviews import GoogleAuthLogin
 from rest_auth.registration.serializers import SocialLoginSerializer
 from django.db import connection
 from django.contrib.auth.models import User
-from app.api.serializers import UserSerializer
+from app.api.serializers import UserSerializer, CollectionSerializer
+from django.contrib.auth.hashers import make_password
+from app.models import Collections
 from project import settings
-import datetime
+from datetime import datetime
+from django.utils import timezone
+from django.db import transaction
 import json
 
 class GoogleLogin(SocialLoginView):
@@ -36,20 +40,28 @@ class GoogleLogin(SocialLoginView):
         try:
             # If user exists, simply use that user and token to authenticate
             user = User.objects.get(email=id_info['email'])
-        except:
-            # If user does not exist, create it using details from google
-            user = User.objects.create(
-                first_name = id_info['given_name'],
-                last_name = id_info['family_name'],
-                last_login = datetime.datetime.now(),
-                username = id_info['given_name'] + " " + id_info['family_name'],
-                #Probably wanna hash this looooool
-                password = "GOOGLEAUTH",
-                email = id_info['email']
-            )
-        finally:
             serializer = UserSerializer(user)
             return Response({
                 "user": serializer.data,
-                "token": requestJson['access_token'] 
+                "token": requestJson['access_token'], 
+                "exists": True,
+            }, status=status.HTTP_200_OK)
+        except:
+            # If user does not exist, create it using details from google
+            password = make_password('')
+            user = User(
+                first_name = id_info['given_name'],
+                last_name = id_info['family_name'],
+                last_login = datetime.now(),
+                username = id_info['given_name'] + " " + id_info['family_name'],
+                #Probably wanna hash this looooool
+                password = password,
+                email = id_info['email']
+            )
+            user.save()
+            serializer = UserSerializer(user)
+            return Response({
+                "user": serializer.data,
+                "token": requestJson['access_token'],
+                "exists": False
             }, status=status.HTTP_200_OK)
