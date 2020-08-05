@@ -9,6 +9,8 @@ import Account from './containers/Account';
 import PrivateRoute from './common/PrivateRoute';
 import BookDirectory from './containers/BookDirectory';
 import PublicCollections from './containers/PublicCollections';
+import Profile from './containers/Profile';
+import OtherProfile from './containers/OtherProfile';
 
 const BaseRouter = () => (
   <div>
@@ -21,6 +23,8 @@ const BaseRouter = () => (
       <PrivateRoute exact path='/account' component={Account}/>
       <PrivateRoute exact path='/book_dir' component={BookDirectory}/>
       <PrivateRoute exact path='/collections' component={PublicCollections}/>
+      <PrivateRoute exact path='/profile' component={Profile}/>
+      <PrivateRoute exact path='/otherprofile' component={OtherProfile}/>
     </Switch>
   </div>
 );
