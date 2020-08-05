@@ -21,6 +21,7 @@
     "react-bootstrap": "^1.0.1",
     "react-card-scroll": "^2.2.4",
     "react-dom": "^16.13.1",
+    "react-google-login": "^5.1.21",
     "react-hook-form": "^5.7.2",
     "react-hook-form-input": "^1.1.10",
     "react-particles-js": "^3.2.1",
