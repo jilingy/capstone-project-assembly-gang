@@ -1,3 +1,42 @@
-from django.shortcuts import render
+from google.oauth2 import id_token
+from google.auth.transport import requests
+from rest_framework.response import Response
+from rest_framework import status
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from rest_auth.registration.views import SocialLoginView
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+from .googleviews import GoogleAuthLogin
+from rest_auth.registration.serializers import SocialLoginSerializer
+from django.db import connection
+from django.contrib.auth.models import User
+from app.api.serializers import UserSerializer
+from project import settings
+import datetime
+import json
 
-# Create your views here.
+class GoogleLogin(SocialLoginView):
+    
+    callback_url = "https://127.0.0.1:8000/accounts/google/login/callback/"
+    adapter_class = GoogleAuthLogin
+    client_class = OAuth2Client
+    serializer_class = SocialLoginSerializer
+
+    def post(self, request):
+        requestJson = json.loads(request.body)
+        request = requests.Request()
+
+        id_info = id_token.verify_oauth2_token(requestJson['access_token'], request, settings.GOOGLE_CLIENT_ID)
+
+        if id_info['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+            return Response("Unable to Validate User: Wrong Issuer")
+
+        if not id_info:
+            return Response("Unable to Validate User: Invalid Token")
+
+        # In this case, if the Person already exists, its name is updated
+        user = User.objects.get(email=id_info['email'])
+        serializer = UserSerializer(user)
+        return Response({
+            "user": serializer.data,
+            "token": requestJson['access_token'] 
+        }, status=status.HTTP_200_OK)

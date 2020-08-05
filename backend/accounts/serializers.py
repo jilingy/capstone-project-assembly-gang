@@ -60,6 +60,3 @@ class ProfileSerializer(serializers.ModelSerializer):
             verification_code=validated_data['verification_code']
         )
         return profile
-
-    
-

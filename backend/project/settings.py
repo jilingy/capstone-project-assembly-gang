@@ -49,6 +49,9 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.facebook',
+    'django_extensions',
     'knox',
     'accounts',
     'simple_email_confirmation'
@@ -154,3 +157,15 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+CSRF_TRUSTED_ORIGINS = ['https://localhost:3000']
+GOOGLE_CLIENT_ID = "348019820347-dk1i5j2buchlrhs0vb1if5p2dgm3j0j3.apps.googleusercontent.com"
+LOGIN_REDIRECT_URL = "https://localhost:3000/book_dir"
