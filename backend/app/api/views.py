@@ -1,7 +1,6 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from django.contrib.auth.models import User
 from rest_framework.response import Response
-from rest_framework import status
 from django.shortcuts import get_object_or_404
 from django.http import Http404
 
@@ -12,7 +11,10 @@ from app.models import (
     Authors,
     WrittenBy,
     Collections,
-    Contains
+    Contains,
+    Profiles,
+    ReadingGoals,
+    Upvotes
 )
 
 from .serializers import (
@@ -23,7 +25,9 @@ from .serializers import (
     WrittenBySerializer,
     CollectionSerializer,
     ContainSerializer,
-    UserSerializer
+    UserSerializer,
+    ReadingGoalSerializer,
+    UpvoteSerializer
 )
 
 class UserSet(viewsets.ModelViewSet):
@@ -33,7 +37,7 @@ class UserSet(viewsets.ModelViewSet):
 class BooksSet(viewsets.ModelViewSet):
     
     serializer_class = BookSerializer
-
+    queryset = Books.objects.all()
     def list(self, request, pk=None):
         books = Books.objects.all()
         serializer = BookSerializer(books, many=True)
@@ -130,6 +134,12 @@ class ContainsSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_404_NOT_FOUND)
         return Response(status=status.HTTP_200_OK)
 
+class ReadingGoalsSet(viewsets.ModelViewSet):
 
+    serializer_class = ReadingGoalSerializer
+    lookup_field = 'user'
+    queryset = ReadingGoals.objects.all()
 
-
+class UpvotesSet(viewsets.ModelViewSet):
+    serializer_class = UpvoteSerializer
+    queryset = Upvotes.objects.all()

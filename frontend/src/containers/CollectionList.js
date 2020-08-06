@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
-import { Form, Input, Button, Popover, Table, message, Tag, Spin, Carousel } from 'antd';
+import { Form, Input, Button, Popover, Table, message, Spin, Carousel, Switch, Typography } from 'antd';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import Fade from 'react-reveal/Fade';
 
-import { apiCollections, apiContains, apiBooks } from '../services/utilities/API';
+import { apiCollections, apiContains, apiBooks, apiReviews } from '../services/utilities/API';
 
 import {
     EditOutlined,
@@ -31,10 +32,10 @@ function AddCollectionForm({ props: Props, setLen: setLength, len: Length }) {
 
     const addCollectionSuccess = () => {
         message.loading({ content: 'Processing...', key });
-            setTimeout(() => {
-                message.success({ content: 'Collection created successfully!', key, duration: 2 });
-                setLength(Length + 1);
-            }, 1000);
+        setTimeout(() => {
+            message.success({ content: 'Collection created successfully!', key, duration: 2 });
+            setLength(Length + 1);
+        }, 1000);
     };
 
     const onSubmit = (data) => {
@@ -109,7 +110,7 @@ function AddCollectionForm({ props: Props, setLen: setLength, len: Length }) {
                 visible={visible}
                 onVisibleChange={handleVisibleChange}
             >
-                <Button type="primary" style={{ left: 730, bottom: 70, position: 'relative' }}>+ Add Collection</Button>
+                <Button type="primary" style={{ bottom: 80, right: 310, position: 'relative' }}>+ Add Collection</Button>
             </Popover>
         </div>
     )
@@ -119,11 +120,13 @@ function CollectionList(props) {
 
     const [collections, updateCollections] = useState([]);
     const [collectionToUpdate, setCollectionToUpdate] = useState();
-    
     const [len, setLen] = useState(collections.length);
     const [loading, setLoading] = useState(true);
-    
     const [books, setBooks] = useState();
+    const [reviews, setReviews] = useState([]);
+    const [viewBooks, setViewBooks] = useState();
+
+    const { Title } = Typography
 
     const { handleSubmit, errors, control } = useForm({
         defaultValues: {
@@ -136,13 +139,14 @@ function CollectionList(props) {
         setLoading(true);
         getCollections();
         getCarouselData();
+        getReviews();
     }, [len, collectionToUpdate])
 
     const getCollections = async () => {
         apiCollections.getAll()
             .then(res => {
                 var coll_filtered = res.data.filter(collection => {
-                    if(parseInt(props.user_id) === collection.owner) {
+                    if (parseInt(props.user_id) === collection.owner) {
                         return collection;
                     } else {
                         return null;
@@ -154,31 +158,43 @@ function CollectionList(props) {
             })
     }
 
+    const getReviews = () => {
+        apiReviews.getAll()
+            .then(res => {
+                var filtered = res.data.filter(review => {
+                    if (review.user === parseInt(props.user_id)) {
+                        return review;
+                    }
+                })
+                setReviews(filtered);
+            })
+    }
+
     const getCarouselData = async () => {
         var finalData = [];
         apiCollections.getAll()
             .then(res => {
                 res.data.filter(collection => {
-                    if(parseInt(props.user_id) === collection.owner) {
+                    if (parseInt(props.user_id) === collection.owner) {
                         var booksData = {};
                         booksData[collection.collection_name] = [];
                         apiContains.getAll()
-                        .then(res => {
-                            res.data.filter(contain => {
-                                if(contain.collection === collection.id) {
-                                    apiBooks.getSingle(contain.book).then(res => {
-                                        booksData[collection.collection_name].push({
-                                            "title" : res.data.book_title , 
-                                            "time_created" : contain.time_added
-                                        }) 
-                                    })
-                                }
+                            .then(res => {
+                                res.data.filter(contain => {
+                                    if (contain.collection === collection.id) {
+                                        apiBooks.getSingle(contain.book).then(res => {
+                                            booksData[collection.collection_name].push({
+                                                "title": res.data.book_title,
+                                                "time_created": contain.time_added
+                                            })
+                                        })
+                                    }
+                                })
+                                finalData.push(booksData);
                             })
-                            finalData.push(booksData);
-                        })
                     }
                 })
-        })
+            })
         setBooks(finalData);
         setTimeout(() => {
             setLoading(false);
@@ -187,10 +203,10 @@ function CollectionList(props) {
 
     const deleteCollectionSuccess = () => {
         message.loading({ content: 'Processing...', key });
-            setTimeout(() => {
-                message.success({ content: 'Collection deleted successfully!', key, duration: 2 });
-                setLen(len - 1);
-            }, 2000);
+        setTimeout(() => {
+            message.success({ content: 'Collection deleted successfully!', key, duration: 2 });
+            setLen(len - 1);
+        }, 2000);
     };
 
     // Collection Delete
@@ -206,7 +222,7 @@ function CollectionList(props) {
 
     // Collection Update
     const onSubmit = (data) => {
-        apiCollections.put(collectionToUpdate[0].id , {
+        apiCollections.put(collectionToUpdate[0].id, {
             collection_name: data.collectionTitle,
             description: data.collectionDesc
         }).then(res => {
@@ -225,25 +241,72 @@ function CollectionList(props) {
         setCollectionToUpdate(obj);
     }
 
+    const handlePrivacyUpdate = (data, id) => {
+        apiCollections.patch(id, {
+            is_private: data,
+        }).then(res => {
+            triggerPrivacyUpdateSuccess();
+        }).catch(err => {
+            triggerPrivacyUpdateError();
+        })
+    }
+
+    const triggerPrivacyUpdateSuccess = () => {
+        message.loading({ content: 'Processing...', key });
+        setTimeout(() => {
+            message.success({ content: 'Privacy settings updated successfully!', key, duration: 2 });
+        }, 2000);
+    };
+
+    const triggerPrivacyUpdateError = () => {
+        message.loading({ content: 'Processing...', key });
+        setTimeout(() => {
+            message.error({ content: 'Privacy update failed!', key, duration: 2 });
+        }, 2000);
+    };
+
+    const handleViewAll = (collection_name) => {
+        var toRender = books.filter(book => {
+            var data = book[collection_name];
+            if (data) {
+                return data;
+            }
+        })
+        setViewBooks(toRender[0][collection_name]);
+    }
+
     const columns = [
         {
             title: 'Collection Name',
             dataIndex: 'collection_name',
             key: 'collection_name',
             align: "center",
-            sorter: (a, b) => { return a.collection_name.localeCompare(b.collection_name)},
-            render: collection_name => <p><b>{collection_name}</b></p>
+            sorter: (a, b) => { return a.collection_name.localeCompare(b.collection_name) },
+            render: (collection_name, record) => {
+                if(record.collection_type === "Cloned") {
+                    return (
+                        <p style={{ color: 'red', textDecoration: 'underline' }}><b>{collection_name}</b></p>
+                    )
+                } else {
+                    return (
+                        <p><b>{collection_name}</b></p>
+                    )
+                }
+            }
         },
         {
             title: 'Collection Description',
             dataIndex: 'description',
             key: 'description',
+            width: 250,
             render: description => <p>{description}</p>
         },
         {
             title: 'Number Of Books',
             dataIndex: 'count',
             key: 'count',
+            align: "center",
+            width: 50,
             sorter: (a, b) => a.count - b.count,
             render: count => <p>{count}</p>
         },
@@ -251,6 +314,8 @@ function CollectionList(props) {
             title: 'Date Created',
             dataIndex: 'date_created',
             key: 'date_created',
+            align: "center",
+            width: 50,
             sorter: (a, b) => { return moment(a.date_created || 0).unix() - moment(b.date_created || 0).unix() },
             sortDirections: ['descend'],
             render: date_created => <p>{date_created.slice(0, 10)}</p>
@@ -262,51 +327,102 @@ function CollectionList(props) {
             key: 'collection_name',
             width: 400,
             render: (collection_name) => {
-                if(loading) {
+                if (loading) {
                     return (
                         <Spin />
                     )
                 } else {
                     var toRender = books.filter(book => {
                         var data = book[collection_name];
-                        if(data) {
+                        if (data) {
                             return data;
-                        } 
+                        }
                     })
-                    if(toRender[0]) {
+                    if (toRender[0]) {
                         var data = toRender[0][collection_name];
                         return (
                             <div>
-                                <Carousel 
-                                    autoplay 
-                                    dots={false} 
-                                    style={{ 
-                                        width: 400, 
-                                        background: "#364d79", 
-                                        color: 'white', 
-                                        borderRadius: 10, 
-                                        paddingTop: 20 
-                                    }}>
-                                    {
-                                        data.reverse().map(b => {  
-                                            if(b !== undefined) { 
-                                                return (
-                                                    <p style={{ 
-                                                        color: '#FFFFFF' 
-                                                    }}>
-                                                        {b.title} at {b.time_created.slice(0, 10)} 
-                                                        {`(${(b.time_created.slice(11, 16))})`}
-                                                    </p>
-                                                )
-                                            }                        
-                                        })
-                                    }
-                                </Carousel>
+                                {data.length > 0 ? <div style={{ float: 'left' }}>
+                                    <Carousel
+                                        autoplay
+                                        dots={false}
+                                        style={{
+                                            borderRadius: 10,
+                                            width: 250,
+                                            background: "#364d79",
+                                            color: 'white',
+                                            borderRadius: 10,
+                                            paddingTop: 10
+                                        }}>
+                                        {
+                                            data.reverse().map(b => {
+                                                if (b !== undefined) {
+                                                    return (
+                                                        <p style={{
+                                                            color: '#FFFFFF'
+                                                        }}>
+                                                            {b.title} at {b.time_created.slice(0, 10)}
+                                                            {`(${(b.time_created.slice(11, 16))})`}
+                                                        </p>
+                                                    )
+                                                }
+                                            })
+                                        }
+                                    </Carousel>
+                                </div> : <p style={{ position: 'relative' , top: 20, right: 50, color: 'red' }}><b>No books to display</b></p>}
+                                <div style={{ position: 'relative', float: 'right' }}>
+                                    {data.length > 0 ? <Popover
+                                        placement="topLeft"
+                                        content={
+                                            <div>
+                                                {viewBooks ? viewBooks.map(book => {
+                                                    return (
+                                                        <p><b>{`${book.title} (${book.time_created.slice(0, 10)})`}</b></p>
+                                                    )
+                                                }) : null}
+                                            </div>
+                                        }
+                                    >
+                                        <Button 
+                                            style={{ 
+                                                    bottom: data.length == 0 ? 20 : 0,  
+                                                    top: data.length == 0 ? -20 : 20,
+                                                    float: 'right' 
+                                                }} 
+                                                type="primary" 
+                                                onMouseEnter={() => handleViewAll(collection_name)}
+                                        >View All
+                                        </Button>
+                                    </Popover> : null}
+                                </div>
                             </div>
                         )
                     }
-                    
+
                 }
+            }
+        },
+        {
+            title: 'Privacy',
+            align: "center",
+            dataIndex: 'is_private',
+            key: 'is_private',
+            render: (is_private, record) => {
+                if (record.collection_type === "Named") {
+                    return (
+                        <div>
+                            <Switch
+                                unCheckedChildren="Public"
+                                checkedChildren="Private"
+                                defaultChecked={is_private}
+                                onClick={(e) => handlePrivacyUpdate(e, record.id)}
+                            />
+                        </div>
+                    )
+                } else {
+                    return null;
+                }
+
             }
         },
         {
@@ -316,6 +432,7 @@ function CollectionList(props) {
             render: (id, record) =>
                 <div>
                     <Popover
+                        headStyle={{ backgroundColor: 'red' }}
                         placement="topLeft"
                         content={
                             <form
@@ -367,9 +484,9 @@ function CollectionList(props) {
                         trigger="click"
                         arrowPointAtCenter={true}
                     >
-                        {(record.collection_type === 'Named') ? <Button onClick={() => getCollectionData(id)} type="primary" icon={<EditOutlined theme="outlined" style={{ position: 'relative', bottom: 3 }} />}>Edit</Button> : null}
+                        {(record.collection_type === 'Named' || record.collection_type === 'Cloned') ? <Button onClick={() => getCollectionData(id)} type="primary" icon={<EditOutlined theme="outlined" style={{ position: 'relative', bottom: 3 }} />}>Edit</Button> : null}
                     </Popover>
-                    <Button type="primary" style={{ left: 5 }}><Link to={{pathname: "/books", state: {collectionID: id , partOf: true} }}>View Collection</Link></Button>
+                    <Button type="primary" style={{ left: 5 }}><Link to={{ pathname: "/books", state: { publicAccess: false, collectionID: id, partOf: true, reviews: reviews } }}>View Collection</Link></Button>
                     <Popover
                         placement="topLeft"
                         content={
@@ -382,7 +499,7 @@ function CollectionList(props) {
                         trigger="click"
                         arrowPointAtCenter={true}
                     >
-                        {(record.collection_type === 'Named') ? <Button type="danger" style={{ left: 10 }}>Delete Collection</Button> : null}
+                        {(record.collection_type === 'Named' || record.collection_type === 'Cloned') ? <Button type="danger" style={{ left: 10 }}>Delete Collection</Button> : null}
                     </Popover>
                 </div>
         }
@@ -390,19 +507,30 @@ function CollectionList(props) {
 
     return (
         <div>
-            <h1 style={{
-                position: 'relative',
-                right: 660,
-                bottom: 30,
-            }}>My Book Collections</h1>
+            <div style={{ height: 100, border: '2px solid black', background: `linear-gradient(#283048 , #859398)` }}>
+                <Fade cascade>
+                    <Title
+                        level={3}
+                        style={{
+                            color: 'white',
+                            fontSize: 50,
+                            position: 'relative',
+                            right: 610,
+                            textAlign: "center",
+                            fontFamily: "Book Antiqua,Georgia,Times New Roman,serif"
+                        }}>My Book Collections
+                    </Title>
+                    <p style={{ color: 'white', fontSize: 24, position: 'relative', bottom: 40, right: 555 }}>Welcome {props.fname}! Here is a list of all your collections</p>
+                </Fade>
+            </div>
             <AddCollectionForm props={props} setLen={setLen} len={len} />
             {collections ? <Table
                 style={{
                     position: 'relative',
                     border: '2px solid black',
-                    bottom: 55,
+                    bottom: 15,
                     width: 1650,
-                    left: -20,
+                    left: 20
                 }}
                 dataSource={collections}
                 columns={columns}
@@ -414,6 +542,9 @@ function CollectionList(props) {
 const mapStateToProps = state => {
     return {
         user_id: state.user_id,
+        fname: state.fname,
+        lname: state.lname,
+        uname: state.uname,
     }
 }
 

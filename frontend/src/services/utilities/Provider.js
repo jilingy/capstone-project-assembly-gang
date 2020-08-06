@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { handleResponse, handleError } from './Response';
 
-const BASE_URL = 'http://127.0.0.1:8000/api';
+const BASE_URL = 'https://127.0.0.1:8000/api';
 
 const getAll = (resource) => {
     return axios
@@ -32,6 +32,8 @@ const remove = (resource, id) => {
     return axios 
       .delete(`${BASE_URL}/${resource}/${id}/`) 
 }; 
+
+
 
 const APIProvider = { 
     getAll, 

@@ -1,0 +1,39 @@
+Week 1
+
+Group formed. I created the Jira account. Together with my team, we decided on the ReadRecommend project. The basic repository on github was set up and split into frontend and backend. Furthermore, our python virtual environment was set up for the backend. We discussed our approach to SCRUM and how we were going to Jira and Github effectively for project management e.g. using pull requests.
+
+Week 2
+
+Reviewed Farhan's user stories. Also added my own user stories. Sorted out our workflow for the project proposal. Planned to meet on 13/06/2020 at uni to write user stories together and go through setting up our development environment.
+
+Week 3
+
+Met on 16/06/2020 at uni. As scrum master, I was responsible for doing part b of the proposal. Began the process of vetting poor user stories and adding new user stories to our jira backlog. Did a discord meeting the following day (17/06/2020) to review Farhan's introduction and provide feedback. The other members did an additional meeting to figure out a common approach to storyboards. I continued to add user stories to Jira.
+
+Finished the project proposal. I was responsible for part (b) excluding the novel functionality section. As scrum master submitted the proposal to webcms on Sunday night.
+
+Week 4
+Focused on getting login and registration set up. I had to brush up on react and django. I also helped design our ER diagram for the backend database. Farhan translated this into the django models. We had a meeting to go through the ER design.
+
+Week 5
+Performed Demo A. Was done quite well. Unfortunately we were not able to meet up in person so did a run through over Discord the night before the Demo. Sprint velocity was quite slow since we had issues with project set up.
+
+We held our Retrospective A meeting after the Demo.
+
+Week 6
+Mainly a relaxed week. We all had to do an assignment for a different course so main focus was on that.
+
+Week 7
+Made progress on setting up the Accounts page for the user. Set it up so it displays the user information. Still reviewing how to make it update in the backend.
+
+Week 8
+Got a few of the update buttons to work except for changing password since that requires additional authentication which Farhan will look into. Demo B went quite well. Sprint velocity improved dramatically and we achieved quite a bit.
+
+Held our Retrospective B meeting after the Demo. We were quite happy with our progress overall and fixed a lot of the project set up bugs that initially slowed our progress.
+
+Week 9
+I set up a dummy template for the motivation stuff for the user i.e. their monthly reading goals and their progress. More work needs to be done so that the goals can be updated. Just waiting on Farhan to add another table to the backend database for reading goals.
+
+Week 10
+Finished implementing the motivation functionality to allow the user to set a monthly reading goal and show their progress towards that goal. Also worked on the final project report. We met up on 6/8/2020 (Thursday night) to go through our app and prepare for our final demo together.
+

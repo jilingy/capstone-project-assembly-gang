@@ -3,62 +3,34 @@ from django.core.validators import RegexValidator
 from django.utils import timezone
 from datetime import datetime, date
 from django.contrib.auth.models import User
+from simple_email_confirmation.models import SimpleEmailConfirmationUserMixin
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 class Books(models.Model):
 
     class Meta:
         db_table = 'books'
 
-    ACTION     = 'Action' 
-    ADVENTURE  = 'Adventure'
     CHILDRENS  = 'Childrens'
-    CLASSIC    = 'Classic'
-    COMIC      = 'Comic'
-    CRIME      = 'Crime'
-    DRAMA      = 'Drama'
-    FANTASY    = 'Fantasy'
-    HORROR     = 'Horror'
-    MYSTERY    = 'Mystery'
-    POETRY     = 'Poetry'
-    SCIFI      = 'Scifi'
-    SUSPENSE   = 'Suspense'
-    THRILLER   = 'Thriller'
-    HUMOR      = 'Humor'
-    RELIGION   = 'Religion'
-    PHILOSOPHY = 'Philosphy'
-    TEXTBOOK   = 'Textbook'
-    TRAVEL     = 'Travel'
-    SPORTS     = 'Sports'
+    FICTION    = 'Fiction'
+    NONFICTION = 'NonFiction'
+    CRIME = 'Crime'
 
     GENRES = [
-        (ACTION     , 'ACTION'),
-        (ADVENTURE  , 'ADVENTURE'),
-        (CHILDRENS  , 'CHILDRENS'),
-        (CLASSIC    , 'CLASSIC'),
-        (COMIC      , 'COMIC'),
-        (CRIME      , 'CRIME'),
-        (DRAMA      , 'DRAMA'),
-        (FANTASY    , 'FANTASY'),
-        (HORROR     , 'HORROR'),
-        (MYSTERY    , 'MYSTERY'),
-        (POETRY     , 'POETRY'),
-        (SCIFI      , 'SCIFI'),
-        (SUSPENSE   , 'SUSPENSE'),
-        (THRILLER   , 'THRILLER'),
-        (HUMOR      , 'HUMOR'),
-        (RELIGION   , 'RELIGION'),
-        (PHILOSOPHY , 'PHILOSOPHY'),
-        (TEXTBOOK   , 'TEXTBOOK'),
-        (TRAVEL     , 'TRAVEL'),
-        (SPORTS     , 'SPORTS'),
+        (CHILDRENS , 'CHILDRENS'),
+        (FICTION   , 'FICTION'),
+        (NONFICTION, 'NONFICTION'),
+        (CRIME, 'CRIME')
     ]
 
     book_title = models.CharField(max_length=200, default="book_title")
     book_synopsis = models.TextField(default="default_book_synopsis")
     book_publisher = models.CharField(max_length=200, default="default_publisher")
     publication_date = models.DateField(default=date.today)
-    genre = models.CharField(max_length=50, choices=GENRES, default=ADVENTURE)
+    genre = models.CharField(max_length=50, choices=GENRES, default=NONFICTION)
+    book_thumbnail = models.CharField(max_length=200, default="book_thumbnail")
     average_rating = models.FloatField(default=0.0)
+    read_count = models.IntegerField(default=0)
 
 class Reads(models.Model):
 
@@ -67,6 +39,7 @@ class Reads(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reader")
     book = models.ForeignKey(Books, on_delete=models.CASCADE, related_name="read_by")
+    month_added = models.IntegerField(default=0, validators=[MaxValueValidator(11), MinValueValidator(0)])
 
 class Reviews(models.Model):
 
@@ -110,11 +83,13 @@ class Collections(models.Model):
     MAIN  = 'Main'
     NAMED = 'Named'
     FINISHED = 'Finished'
+    CLONED = 'Cloned'
 
     COLLECTION_TYPES = [
         (MAIN , 'MAIN'),
         (NAMED, 'NAMED'),
         (FINISHED, 'FINISHED'),
+        (CLONED, 'CLONED')
     ]
 
     collection_type = models.CharField(max_length=10, choices=COLLECTION_TYPES, default=MAIN)
@@ -135,7 +110,27 @@ class Contains(models.Model):
     time_added = models.DateTimeField(default=datetime.now)
 
 
+class Profiles(SimpleEmailConfirmationUserMixin, models.Model):
 
+    class Meta:
+        db_table = 'profiles'
+            
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    verification_code = models.CharField(max_length=100, default="XYZ")
 
+class ReadingGoals(models.Model):
 
+    class Meta:
+        db_table = 'reading_goals'
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    current_month = models.IntegerField(default=0, validators=[MaxValueValidator(11), MinValueValidator(0)])
+    reading_goal = models.IntegerField(default=0)
+
+class Upvotes(models.Model):
     
+    class Meta:
+        db_table = 'upvotes'
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="voted_by_user")
+    review = models.ForeignKey(Reviews, on_delete=models.CASCADE, related_name="for_review")
