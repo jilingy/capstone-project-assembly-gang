@@ -124,22 +124,16 @@ function BookDetail(props){
 
     const getUpvotes = () => {
       apiUpvotes.getAll().then(res =>{
-        var upvote;
         for (var review of reviews){
           updateUpvoteCountMap(review.id,0)
-          res.data.find(upvote =>{
+          for(var upvote of res.data){
             if(upvote.review === review.id){
               updateUpvoteCountMap(review.id,upvoteCountMap.get(review.id)+1)
               if(upvote.user === props.user_id){
                 updateUpvoteStateMap(review.id,true)
               }
-              return upvote;
             }
-            else{
-              updateUpvoteStateMap(review.id,false)
-              return null;
-            }
-          })
+          }
         }
       })
     }
