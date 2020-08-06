@@ -31,7 +31,7 @@ function Recommendations(props) {
                 }
             }) 
             setRatings(filtered);
-            console.log(filtered);    
+            console.log(random)   
         })
     }
 
@@ -40,17 +40,12 @@ function Recommendations(props) {
         .then(res => {
             var len = 0;
             var rando;
-            len = res.data.length;
-            rando = Math.floor(Math.random() * Math.floor(len));
-            var filtered = res.data.filter( book => {
-                if(book.id == rando){
-                    return book;
-                }else {
-                    return null;
-                }
-            })
-            setRandom(filtered);
-
+            var array = [];
+            len = res.data.length - 1;
+            rando = Math.floor(Math.random() * (len - 0 + 1)) + 0;
+            console.log(res.data[rando]);
+            array.push(res.data[rando])
+            setRandom(array);
         })
        
     }
