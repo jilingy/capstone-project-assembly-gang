@@ -13,14 +13,14 @@ function BookDetail(props){
 
     const [reviews, setReviews] = useState([]);
     const [userReview, setUserReview] = useState();
-    const [readCount, setReadCount] = useState(0);
+    //const [readCount, setReadCount] = useState(0);
     const [userIdMap, setUserIdMap] = useState(new Map());
     const [upvoteStateMap, setUpvoteStateMap]=useState(new Map());
     const [upvoteCountMap, setUpvoteCountMap]=useState(new Map());
 
     useEffect(() => {
       getReviews();
-      getFinishedCollections();
+      //getFinishedCollections();
     }, [props.id]);
 
     useEffect(() => {
@@ -32,7 +32,7 @@ function BookDetail(props){
       getUpvotes();
     }, [reviews]);
 
-    const getFinishedCollections = () => {
+    /*const getFinishedCollections = () => {
       setReadCount(0);
       var finished;
       var containedIn;
@@ -63,7 +63,7 @@ function BookDetail(props){
           }
         })
       })
-    }
+    }*/
 
     const updateMap = (k,v) => {
       setUserIdMap(userIdMap.set(k,v));
@@ -104,9 +104,8 @@ function BookDetail(props){
     const getUsers = () => {
       apiAccount.getAll()
       .then(res =>{
-        var users;
         for (var review of reviews){
-          users = res.data.find(account =>{
+          for(var account of res.data){
             if(review.user === account.id){
               /*console.log("Review: " + review.review)
               console.log("Username: " + account.username)*/
@@ -114,10 +113,7 @@ function BookDetail(props){
               //console.log(userIdMap)
               return account;
             }
-            else{
-              return null;
-            }
-          })
+          }
         }
       })
     }
@@ -126,13 +122,18 @@ function BookDetail(props){
       apiUpvotes.getAll().then(res =>{
         for (var review of reviews){
           updateUpvoteCountMap(review.id,0)
+          var flag = false
           for(var upvote of res.data){
             if(upvote.review === review.id){
               updateUpvoteCountMap(review.id,upvoteCountMap.get(review.id)+1)
               if(upvote.user === props.user_id){
                 updateUpvoteStateMap(review.id,true)
+                flag = true
               }
             }
+          }
+          if(flag == false){
+            updateUpvoteStateMap(review.id,false)
           }
         }
       })
@@ -188,7 +189,7 @@ function BookDetail(props){
           <p><b>Date Published:</b> {props.publication_date}</p>
           <p><b>Genre:</b> {props.genre}</p>
           <p><b>Average Rating:</b> {props.averagerating}</p>
-          <h4><b>Read Count:</b> {readCount}</h4>
+          <h4><b>Read Count:</b> {props.read_count}</h4>
           </Col>
           <Col span={9}>
             <Title level={4}>Your Review</Title>
@@ -232,6 +233,7 @@ function BookDetail(props){
               actions = {<Tooltip key="comment-basic-like" title="Like">
               <span onClick={(()=>handleLike(item.id))}>
                 {React.createElement(upvoteStateMap.get(item.id) === true ? LikeFilled : LikeOutlined)}
+                {console.log('big xD')}
                 <span className="comment-action">{upvoteCountMap.get(item.id)}</span>
               </span>
             </Tooltip>}

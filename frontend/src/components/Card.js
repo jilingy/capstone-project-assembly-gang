@@ -8,7 +8,7 @@ import Review from './Review';
 import EditReview from './EditReview';
 import _, { sum, filter } from "lodash";
 
-import { apiCollections, apiContains, apiReviews } from '../services/utilities/API';
+import { apiCollections, apiContains, apiReviews, apiBooks, apiReads } from '../services/utilities/API';
 
 const { Option } = Select;
 const key = 'updatable';
@@ -172,6 +172,22 @@ function CustomCard(props) {
             } else {
                 return null;
             }
+        })
+        apiBooks.getSingle(bookID).then(res => {
+            apiBooks.patch(bookID , {
+                read_count: res.data.read_count + 1,
+            }).catch(err => {
+                console.log(err);
+            })
+        }).catch(err => {
+            console.log(err);
+        })
+        var today = new Date();
+        console.log(today)
+        apiReads.post({
+            user: props.user_id,
+            book: bookID,
+            month_added: today.getMonth()
         })
     }
 

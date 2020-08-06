@@ -30,6 +30,7 @@ class Books(models.Model):
     genre = models.CharField(max_length=50, choices=GENRES, default=NONFICTION)
     book_thumbnail = models.CharField(max_length=200, default="book_thumbnail")
     average_rating = models.FloatField(default=0.0)
+    read_count = models.IntegerField(default=0)
 
 class Reads(models.Model):
 

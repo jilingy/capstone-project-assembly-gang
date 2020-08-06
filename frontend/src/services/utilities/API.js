@@ -9,6 +9,7 @@ const profilesURL = 'auth/profiles';
 const authorsURL = 'authors';
 const writtenByURL = 'writtenby';
 const upvotesURL = 'upvotes';
+const readsURL = 'reads';
 
 export const apiProfiles = new APICore({
     getAll: true,
@@ -98,6 +99,16 @@ export const apiUpvotes = new APICore({
     patch: true,
     remove: true,
     url: upvotesURL,
+});
+
+export const apiReads = new APICore({
+    getAll: true,
+    getSingle: true,
+    post: true,
+    put: true,
+    patch: true,
+    remove: true,
+    url: readsURL,
 });
 
 export default apiCollections;
