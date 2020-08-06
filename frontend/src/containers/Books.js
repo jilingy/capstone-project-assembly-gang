@@ -108,7 +108,7 @@ function Books(props) {
                                     level={3}
                                     style={{
                                         position: 'relative',
-                                        right: 390,
+                                        right: 620,
                                         fontSize: 50, 
                                         color: 'white',
                                         textAlign : "center",

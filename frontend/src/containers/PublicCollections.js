@@ -154,19 +154,19 @@ function PublicCollections(props) {
                     level={3} 
                     style={{
                         position: 'relative',
-                        right: 545, 
+                        right: 640, 
                         fontSize: 50, 
                         color: 'white',
                         textAlign : "center", 
                         fontFamily:"Book Antiqua,Georgia,Times New Roman,serif" 
                     }}>Public Collections
                 </Title>
-                <p style={{ color: 'white', fontSize: 24, position: 'relative', bottom: 40, right: 490 }}>Find out what everyone else has compiled or...</p>
+                <p style={{ color: 'white', fontSize: 24, position: 'relative', bottom: 40, right: 585 }}>Find out what everyone else has compiled or...</p>
                 <div style={{ 
                     position: 'relative',
                     width: 535, 
-                    left: 715,
-                    bottom: 95,
+                    left: 520,
+                    bottom: 90,
                 }}>
                     <Search 
                         placeholder="Search collection by collection name or username..." 

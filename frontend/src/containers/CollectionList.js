@@ -110,7 +110,7 @@ function AddCollectionForm({ props: Props, setLen: setLength, len: Length }) {
                 visible={visible}
                 onVisibleChange={handleVisibleChange}
             >
-                <Button type="primary" style={{ bottom: 80, right: 220, position: 'relative' }}>+ Add Collection</Button>
+                <Button type="primary" style={{ bottom: 80, right: 310, position: 'relative' }}>+ Add Collection</Button>
             </Popover>
         </div>
     )
@@ -477,12 +477,12 @@ function CollectionList(props) {
                             color: 'white',
                             fontSize: 50,
                             position: 'relative',
-                            right: 515,
+                            right: 610,
                             textAlign: "center",
                             fontFamily: "Book Antiqua,Georgia,Times New Roman,serif"
                         }}>My Book Collections
                     </Title>
-                    <p style={{ color: 'white', fontSize: 24, position: 'relative', bottom: 40, right: 460 }}>Welcome {props.fname}! Here is a list of all your collections</p>
+                    <p style={{ color: 'white', fontSize: 24, position: 'relative', bottom: 40, right: 555 }}>Welcome {props.fname}! Here is a list of all your collections</p>
                 </Fade>
             </div>
             <AddCollectionForm props={props} setLen={setLen} len={len} />
@@ -492,7 +492,7 @@ function CollectionList(props) {
                     border: '2px solid black',
                     bottom: 15,
                     width: 1650,
-                    left: 215
+                    left: 20
                 }}
                 dataSource={collections}
                 columns={columns}

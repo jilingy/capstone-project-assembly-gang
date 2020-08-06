@@ -245,7 +245,7 @@ function CustomCard(props) {
     }
 
     return (
-        <div className="site-card-wrapper" style={{ position: 'relative' , bottom: props.partOf ? 60 : -10, left: 215}}>
+        <div className="site-card-wrapper" style={{ position: 'relative' , bottom: props.partOf ? 60 : -10, left: 25}}>
             <Row gutter={32}>
             {
                 _.zipWith(props.booksData, props.authors, function(book, author) {
