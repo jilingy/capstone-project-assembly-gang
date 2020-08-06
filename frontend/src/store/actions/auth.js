@@ -70,14 +70,14 @@ export const checkAuthTimeout = (expirationTime) => {
     }
 }
 
-export const authGoogleLogin = (access_token, id_token) => {
+export const authGoogleSignAndLogin = (access_token, id_token) => {
     return dispatch => {
         dispatch(authStart());
         axios.post("https://localhost:8000/rest-auth/google/", {
             access_token: id_token,
         }).then(res => {
 
-            // If user account does not exist, create default collections for user
+            // Only If user account does not exist, create default collections for user
             if(res.data.exists === false)
                 if(res.data.user.id !== null) {
                     apiCollections.post({
