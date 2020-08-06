@@ -84,7 +84,7 @@ function CollectionCard(props) {
                                         <Meta
                                             // @mwang - i've passed in the appropriate profile object through to your component (Account.js) using the 'to' parameter of <Link/>.
                                             // To access it within your component, simple do "props.location.state.profile"
-                                            description={profile ? <p style={{ color: 'black' }}>Compiled By: <Link to={{ pathname: "/accounts", state: { profile: profile } }}>{profile.username}<Tooltip text="View profile"></Tooltip></Link></p> : null}
+                                            description={profile ? <p style={{ color: 'black' }}>Compiled By: <Link to={{ pathname: "/otherprofile", state: { profile: profile } }}>{profile.username}<Tooltip text="View profile"></Tooltip></Link></p> : null}
                                         />
                                         {collection.description}
                                     </Card>

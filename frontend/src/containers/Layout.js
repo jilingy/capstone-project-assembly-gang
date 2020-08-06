@@ -52,6 +52,7 @@ function CustomLayout(props) {
           }
 
           {props.isAuthenticated ? <Button type="primary" style={{ float: 'right', left: 20, marginTop: 15 }}><Link to="/account">Account</Link></Button> : null}
+          {props.isAuthenticated ? <Button type="primary" style={{ float: 'right', marginRight: 10, left: 20, marginTop: 15 }}><Link to="/profile">Profile</Link></Button> : null}
           {props.isAuthenticated ? null : <Button type="primary" style={{ float: 'right', right: 10, marginTop: 15 }}><Link to="/register">Register</Link></Button>} 
         
         </Menu>
