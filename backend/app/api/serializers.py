@@ -10,7 +10,8 @@ from app.models import (
     Collections,
     Contains,
     Profiles,
-    ReadingGoals
+    ReadingGoals,
+    Upvotes
 )
 
 class UserSerializer(serializers.ModelSerializer):
@@ -91,4 +92,12 @@ class ReadingGoalSerializer(serializers.ModelSerializer):
         model = ReadingGoals
         fields = (
             'id', 'user', 'current_month', 'reading_goal'
+        )
+
+class UpvoteSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Upvotes
+        fields = (
+            'id', 'user', 'review'
         )
