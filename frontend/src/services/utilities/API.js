@@ -8,6 +8,7 @@ const reviewsURL = 'reviews'
 const profilesURL = 'auth/profiles';
 const authorsURL = 'authors';
 const writtenByURL = 'writtenby';
+const upvotesURL = 'upvotes';
 const goalURL = 'reading_goals';
 const readsURL = 'reads';
 
@@ -109,6 +110,26 @@ export const apiWrittenBy = new APICore({
     patch: true,
     remove: true,
     url: writtenByURL,
+});
+
+export const apiUpvotes = new APICore({
+    getAll: true,
+    getSingle: true,
+    post: true,
+    put: true,
+    patch: true,
+    remove: true,
+    url: upvotesURL,
+});
+
+export const apiReads = new APICore({
+    getAll: true,
+    getSingle: true,
+    post: true,
+    put: true,
+    patch: true,
+    remove: true,
+    url: readsURL,
 });
 
 export default apiCollections;
