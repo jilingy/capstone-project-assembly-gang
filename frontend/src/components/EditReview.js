@@ -9,19 +9,14 @@ import TextArea from 'antd/lib/input/TextArea';
 const key = 'updatable';
 
 function Review(props) {
-
     
-
-
+    
     const { handleSubmit, errors, reset, control, defaultValues } = useForm({
         defaultValues: {
             "reviewText": '',
             "reviewRating": 0,
         },
     });
-
-   
-
 
     const editReviewSuccess = () => {
         message.loading({ content: 'Processing...', key });
@@ -37,14 +32,37 @@ function Review(props) {
             }, 1000);
     };
 
-   
-
     const handleOk = (data) => {
-        //console.log(data, props.review.id);
+        console.log(data, props.review.id);
         apiReviews.patch(props.review.id,{
             review: data.reviewText,
             rating: data.reviewRating,
         }).then(res => {
+            apiReviews.getAll()
+            .then(rev => {
+                var summ = 0;
+                var filtered = rev.data.filter(review => {
+                    
+                    if(parseInt(props.book.id) === review.book ) {
+                        summ = (summ + review.rating);
+                        return review;
+                    }
+                })
+                if(filtered.length == 0){
+                    summ = 0;    
+                }
+                else{
+                    summ = (summ / filtered.length);
+                }
+                
+                var avg = Math.round(summ * 10) / 10;
+                apiBooks.patch(props.book.id, {
+                    average_rating: avg,
+                })
+
+            }).catch(err => {
+                console.log(err);
+            })
             props.updateLoading(!props.loading);
             editReviewSuccess();
             setTimeout(() => {
@@ -135,7 +153,7 @@ function Review(props) {
                     type= "number"
                     rules={{ required: "Please enter a rating" }}
                     as={
-                        <Rate name="reviewRating" >
+                        <Rate value={(props.review === undefined) ? "" : props.review.rating}>
                             
                         </Rate>
                     }  
@@ -145,7 +163,7 @@ function Review(props) {
                                
                  <Button type="primary" htmlType="submit" loading={props.loading} onClick={handleOk} style={{left: 390, top: 67, position: 'relative'}}>Submit</Button>
                     
-                 <Button type= "primary" onClick={handleDelete} style={{left: 280, bottom: 450, position: 'relative'}} >Delete</Button>
+                 <Button type= "primary" onClick={handleDelete} style={{left: 280, bottom: 470, position: 'relative'}} >Delete</Button>
  
             </form>    
 

@@ -13,6 +13,7 @@ const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
 function Review(props) {
 
     
+    
     const { handleSubmit, errors, reset, control, defaultValues } = useForm({
         defaultValues: {
             "reviewText": '',
@@ -35,6 +36,30 @@ function Review(props) {
             review: data.reviewText,
             rating: data.reviewRating,
         }).then(res => {
+            apiReviews.getAll()
+            .then(rev => {
+                var summ = 0;
+                var filtered = rev.data.filter(review => {
+                    
+                    if(parseInt(props.book.id) === review.book ) {
+                        summ = (summ + review.rating);
+                        return review;
+                    }
+                })
+                if(filtered.length == 0){
+                    summ = 0;    
+                }
+                else{
+                    summ = (summ / filtered.length);
+                }
+                var avg = Math.round(summ * 10) / 10;
+                apiBooks.patch(props.book.id, {
+                    average_rating: avg,
+                })
+
+            }).catch(err => {
+                console.log(err);
+            })
             props.updateLoading(!props.loading);
             addReviewSuccess();
             setTimeout(() => {
@@ -53,12 +78,6 @@ function Review(props) {
         props.updateVisible(!props.visible);
         
     };
-
-   
-
-    
-   
-    
 
     const { TextArea } = Input;
 

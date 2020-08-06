@@ -34,6 +34,9 @@ function CustomLayout(props) {
           <Menu.Item key="3" icon={<BookOutlined />}>
             <Link to="/collections">Public Collections</Link>
           </Menu.Item>
+          <Menu.Item key="4" icon={<BookOutlined />}>
+            <Link to="/recommendations">Recommendations</Link>
+          </Menu.Item>
         </Menu>
     </Sider> : null}
     

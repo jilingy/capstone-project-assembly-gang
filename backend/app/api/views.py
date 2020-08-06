@@ -13,7 +13,8 @@ from app.models import (
     Collections,
     Contains,
     Profiles,
-    ReadingGoals
+    ReadingGoals,
+    Upvotes
 )
 
 from .serializers import (
@@ -25,7 +26,8 @@ from .serializers import (
     CollectionSerializer,
     ContainSerializer,
     UserSerializer,
-    ReadingGoalSerializer
+    ReadingGoalSerializer,
+    UpvoteSerializer
 )
 
 class UserSet(viewsets.ModelViewSet):
@@ -138,3 +140,6 @@ class ReadingGoalsSet(viewsets.ModelViewSet):
     lookup_field = 'user'
     queryset = ReadingGoals.objects.all()
 
+class UpvotesSet(viewsets.ModelViewSet):
+    serializer_class = UpvoteSerializer
+    queryset = Upvotes.objects.all()

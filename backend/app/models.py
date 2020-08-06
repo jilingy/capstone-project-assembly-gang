@@ -30,6 +30,7 @@ class Books(models.Model):
     genre = models.CharField(max_length=50, choices=GENRES, default=NONFICTION)
     book_thumbnail = models.CharField(max_length=200, default="book_thumbnail")
     average_rating = models.FloatField(default=0.0)
+    read_count = models.IntegerField(default=0)
 
 class Reads(models.Model):
 
@@ -125,3 +126,11 @@ class ReadingGoals(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     current_month = models.IntegerField(default=0, validators=[MaxValueValidator(11), MinValueValidator(0)])
     reading_goal = models.IntegerField(default=0)
+
+class Upvotes(models.Model):
+    
+    class Meta:
+        db_table = 'upvotes'
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="voted_by_user")
+    review = models.ForeignKey(Reviews, on_delete=models.CASCADE, related_name="for_review")
