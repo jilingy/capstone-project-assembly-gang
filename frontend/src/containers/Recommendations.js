@@ -1,22 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { apiBooks, apiCollections, apiContains } from '../services/utilities/API';
-import CustomCard from '../components/Card';
-import { Tabs} from 'antd';
+import CustomCard from '../components/RecommendCard';
+import { Tabs, Divider, Row } from 'antd';
 import { useForm, Controller } from 'react-hook-form';
 import { connect } from 'react-redux';
+import Fade from 'react-reveal/Fade';
 
 function Recommendations(props) {
 
     const [ratings, setRatings] = useState([]);
+    const [rerend, setRerend] = useState(true);
     const [topTen, setTopTen] = useState([]);
     const [random, setRandom] = useState([]);
+    const [genre1, setGenre1] = useState([]);
+    const [genre2, setGenre2] = useState([]);
+    const [genre3, setGenre3] = useState([]);
+    const [genre4, setGenre4] = useState([]);
+    const [authors, setAuthors] = useState([]);
+
+    
 
     const getTopTen = () => {
         apiBooks.getAll()
         .then(res => {
-            var sorted = res.data.sort((a, b) => b.readCount - a.readCount);
-            var show = sorted.slice(0,10);
-            setTopTen(show);
+            var sorted = res.data.sort((a, b) => b.read_count - a.read_count);
+            setTopTen(sorted.slice(0,10));
         })
     }
 
@@ -50,6 +58,31 @@ function Recommendations(props) {
        
     }
 
+    const getGenre = () => {
+        if(rerend == true){
+            apiBooks.getAll()
+            .then(res => {
+                var sorted = res.data.sort((a, b) => b.read_count - a.read_count);
+                sorted.map(gen => {
+                    if(gen.genre === 'Childrens'){  
+                        setGenre1(prevBooks => [...prevBooks , gen]);
+                    }
+                    if (gen.genre === 'Fiction'){
+                        setGenre2(prevBooks => [...prevBooks , gen]);
+                    } 
+                    if(gen.genre === 'NonFiction'){
+                        setGenre3(prevBooks => [...prevBooks , gen]);
+                    }
+                    if(gen.genre === 'Crime'){
+                        setGenre4(prevBooks => [...prevBooks , gen]);
+                    }  
+                })
+                
+            })
+        }
+        setRerend(false);
+    }
+
     const callback = (key) => {
         console.log(key);
         switch(key){
@@ -57,22 +90,14 @@ function Recommendations(props) {
                 getRandom();
                 break;
             case '2':
-                //function call;
+                getGenre();
                 break;
             case '3':
                 getByRating();
                 break;
-            case '4':
-                //function call;
-                break;
             case '5':
-                //function call;
-                break;
-            case '6':
-                //function call;
-                break;
-            case '7':
                 getTopTen();
+                break;               
         }
     }
 
@@ -80,30 +105,70 @@ function Recommendations(props) {
 
 
     return (
-        <div>
-            <Tabs onChange={callback} type="card" style={{left: 201, position: 'relative'}} size={"large"}>
-                <TabPane tab="Daily Recommendation" key="1">
-                    <CustomCard partOf={false} booksData={random} />
-                </TabPane>
-                <TabPane tab="Genres" key="2">
-                Content of Tab Pane 2
-                </TabPane>
-                <TabPane tab="Average Rating" key="3">
-                    <CustomCard partOf={false} booksData={ratings} />
-                </TabPane>
-                <TabPane tab="Authors" key="4">
-                Content of Tab Pane 4
-                </TabPane>
-                <TabPane tab="Common to Others" key="5">
-                Content of Tab Pane 5
-                </TabPane>
-                <TabPane tab="Past Readings" key="6">
-                Content of Tab Pane 6
-                </TabPane>
-                <TabPane tab="Top 10" key="7">
-                <CustomCard partOf={false} booksData={topTen} />
-                </TabPane>
-            </Tabs>
+        <div className="site-card-wrapper" style={{ position: 'relative' , bottom: props.partOf ? 60 : -10, left: 215}}>
+            <Row gutter={32}>
+                <Tabs onChange={callback} type="card" size={"large"} >
+                    <TabPane tab="Daily Recommendation" key="1" >
+                        <CustomCard partOf={false} booksData={random} />
+                    </TabPane>
+                    <TabPane tab="Genres" key="2">
+                        <div style={{ height: 100, border: '2px solid black', background: `linear-gradient(#283048 , #859398)`}}>
+                            <Fade cascade>
+                                <h2 style={{
+                                        fontFamily:"Book Antiqua,Georgia,Times New Roman,serif",
+                                        position: 'relative',
+                                        top: 20,
+                                        fontSize: 50, 
+                                        color: 'black',
+                                    }}>Childrens</h2>
+                            </Fade>
+                        </div>
+                            <CustomCard partOf={false} booksData={genre1} />
+                        <div style={{ height: 100, border: '2px solid black', background: `linear-gradient(#283048 , #859398)`}}>
+                            <Fade cascade>
+                                <h2 style={{
+                                        fontFamily:"Book Antiqua,Georgia,Times New Roman,serif",
+                                        position: 'relative',
+                                        top: 20,
+                                        fontSize: 50, 
+                                        color: 'black',
+                                    }}>Fiction</h2>
+                            </Fade>
+                        </div>
+                            <CustomCard partOf={false} booksData={genre2} />
+                        <div style={{ height: 100, border: '2px solid black', background: `linear-gradient(#283048 , #859398)`}}>
+                            <Fade cascade>
+                                <h2 style={{
+                                        fontFamily:"Book Antiqua,Georgia,Times New Roman,serif",
+                                        position: 'relative',
+                                        top: 20,
+                                        fontSize: 50, 
+                                        color: 'black',
+                                    }}>Non-Fiction</h2>
+                            </Fade>
+                        </div>
+                            <CustomCard partOf={false} booksData={genre3} />
+                        <div style={{ height: 100, border: '2px solid black', background: `linear-gradient(#283048 , #859398)`}}>
+                            <Fade cascade>
+                                <h2 style={{
+                                        fontFamily:"Book Antiqua,Georgia,Times New Roman,serif",
+                                        position: 'relative',
+                                        top: 20,
+                                        fontSize: 50, 
+                                        color: 'black',
+                                    }}>Crime</h2>
+                            </Fade>
+                        </div>
+                            <CustomCard partOf={false} booksData={genre4} />
+                    </TabPane>
+                    <TabPane tab="Average Rating" key="3">
+                        <CustomCard partOf={false} booksData={ratings} />
+                    </TabPane>
+                    <TabPane tab="Top 10" key="5">
+                    <CustomCard partOf={false} booksData={topTen} />
+                    </TabPane>
+                </Tabs>
+            </Row>
         </div>
     )
 }

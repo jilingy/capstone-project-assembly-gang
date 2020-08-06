@@ -122,14 +122,5 @@ export const apiUpvotes = new APICore({
     url: upvotesURL,
 });
 
-export const apiReads = new APICore({
-    getAll: true,
-    getSingle: true,
-    post: true,
-    put: true,
-    patch: true,
-    remove: true,
-    url: readsURL,
-});
 
 export default apiCollections;
