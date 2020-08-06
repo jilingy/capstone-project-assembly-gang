@@ -1,7 +1,26 @@
 Week 1
 Group was formed. Set up Jira Account. Discussed what tech stack we would be using, it was decided to be django/flask for backend, react for front end and postgresql for the database. Next week we will have to do user stories and the project proposal
+
 Week 2
 Set out user stories for the ratings epic story and book epic story.
 
 Week3
-Edited the background and problem domain part of the proposal. Was assigned the storyboarding for books epic.
+Edited the background and problem domain part of the proposal. Was assigned the storyboarding for books, login epic.
+
+week 4
+The first sprint was slow for us due to being unfamiliar with part of the technology stack. Most of this time was spent on tutorials and learning. Hope to pick up velocity for next sprint
+
+week 5
+Was able to finish login and registration frontend. Helped to format the overall layout of the webstie.
+
+week 6 
+Got advice from the demo about using more conditional rendering, passed login and registration user story over and started working on book epic
+
+week 7
+Integrated reviews and ratings with book. Added small button functionalities
+
+week 8.
+Few users stories here and there left to finish off. Helped out team with their queties where necessary
+
+week 9.
+Finalising the code for submission. Contributed to third party implementation and technology stack component of report
