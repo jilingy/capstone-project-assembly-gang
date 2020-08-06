@@ -4,6 +4,7 @@ import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as actions from '../store/actions/auth';
 import Fade from 'react-reveal/Fade';
+import GoogleAuth from './GoogleLogin';
 
 function Login(props) {
   
@@ -138,6 +139,7 @@ function Login(props) {
               </Button>
             </Form.Item>
           </Form>
+          <GoogleAuth /><br></br><br></br>
           <Link to="/register">Register for an Account</Link>
         </div>
       )

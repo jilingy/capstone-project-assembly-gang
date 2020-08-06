@@ -108,7 +108,7 @@ function Recommendations(props) {
 
 
     return (
-        <div className="site-card-wrapper" style={{ position: 'relative' , bottom: props.partOf ? 60 : -10, left: 215}}>
+        <div className="site-card-wrapper" style={{ position: 'relative' , bottom: props.partOf ? 60 : -10, left: 30}}>
             <Row gutter={32}>
                 <Tabs onChange={callback} type="card" size={"large"} >
                     <TabPane tab="Daily Recommendation" key="1" >
@@ -122,7 +122,7 @@ function Recommendations(props) {
                                         position: 'relative',
                                         top: 20,
                                         fontSize: 50, 
-                                        color: 'black',
+                                        color: 'white',
                                     }}>Childrens</h2>
                             </Fade>
                         </div>
@@ -134,7 +134,7 @@ function Recommendations(props) {
                                         position: 'relative',
                                         top: 20,
                                         fontSize: 50, 
-                                        color: 'black',
+                                        color: 'white',
                                     }}>Fiction</h2>
                             </Fade>
                         </div>
@@ -146,7 +146,7 @@ function Recommendations(props) {
                                         position: 'relative',
                                         top: 20,
                                         fontSize: 50, 
-                                        color: 'black',
+                                        color: 'white',
                                     }}>Non-Fiction</h2>
                             </Fade>
                         </div>
@@ -158,7 +158,7 @@ function Recommendations(props) {
                                         position: 'relative',
                                         top: 20,
                                         fontSize: 50, 
-                                        color: 'black',
+                                        color: 'white',
                                     }}>Crime</h2>
                             </Fade>
                         </div>
@@ -167,7 +167,7 @@ function Recommendations(props) {
                     <TabPane tab="Average Rating" key="3">
                         <CustomCard partOf={false} booksData={ratings} />
                     </TabPane>
-                    <TabPane tab="Top 10" key="5">
+                    <TabPane tab="Top 10 By Read Count" key="5">
                     <CustomCard partOf={false} booksData={topTen} />
                     </TabPane>
                 </Tabs>

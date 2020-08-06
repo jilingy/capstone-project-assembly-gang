@@ -50,7 +50,7 @@ function EmailConfirm(props) {
 
 
     const onSubmit = (data) => {
-        axios.post('http://127.0.0.1:8000/api/auth/profiles' , {
+        axios.post('https://127.0.0.1:8000/api/auth/profiles' , {
             user: props.user_id,
             verification_code: data.verification_code
         }).then(res => {

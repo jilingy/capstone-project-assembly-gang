@@ -49,7 +49,7 @@ function CollectionCard(props) {
     };
 
     return (
-        <div style={{ marginLeft: 210, position: 'relative', bottom: 40 }}>
+        <div style={{ marginLeft: 20, position: 'relative', bottom: 40 }}>
             <Row gutter={16}>
                 {
                     _.zipWith(props.collections, props.profiles, function (collection, profile) {

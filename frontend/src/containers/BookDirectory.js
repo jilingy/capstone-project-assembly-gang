@@ -141,6 +141,16 @@ function BookDirectory(props) {
                             return null;
                         }
                     })
+                } else if(filter === "Average Rating") {
+                    var filtered = books.filter((book, index) => {
+                        queryMod = parseInt(query);
+                        if(book.average_rating === queryMod) {
+                            author_filtered.push(authors[index]);
+                            return book;
+                        } else {
+                            return null;
+                        }
+                    })
                 }
             if(filtered && !filtered.length) {
                 emptySearchReturn();
@@ -167,25 +177,28 @@ function BookDirectory(props) {
           <Menu.Item key="4" value="Publisher">
            Publisher
           </Menu.Item>
+          <Menu.Item key="5" value="Average Rating">
+           Average Rating
+          </Menu.Item>
         </Menu>
       );
 
     return (
         <div>
-            <div style={{ height: 100, border: '2px solid black', background: `linear-gradient(#283048 , #859398)`}}>
+            <div style={{ position: 'relative', height: 100, border: '2px solid black', background: `linear-gradient(#283048 , #859398)`}}>
                 <Fade cascade>
                     <Title 
                         level={3} 
                         style={{
                             fontFamily:"Book Antiqua,Georgia,Times New Roman,serif",
                             position: 'relative',
-                            right: 575,
+                            right: 670,
                             fontSize: 50, 
                             color: 'white',
                             textAlign : "center", 
                         }}>Book Directory
                     </Title>
-                    <p style={{ color: 'white', fontSize: 24, position: 'relative', bottom: 40, right: 575 }}>Browse through our books or...</p>
+                    <p style={{ color: 'white', fontSize: 24, position: 'relative', bottom: 40, right: 670 }}>Browse through our books or...</p>
                     <Search 
                     placeholder="Search book by title, author, genre..." 
                     onSearch={value => setSearchFlag(value)} 
@@ -193,7 +206,7 @@ function BookDirectory(props) {
                     style={{ 
                         position: 'relative',
                         width: 535, 
-                        right: 130,
+                        right: 230,
                         bottom: 90,
                     }}
                     />
@@ -201,24 +214,24 @@ function BookDirectory(props) {
                 <Dropdown.Button overlay={menu} style={{ position: 'relative',
                     width: 535, 
                     bottom: 122,
-                    left: 410
+                    left: 320
                 }} type="primary"> 
                     {filter ? filter : 'Filters'}
                 </Dropdown.Button>
                 {/* We pass the 'books' array as a prop to the 'CustomCard' component */}
-                </div>
+            </div>
                 <Button 
                     type={cancel ? "danger" : "primary"}
                     style={
                         filter !== 'Publisher' ?
                         { 
                             position: 'relative',
-                            left: 290,
+                            left: 200,
                             bottom: 44
                         } : 
                         {
                             position: 'relative',
-                            left: 305,
+                            left: 220,
                             bottom: 44
                         }
                     }

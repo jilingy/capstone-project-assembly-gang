@@ -19,7 +19,7 @@ function CustomLayout(props) {
         style={{
           overflow: 'auto',
           height: '100vh',
-          position: 'fixed',
+          position: 'relative',
           left: 0,
         }}
       >
@@ -41,11 +41,11 @@ function CustomLayout(props) {
     </Sider> : null}
     
     <Layout className="site-layout">
-      <Header className="site-layout-background" style={{ position: 'fixed', zIndex: 1, width: '100%'  }}>
+      <Header className="site-layout-background" style={{ position: 'fixed', width: '100%', zIndex: 1  }}>
         <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
           
           { props.isAuthenticated ?  
-          <Button type="primary" style={{ float: 'right', marginTop: 15, marginLeft: 30, backgroundColor: '#FF5833', borderColor: '#FF5833' }} onClick={props.logout}>
+          <Button type="primary" style={{ position: 'relative', left: 1560, marginRight: 10, marginTop: 15, backgroundColor: '#FF5833', borderColor: '#FF5833' }} onClick={props.logout}>
             <Link to="/">Logout</Link>
           </Button> 
           :  
@@ -53,9 +53,9 @@ function CustomLayout(props) {
             <Link to="/">Login</Link>
           </Button>
           }
-
-          {props.isAuthenticated ? <Button type="primary" style={{ float: 'right', left: 20, marginTop: 15 }}><Link to="/account">Account</Link></Button> : null}
-          {props.isAuthenticated ? <Button type="primary" style={{ float: 'right', marginRight: 10, left: 20, marginTop: 15 }}><Link to="/profile">Profile</Link></Button> : null}
+          
+          {props.isAuthenticated ? <Button type="primary" style={{ left: 1300, position: 'relative', marginRight: 10, marginTop: 15 }}><Link to="/account">Account</Link></Button> : null}
+          {props.isAuthenticated ? <Button type="primary" style={{ left: 1300, position: 'relative', marginRight: 10, marginTop: 15 }}><Link to="/profile">Profile</Link></Button> : null}
           {props.isAuthenticated ? null : <Button type="primary" style={{ float: 'right', right: 10, marginTop: 15 }}><Link to="/register">Register</Link></Button>} 
         
         </Menu>

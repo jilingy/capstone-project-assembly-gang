@@ -9,5 +9,6 @@ urlpatterns = [
     path('rest-auth/registration/', include('rest_auth.registration.urls')),
     path('admin/', admin.site.urls),
     path('api/', include('app.api.urls')),
-    path('', include('accounts.urls'))
+    path('', include('accounts.urls')),
+    path('accounts/', include('allauth.urls'))
 ]

@@ -108,7 +108,7 @@ function Books(props) {
                                     level={3}
                                     style={{
                                         position: 'relative',
-                                        right: 390,
+                                        right: 630,
                                         fontSize: 50, 
                                         color: 'white',
                                         textAlign : "center",
@@ -127,7 +127,7 @@ function Books(props) {
                         books.length === 0 ? <Link to="/col_list"><Button style={{
                             position: 'relative',
                             bottom: 60,
-                            left: 770
+                            left: 680
                         }} 
                         type="primary"
                         >Back to Collections</Button></Link> : 
@@ -136,7 +136,7 @@ function Books(props) {
                                 <Button style={{
                                     position: 'relative',
                                     bottom: 60,
-                                    left: 735
+                                    left: 640
                                 }} 
                                 type="primary"
                                 >Back to Collections
@@ -146,7 +146,7 @@ function Books(props) {
                                 <Button style={{
                                     position: 'relative',
                                     bottom: 60,
-                                    left: 750
+                                    left: 650
                                 }} 
                                 type="primary">Add Books
                                 </Button>
@@ -220,6 +220,7 @@ function Books(props) {
                     reviews={reviews}
                     publicAccess={publicAccess}
                     authors={authors}
+                    setAuthors={setAuthors}
                 />
                 </div>
             }            

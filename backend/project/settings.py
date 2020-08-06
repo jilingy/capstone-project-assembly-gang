@@ -31,7 +31,6 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -49,6 +48,9 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.facebook',
+    'django_extensions',
     'knox',
     'accounts',
     'simple_email_confirmation'
@@ -56,9 +58,13 @@ INSTALLED_APPS = [
 
 SITE_ID = 1
 
+### ---------- REST FRAMEWORK SETTINGS START ---------- ###
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',)
 }
+
+### ---------- REST FRAMEWORK SETTINGS END ---------- ###
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -125,6 +131,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+### ---------- DISPATCH VERIFICATION EMAIL SETTINGS START ---------- ###
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST_USER = "readrecommend@gmail.com"
 EMAIL_HOST = 'smtp.gmail.com'
@@ -133,6 +141,8 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_PASSWORD = "Z00k33p3r123"
 EMAIL_CONFIRMATION_PERIOD_DAYS = 1
 SIMPLE_EMAIL_CONFIRMATION_PERIOD = timedelta(days=EMAIL_CONFIRMATION_PERIOD_DAYS)
+
+### ---------- DISPATCH VERIFICATION EMAIL SETTINGS END ---------- ###
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
@@ -154,3 +164,17 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+### ---------- SOCIAL AUTH SETTINGS START ---------- ###
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+GOOGLE_CLIENT_ID = "348019820347-dk1i5j2buchlrhs0vb1if5p2dgm3j0j3.apps.googleusercontent.com"
+
+### ---------- SOCIAL AUTH SETTINGS END ---------- ###

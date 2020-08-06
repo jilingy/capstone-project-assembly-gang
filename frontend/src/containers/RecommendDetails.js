@@ -187,7 +187,7 @@ function RecommendDetails(props){
           <p><b>Publisher:</b> {props.book_publisher}</p>
           <p><b>Date Published:</b> {props.publication_date}</p>
           <p><b>Genre:</b> {props.genre}</p>
-          <p><b>Average Rating:</b> {props.averagerating}</p>
+          <p><b>Average Rating:</b> {props.average_rating}</p>
           <h4><b>Read Count:</b> {props.read_count}</h4>
           </Col>
           <Col span={9}>
