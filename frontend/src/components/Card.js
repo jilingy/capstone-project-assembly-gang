@@ -183,7 +183,6 @@ function CustomCard(props) {
             console.log(err);
         })
         var today = new Date();
-        console.log(today)
         apiReads.post({
             user: props.user_id,
             book: bookID,

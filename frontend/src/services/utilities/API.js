@@ -8,10 +8,7 @@ const reviewsURL = 'reviews'
 const profilesURL = 'auth/profiles';
 const authorsURL = 'authors';
 const writtenByURL = 'writtenby';
-<<<<<<< HEAD
 const upvotesURL = 'upvotes';
-const readsURL = 'reads';
-=======
 const goalURL = 'reading_goals';
 const readsURL = 'reads';
 
@@ -34,7 +31,6 @@ export const apiGoal = new APICore({
     remove: true,
     url: goalURL,
 })
->>>>>>> dev
 
 export const apiProfiles = new APICore({
     getAll: true,
