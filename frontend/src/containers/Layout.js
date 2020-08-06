@@ -38,7 +38,7 @@ function CustomLayout(props) {
     </Sider> : null}
     
     <Layout className="site-layout">
-      <Header className="site-layout-background" style={{ position: 'fixed', width: '100%'  }}>
+      <Header className="site-layout-background" style={{ position: 'fixed', width: '100%', zIndex: 1  }}>
         <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
           
           { props.isAuthenticated ?  

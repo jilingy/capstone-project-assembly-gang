@@ -124,6 +124,7 @@ function CollectionList(props) {
     const [loading, setLoading] = useState(true);
     const [books, setBooks] = useState();
     const [reviews, setReviews] = useState([]);
+    const [viewBooks, setViewBooks] = useState();
 
     const { Title } = Typography
 
@@ -264,6 +265,16 @@ function CollectionList(props) {
         }, 2000);
     };
 
+    const handleViewAll = (collection_name) => {
+        var toRender = books.filter(book => {
+            var data = book[collection_name];
+            if (data) {
+                return data;
+            }
+        })
+        setViewBooks(toRender[0][collection_name]);
+    }
+
     const columns = [
         {
             title: 'Collection Name',
@@ -331,32 +342,59 @@ function CollectionList(props) {
                         var data = toRender[0][collection_name];
                         return (
                             <div>
-                                <Carousel
-                                    autoplay
-                                    dots={false}
-                                    style={{
-                                        borderRadius: 10,
-                                        width: 400,
-                                        background: "#364d79",
-                                        color: 'white',
-                                        borderRadius: 10,
-                                        paddingTop: 20
-                                    }}>
-                                    {
-                                        data.reverse().map(b => {
-                                            if (b !== undefined) {
-                                                return (
-                                                    <p style={{
-                                                        color: '#FFFFFF'
-                                                    }}>
-                                                        {b.title} at {b.time_created.slice(0, 10)}
-                                                        {`(${(b.time_created.slice(11, 16))})`}
-                                                    </p>
-                                                )
-                                            }
-                                        })
-                                    }
-                                </Carousel>
+                                {data.length > 0 ? <div style={{ float: 'left' }}>
+                                    <Carousel
+                                        autoplay
+                                        dots={false}
+                                        style={{
+                                            borderRadius: 10,
+                                            width: 250,
+                                            background: "#364d79",
+                                            color: 'white',
+                                            borderRadius: 10,
+                                            paddingTop: 10
+                                        }}>
+                                        {
+                                            data.reverse().map(b => {
+                                                if (b !== undefined) {
+                                                    return (
+                                                        <p style={{
+                                                            color: '#FFFFFF'
+                                                        }}>
+                                                            {b.title} at {b.time_created.slice(0, 10)}
+                                                            {`(${(b.time_created.slice(11, 16))})`}
+                                                        </p>
+                                                    )
+                                                }
+                                            })
+                                        }
+                                    </Carousel>
+                                </div> : <p style={{ position: 'relative' , top: 20, right: 50, color: 'red' }}><b>No books to display</b></p>}
+                                <div style={{ position: 'relative', float: 'right' }}>
+                                    <Popover
+                                        placement="topLeft"
+                                        content={
+                                            <div>
+                                                {viewBooks ? viewBooks.map(book => {
+                                                    return (
+                                                        <p><b>{`${book.title} (${book.time_created.slice(0, 10)})`}</b></p>
+                                                    )
+                                                }) : null}
+                                            </div>
+                                        }
+                                    >
+                                        <Button 
+                                            style={{ 
+                                                    bottom: data.length == 0 ? 20 : 0,  
+                                                    top: data.length == 0 ? -20 : 20,
+                                                    float: 'right' 
+                                                }} 
+                                                type="primary" 
+                                                onMouseEnter={() => handleViewAll(collection_name)}
+                                        >View All
+                                        </Button>
+                                    </Popover>
+                                </div>
                             </div>
                         )
                     }

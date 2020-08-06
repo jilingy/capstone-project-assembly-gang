@@ -42,6 +42,7 @@ function GoogleAuth (props) {
                 onFailure={responseGoogle}
                 cookiePolicy={'single_host_origin'}
                 autoLoad={false}
+                isSignedIn={false}
             />
     )
 }

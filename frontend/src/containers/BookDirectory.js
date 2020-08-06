@@ -206,7 +206,7 @@ function BookDirectory(props) {
                     {filter ? filter : 'Filters'}
                 </Dropdown.Button>
                 {/* We pass the 'books' array as a prop to the 'CustomCard' component */}
-                </div>
+            </div>
                 <Button 
                     type={cancel ? "danger" : "primary"}
                     style={
