@@ -146,9 +146,9 @@ function CustomCard(props) {
                     })
                 }
                 const updateCollectionCount = async () => {
-                    apiCollections.getSingle(collectionID).then(res => {
+                    apiCollections.getSingle(collectionID).then(collRes => {
                         apiCollections.patch(collectionID, {
-                            count: res.data.count - 1,
+                            count: collRes.data.count - 1,
                         }).catch(err => {
                             console.log(err);
                         })

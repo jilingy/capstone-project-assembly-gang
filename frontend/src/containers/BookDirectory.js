@@ -141,6 +141,16 @@ function BookDirectory(props) {
                             return null;
                         }
                     })
+                } else if(filter === "Average Rating") {
+                    var filtered = books.filter((book, index) => {
+                        queryMod = parseInt(query);
+                        if(book.average_rating === queryMod) {
+                            author_filtered.push(authors[index]);
+                            return book;
+                        } else {
+                            return null;
+                        }
+                    })
                 }
             if(filtered && !filtered.length) {
                 emptySearchReturn();
@@ -166,6 +176,9 @@ function BookDirectory(props) {
           </Menu.Item>
           <Menu.Item key="4" value="Publisher">
            Publisher
+          </Menu.Item>
+          <Menu.Item key="5" value="Average Rating">
+           Average Rating
           </Menu.Item>
         </Menu>
       );
