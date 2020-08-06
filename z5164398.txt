@@ -1,0 +1,30 @@
+Work Diary
+
+Week 1
+GRoup was formed, named Assembly Gang. Discussed using django for backend and react for front end. Started user stories and set up Jira and Github. Finished first lab and finalised project ideas. Picked Read Recommend.
+
+Week 2
+Set up Virtual environment. Downloaded all backend and frontend software. Refining user stories. Sorting out Proposal details and each members role. Have sorted out meeting/ standup times. Have yet to finish Proposal but getting there. By next week, Proposal will have been finished and backend coding should have started. 
+
+Week 3.
+We planned to finish the proposal and assign the first sprint user stories. We finished the proposal and assigned the user stories of the first sprint. We had some members busy with work and other courses but we managed to initiate our own to work to the best of our ability. I myself struggled with visualising the story boards but had tim and farhans as inspiration. Everything was finished with 2 hours to spare, i think we worked well as a group. In the next period, we should have finished the first sprint and started organising the second sprint and learnt about react and django
+
+week 4
+we planned to be finishing the first sprint and planning the second sprint, however due to other course work we didnt end up being able to finish the first sprint. we tried to meet up and get it all finished however i had trouble finding the time to learn react and django with full fluency and struggled to complete my assigned user stories. it doesnt affect the overall project as we assumed there were going to be delays and have adjusted for accordingly. by next sprint i plan to be fluent in react and django and thus ensure the next sprints face no delays.
+
+week 5
+by last sprint i planned to be fluent in react and django and thus ensure the next sprints face no delays, which was completed. we also finished the sprint and demonstrated our current product. most of it was well designed except certain things were discovered last minute like our need for 2 layout designs. most things we wanted to complete was completed. we plan to start and finish the next sprint and complete the retrospective. 
+
+week 6 
+we have decided to up the velocity of our assignment, since we have all learnt react and django, we are able to start coding more rapidly. we have finished a lot of features and started new epics. personally coordinating everything between us has be a struggle since we all have other work but its slowly coming together. most things are being finished although certain user stories are needed before we can progress further. we have planned to more sprints. 
+
+week 7
+we have increased our velocity and been getting more and more done. we finished most of collection list, as well as other epics. im working on review and rating but having an issue that modals dont allow forms unless you make it a custom class. but next sprint we should have everything done and ready for the demo.
+
+week 8.
+we finsihed off our demo and sprints, we now have one epic each to finish and it seems to be on track, no clue about how reccomender systems work but will brush up on that soon. by next sprint we should have everything ready to submit, i think we might want to comment our code a little to make it look better for our code review but for now just focusing on getting all the user stories done
+
+week 9.
+Almost all user stories have been completed, we are just debugging and finalising the ui design. And preparing to submit our code and report. Struggling due to other course work but everyone is helping with the final product so the work is progressing quick
+
+Week 10.
