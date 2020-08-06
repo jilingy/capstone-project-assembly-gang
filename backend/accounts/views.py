@@ -19,8 +19,7 @@ from django.db import transaction
 import json
 
 class GoogleLogin(SocialLoginView):
-    
-    callback_url = "https://127.0.0.1:8000/accounts/google/login/callback/"
+
     adapter_class = GoogleAuthLogin
     client_class = OAuth2Client
     serializer_class = SocialLoginSerializer
@@ -54,7 +53,6 @@ class GoogleLogin(SocialLoginView):
                 last_name = id_info['family_name'],
                 last_login = datetime.now(),
                 username = id_info['given_name'] + " " + id_info['family_name'],
-                #Probably wanna hash this looooool
                 password = password,
                 email = id_info['email']
             )
