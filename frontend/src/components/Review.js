@@ -52,11 +52,9 @@ function Review(props) {
                 else{
                     summ = (summ / filtered.length);
                 }
-                
-                console.log(summ);
-                console.log(rev.data);
+                var avg = Math.round(summ * 10) / 10;
                 apiBooks.patch(props.book.id, {
-                    average_rating: summ,
+                    average_rating: avg,
                 })
 
             }).catch(err => {
