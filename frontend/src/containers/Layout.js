@@ -42,7 +42,7 @@ function CustomLayout(props) {
         <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
           
           { props.isAuthenticated ?  
-          <Button type="primary" style={{ marginRight: 10, marginTop: 15, backgroundColor: '#FF5833', borderColor: '#FF5833' }} onClick={props.logout}>
+          <Button type="primary" style={{ position: 'relative', left: 1560, marginRight: 10, marginTop: 15, backgroundColor: '#FF5833', borderColor: '#FF5833' }} onClick={props.logout}>
             <Link to="/">Logout</Link>
           </Button> 
           :  
@@ -50,9 +50,9 @@ function CustomLayout(props) {
             <Link to="/">Login</Link>
           </Button>
           }
-
-          {props.isAuthenticated ? <Button type="primary" style={{ position: 'relative', marginRight: 10, marginTop: 15 }}><Link to="/account">Account</Link></Button> : null}
-          {props.isAuthenticated ? <Button type="primary" style={{ position: 'relative', marginRight: 10, marginTop: 15 }}><Link to="/profile">Profile</Link></Button> : null}
+          
+          {props.isAuthenticated ? <Button type="primary" style={{ left: 1300, position: 'relative', marginRight: 10, marginTop: 15 }}><Link to="/account">Account</Link></Button> : null}
+          {props.isAuthenticated ? <Button type="primary" style={{ left: 1300, position: 'relative', marginRight: 10, marginTop: 15 }}><Link to="/profile">Profile</Link></Button> : null}
           {props.isAuthenticated ? null : <Button type="primary" style={{ float: 'right', right: 10, marginTop: 15 }}><Link to="/register">Register</Link></Button>} 
         
         </Menu>
