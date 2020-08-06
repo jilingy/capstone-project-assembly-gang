@@ -1,0 +1,43 @@
+My Work Diary
+
+Week 1
+
+The team discussed and brainstormed ideas for the project - ReadRecommend. We have more or less an idea of our tech stack. Our primary focus right now is to brainstorm epics and user stories. Once this is done, we intend to map them to Jira.
+
+Week 2
+
+Started writing out potential epic stories and related user stories and pitched them to the team. Over the week, as a team, we started off with my initial stories and soon enough we had a lot of functionality narrowed down and refined. Once Micheal Wang had reviewed my set of user stories, they were migrated onto the JIRA backlog. Furthermore, I started developing a potential system schema for our application. Lastly, I personally set up the React frontend so as to make it easier for the rest of the team to get set up and running in less time.
+
+Week 3
+
+Made significant contributions to the Project Proporsal submission. Contributed to completing storyboards covering a total of 8 epic stories. Furthermore, was responsible for writing majority of the introduction section as well as the system architecture section of the project proposal. Both sections were reviewed by the team and approved. 
+
+Week 4
+
+With our first sprint delieverable due at the end of Week 4, I took the lead in development and provided a helping hand to the rest of the team in order to help them get better familiarised with the tech stack of the application. Furthermore, I wrote up the authentication code as well as set up the "Collection List" epic stories. 
+Our first sprint was a success as we managed to get all allocated stories done on time. 
+
+Week 5
+
+Having been allocated my tasks for sprint 2, I over-delievered and was able to wrap up the full authentication flow of our application (DjangoRest-ReactRedux) as well as set up the "Books" tab for our application. Furthermore, I also set our landing page for the application (Book Directory). Also set up search functionality on our books database.
+
+Week 6
+
+Helped all team members debug issues on their respective user story implementations as well as continued to work on my epics. Set up the "Public Collections" tab for our application (that displays collecionts of other users). Also implemented account confirmation via email verification service for application.
+
+Week 7
+
+Implemented key novel functionality feature for our application: current user can "clone" as well as view other user collections. Added additional filters for search such as "author", "genre", "title"
+
+Week 8
+
+Our second demo went well and we recieved valuable feedback. I was advised to update the "Carousel" feature as it did not quite meet the project objectives. Furthermore, we shared insight on how to increase our sprint velocity so as to ensure we get all our work done and delievered on time.
+
+Week 9
+
+Worked on implementing another key novel functionality: social authentication via Google. This involved writing both backend and frontend code and familiarising myself with django-allauth, oauth and google's developer guidelines.
+
+Week 10
+
+With the majority of the product backlog wrapped up, the last week was spent fine-tuning our application. I helped out my team members in debugging via peer-programming. Sorted out minor UI issues on the frontend as well as request issues on the backend. 
+Put in the final pull request to merge stable dev to master.
