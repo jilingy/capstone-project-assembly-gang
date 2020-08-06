@@ -5,6 +5,7 @@ import { Tabs, Divider, Row } from 'antd';
 import { useForm, Controller } from 'react-hook-form';
 import { connect } from 'react-redux';
 import Fade from 'react-reveal/Fade';
+import { keyBy } from 'lodash';
 
 function Recommendations(props) {
 
@@ -18,7 +19,9 @@ function Recommendations(props) {
     const [genre4, setGenre4] = useState([]);
     const [authors, setAuthors] = useState([]);
 
-    
+    useEffect(() => {
+        getRandom();
+      } , []);  
 
     const getTopTen = () => {
         apiBooks.getAll()
