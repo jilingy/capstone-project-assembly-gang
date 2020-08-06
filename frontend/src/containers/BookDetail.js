@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import {Row,Col,Typography,Card ,Modal, Comment, Avatar, Empty , List, Rate } from 'antd';
-import { MessageOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
+import {Row,Col,Typography,Card ,Modal, Comment, Avatar, Empty , List, Rate, Tooltip } from 'antd';
+import { LikeOutlined, LikeFilled } from '@ant-design/icons';
 import BookCover from '..//images/book_cover.jpg';
 //import axios from 'axios';
 import { connect } from 'react-redux';
-import apiCollections, { apiReviews, apiAccount, apiContains } from '../services/utilities/API';
+import apiCollections, { apiReviews, apiAccount, apiContains, apiUpvotes } from '../services/utilities/API';
 import { createPortal } from 'react-dom';
 
 function BookDetail(props){
@@ -13,14 +13,14 @@ function BookDetail(props){
 
     const [reviews, setReviews] = useState([]);
     const [userReview, setUserReview] = useState();
-    const [readCount, setReadCount] = useState(0);
-    const [author, setAuthor]=useState();
+    //const [readCount, setReadCount] = useState(0);
     const [userIdMap, setUserIdMap] = useState(new Map());
+    const [upvoteStateMap, setUpvoteStateMap]=useState(new Map());
+    const [upvoteCountMap, setUpvoteCountMap]=useState(new Map());
 
     useEffect(() => {
       getReviews();
-      getFinishedCollections();
-      //getAuthor();
+      //getFinishedCollections();
     }, [props.id]);
 
     useEffect(() => {
@@ -29,16 +29,10 @@ function BookDetail(props){
       console.log(reviews)
       console.log(reviews.length)*/
       getUsers();
+      getUpvotes();
     }, [reviews]);
 
-    /*const getAuthor = () => {
-      apiAuthor.getSingle(props.id)
-      .then(res => {
-
-      })
-    } */
-
-    const getFinishedCollections = () => {
+    /*const getFinishedCollections = () => {
       setReadCount(0);
       var finished;
       var containedIn;
@@ -69,10 +63,18 @@ function BookDetail(props){
           }
         })
       })
-    }
+    }*/
 
     const updateMap = (k,v) => {
       setUserIdMap(userIdMap.set(k,v));
+    }
+
+    const updateUpvoteStateMap = (k,v) => {
+      setUpvoteStateMap(upvoteStateMap.set(k,v));
+    }
+
+    const updateUpvoteCountMap = (k,v) => {
+      setUpvoteCountMap(upvoteCountMap.set(k,v));
     }
 
     const getReviews = () => {
@@ -102,27 +104,60 @@ function BookDetail(props){
     const getUsers = () => {
       apiAccount.getAll()
       .then(res =>{
-        var users;
         for (var review of reviews){
-          users = res.data.find(account =>{
-            if(review.user = account.id){
+          for(var account of res.data){
+            if(review.user === account.id){
               /*console.log("Review: " + review.review)
               console.log("Username: " + account.username)*/
               updateMap(review.user,account.username)
               //console.log(userIdMap)
               return account;
             }
-            else{
-              return null;
-            }
-          })
+          }
         }
       })
     }
 
+    const getUpvotes = () => {
+      apiUpvotes.getAll().then(res =>{
+        for (var review of reviews){
+          updateUpvoteCountMap(review.id,0)
+          var flag = false
+          for(var upvote of res.data){
+            if(upvote.review === review.id){
+              updateUpvoteCountMap(review.id,upvoteCountMap.get(review.id)+1)
+              if(upvote.user === props.user_id){
+                updateUpvoteStateMap(review.id,true)
+                flag = true
+              }
+            }
+          }
+          if(flag == false){
+            updateUpvoteStateMap(review.id,false)
+          }
+        }
+      })
+    }
+
+    const handleLike = (review) => {
+      if(upvoteStateMap.get(review) === true){
+        updateUpvoteStateMap(review,false)
+        updateUpvoteCountMap(review,upvoteCountMap.get(review)+1)
+      }
+      else{
+        updateUpvoteStateMap(review,true)
+        updateUpvoteCountMap(review,upvoteCountMap.get(review)-1)
+      }
+    }
+
     const handleCancel = () => {
       props.updateModalVisible(!props.visible);
+      postUpvotes()
     };
+
+    const postUpvotes = () => {
+    }
+
     return(
       <div>
         <Modal
@@ -154,12 +189,15 @@ function BookDetail(props){
           <p><b>Date Published:</b> {props.publication_date}</p>
           <p><b>Genre:</b> {props.genre}</p>
           <p><b>Average Rating:</b> {props.averagerating}</p>
-          <p><b>Read Count:</b> {readCount}</p>
+          <h4><b>Read Count:</b> {props.read_count}</h4>
           </Col>
           <Col span={9}>
             <Title level={4}>Your Review</Title>
             {userReview ? <Comment
-              //actions={actions}
+              actions={<Tooltip key="comment-basic-like" title="Like">
+                {LikeFilled}
+                <span className="comment-action">{upvoteCountMap.get(userReview.id)}</span>
+            </Tooltip>}
             author={<Rate disabled value={userReview.rating}/>}
               avatar={
                 <Avatar
@@ -189,14 +227,17 @@ function BookDetail(props){
               dataSource={reviews}
               renderItem={item => (
               <List.Item
-                key={item}
-                //actions={[
-                  //<IconText icon={LikeOutlined} text="156" key="list-vertical-like-o" />
-                //]}
+                key={item.id}
                 >
                 <Comment
-              //actions={actions}
-              author={<p><b>{/*(()=>userIdMap.get(*/item.user/*))*/}</b><Rate disabled value={item.rating}/></p>}
+              actions = {<Tooltip key="comment-basic-like" title="Like">
+              <span onClick={(()=>handleLike(item.id))}>
+                {React.createElement(upvoteStateMap.get(item.id) === true ? LikeFilled : LikeOutlined)}
+                {console.log('big xD')}
+                <span className="comment-action">{upvoteCountMap.get(item.id)}</span>
+              </span>
+            </Tooltip>}
+              author={<p><b>{userIdMap.get(item.user)}</b><Rate disabled value={item.rating}/></p>}
               avatar={
                   <Avatar
                     src={BookCover}
