@@ -21,6 +21,7 @@ function Recommendations(props) {
 
     useEffect(() => {
         getRandom();
+        getGenre();
       } , []);  
 
     const getTopTen = () => {
