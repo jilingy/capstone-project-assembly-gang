@@ -298,7 +298,7 @@ function CollectionList(props) {
             title: 'Collection Description',
             dataIndex: 'description',
             key: 'description',
-            width: 300,
+            width: 250,
             render: description => <p>{description}</p>
         },
         {
@@ -371,7 +371,7 @@ function CollectionList(props) {
                                     </Carousel>
                                 </div> : <p style={{ position: 'relative' , top: 20, right: 50, color: 'red' }}><b>No books to display</b></p>}
                                 <div style={{ position: 'relative', float: 'right' }}>
-                                    <Popover
+                                    {data.length > 0 ? <Popover
                                         placement="topLeft"
                                         content={
                                             <div>
@@ -393,7 +393,7 @@ function CollectionList(props) {
                                                 onMouseEnter={() => handleViewAll(collection_name)}
                                         >View All
                                         </Button>
-                                    </Popover>
+                                    </Popover> : null}
                                 </div>
                             </div>
                         )

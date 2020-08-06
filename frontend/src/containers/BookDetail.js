@@ -189,11 +189,7 @@ function BookDetail(props){
           <p><b>Date Published:</b> {props.publication_date}</p>
           <p><b>Genre:</b> {props.genre}</p>
           <p><b>Average Rating:</b> {props.average_rating}</p>
-<<<<<<< HEAD
-          <p><b>Read Count:</b> {readCount}</p>
-=======
           <h4><b>Read Count:</b> {props.read_count}</h4>
->>>>>>> dev
           </Col>
           <Col span={9}>
             <Title level={4}>Your Review</Title>
