@@ -34,5 +34,6 @@ Held our Retrospective B meeting after the Demo. We were quite happy with our pr
 Week 9
 I set up a dummy template for the motivation stuff for the user i.e. their monthly reading goals and their progress. More work needs to be done so that the goals can be updated. Just waiting on Farhan to add another table to the backend database for reading goals.
 
-
+Week 10
+Finished implementing the motivation functionality to allow the user to set a monthly reading goal and show their progress towards that goal. Also worked on the final project report. We met up on 6/8/2020 (Thursday night) to go through our app and prepare for our final demo together.
 
